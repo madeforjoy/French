@@ -1,3 +1,6 @@
+bash
+cat /home/claude/french_final.html
+Output
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -513,7 +516,8 @@ async function runItem(item){
   await speak(item.fr,'fr-FR',speed);
   if(paused)return;
 
-  await pause(400);
+  // Longer silence gap so mic doesn't pick up app's voice
+  await pause(1200);
 
   // Show mic — user taps when ready
   showMic(true);
@@ -578,7 +582,7 @@ async function retryItem(){
   pill('TRY AGAIN');
   fr(queue[idx].fr);en(queue[idx].en);
   await speak(queue[idx].fr,'fr-FR',speed);
-  await pause(600);
+  await pause(1200);
 
   showMic(true);
   gel('micLabel').textContent='Tap 🎤 — one more try';
@@ -729,33 +733,44 @@ function waitForMic(){return new Promise(res=>{micResolve=res;});}
 // ══════════════════════════════════════════
 // AI FEEDBACK
 // ══════════════════════════════════════════
-async function getAIFeedback(phrase,meaning,said){
-  return new Promise(res=>{
-    const prompt=`French tutor helping Jack (68, American, beginner) learning French for Menton.
-Phrase: "${phrase}" (means: "${meaning}")
-Jack said: "${said}"
-Reply in exactly 3 plain text lines, no markdown:
-Line 1: Score — Excellent / Good / Almost / Try Again
-Line 2: What he got right (be specific and brief)
-Line 3: One simple correction, or "Keep going!" if good`;
-    try{
-      sendPrompt(prompt);
-      // sendPrompt is async via message event
-      window._aiFeedbackResolve = res;
-    }catch(e){
-      res("Could not get feedback. Keep practicing!");
-    }
-  });
-}
+function getAIFeedback(phrase, meaning, said){
+  // Smart local feedback — works everywhere, no internet needed
+  const normalize = s => s.toLowerCase()
+    .replace(/[?.!,’']/g,'')
+    .replace(/\s+/g,' ')
+    .trim();
 
-// Listen for Claude's response to sendPrompt
-window.addEventListener('message', e=>{
-  if(window._aiFeedbackResolve && e.data && typeof e.data === 'string'){
-    const resolve = window._aiFeedbackResolve;
-    window._aiFeedbackResolve = null;
-    resolve(e.data);
+  const target = normalize(phrase);
+  const heard  = normalize(said);
+
+  // Exact or near-exact match
+  if(heard === target || heard.includes(target) || target.includes(heard)){
+    return Promise.resolve("Excellent
+Perfect — that's exactly right!
+Keep going!");
   }
-});
+
+  // Count matching words
+  const targetWords = target.split(' ');
+  const heardWords  = heard.split(' ');
+  const matches = targetWords.filter(w => w.length > 2 && heardWords.some(h => h.includes(w) || w.includes(h)));
+  const score = matches.length / targetWords.length;
+
+  if(score >= 0.75){
+    return Promise.resolve(`Good
+You got most of it — ${matches.join(', ')} came through clearly.
+Say the full phrase: ${phrase}`);
+  } else if(score >= 0.4){
+    const missed = targetWords.filter(w => w.length > 2 && !heardWords.some(h => h.includes(w) || w.includes(h)));
+    return Promise.resolve(`Almost
+You got: ${matches.join(', ')}.
+Work on: ${missed.slice(0,3).join(', ')} — full phrase: ${phrase}`);
+  } else {
+    return Promise.resolve(`Try Again
+I heard "${said}" but expected "${phrase}".
+Listen again and repeat: ${phrase}`);
+  }
+}
 
 // ══════════════════════════════════════════
 // INIT
