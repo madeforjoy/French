@@ -110,9 +110,11 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
 
 <div class="tab-bar">
   <button class="tab-btn active" onclick="showPage('home')">🏠 Home</button>
+  <button class="tab-btn" onclick="showPage('vocabulary')">🔤 Vocab</button>
+  <button class="tab-btn" onclick="showPage('verbs')">📖 Verbs</button>
   <button class="tab-btn" onclick="showPage('phrases')">💬 Phrases</button>
   <button class="tab-btn" onclick="showPage('drill')">🎤 Drill</button>
-  <button class="tab-btn" onclick="showPage('verbs')">📖 Verbs</button>
+  <button class="tab-btn" onclick="showPage('qa')">💬 Q&amp;A</button>
 </div>
 
 <!-- HOME -->
@@ -129,6 +131,7 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
   <div class="unit-card" onclick="showPage('phrases');setUnit('cafe')"><div class="unit-icon">☕</div><div class="unit-info"><div class="unit-name">Café & Boulangerie</div><div class="unit-desc">Ordering coffee, bread, croissants</div><div class="unit-count">10 phrases</div></div><div class="unit-arrow">›</div></div>
   <div class="unit-card" onclick="showPage('phrases');setUnit('polite')"><div class="unit-icon">🎩</div><div class="unit-info"><div class="unit-name">Polite Responses</div><div class="unit-desc">Merci, avec plaisir, pas grave</div><div class="unit-count">10 phrases</div></div><div class="unit-arrow">›</div></div>
   <div class="unit-card" onclick="showPage('phrases');setUnit('lifestyle')"><div class="unit-icon">🌅</div><div class="unit-info"><div class="unit-name">Lifestyle & Living</div><div class="unit-desc">J'aime, je déteste, le style de vie</div><div class="unit-count">9 phrases</div></div><div class="unit-arrow">›</div></div>
+  <div class="unit-card" onclick="showPage('drill');document.getElementById('drillUnit').value='qa'"><div class="unit-icon">💬</div><div class="unit-info"><div class="unit-name">Q&amp;A Practice</div><div class="unit-desc">Real conversations — questions you'll be asked in Menton</div><div class="unit-count">15 pairs · Go straight to Drill</div></div><div class="unit-arrow">›</div></div>
   <div class="tip-box" style="margin-top:6px">Always say <strong style="color:var(--gold)">madame</strong> or <strong style="color:var(--gold)">monsieur</strong> after Bonjour with strangers. Use <strong style="color:var(--gold)">vous</strong> — not tu — with anyone you don't know well.</div>
 </div>
 
@@ -155,6 +158,8 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
     <option value="cafe">Café & Boulangerie</option>
     <option value="polite">Polite Responses</option>
     <option value="lifestyle">Lifestyle & Living</option>
+    <option value="qa">Q&amp;A Practice</option>
+    <option value="vocab">Vocabulary</option>
   </select>
 
   <div class="drill-wrap">
@@ -186,10 +191,35 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
 </div>
 
 <!-- VERBS -->
+<!-- VOCABULARY -->
+<div class="page" id="page-vocabulary">
+  <div class="unit-pills" id="vocabPills" style="margin-top:4px">
+    <button class="unit-pill active" onclick="setVocabCat('numbers')">🔢 Numbers</button>
+    <button class="unit-pill" onclick="setVocabCat('days')">📅 Days</button>
+    <button class="unit-pill" onclick="setVocabCat('months')">🗓️ Months</button>
+    <button class="unit-pill" onclick="setVocabCat('colors')">🎨 Colors</button>
+    <button class="unit-pill" onclick="setVocabCat('food')">🥖 Food</button>
+    <button class="unit-pill" onclick="setVocabCat('measures')">⚖️ Measures</button>
+    <button class="unit-pill" onclick="setVocabCat('keywords')">🔑 Key Words</button>
+  </div>
+  <div id="vocabList"></div>
+</div>
+
 <div class="page" id="page-verbs">
   <div class="section-title" style="margin-top:6px">Key Verbs</div>
   <div class="section-sub">The forms you'll actually use. Tap ▶ to hear.</div>
   <div id="verbList"></div>
+</div>
+
+<!-- Q&A -->
+<div class="page" id="page-qa">
+  <div class="section-title" style="margin-top:6px">Q&amp;A Practice</div>
+  <div class="section-sub">Real conversations you'll have in Menton. Select a pair to drill it, or go to Drill tab and choose Q&amp;A Practice.</div>
+  <div class="tip-box">💡 Each pair drills in 3 steps: learn the question → learn the answer → full Q&amp;A together.</div>
+  <div id="qaList"></div>
+  <div style="margin-top:20px;text-align:center">
+    <button class="btn-gold" onclick="showPage('drill');document.getElementById('drillUnit').value='qa'">🎤 Drill All Q&amp;A Pairs</button>
+  </div>
 </div>
 
 <script>
@@ -274,6 +304,178 @@ const units={
   ]}
 };
 
+
+// ══════════════════════════════════════════
+// VOCABULARY DATA
+// ══════════════════════════════════════════
+const vocab = {
+  numbers: {
+    name: "Numbers",
+    icon: "🔢",
+    tip: "Numbers are essential — prices, addresses, times, phone numbers.",
+    words: [
+      {fr:"zéro",en:"0 — zero"},{fr:"un",en:"1 — one"},{fr:"deux",en:"2 — two"},
+      {fr:"trois",en:"3 — three"},{fr:"quatre",en:"4 — four"},{fr:"cinq",en:"5 — five"},
+      {fr:"six",en:"6 — six"},{fr:"sept",en:"7 — seven"},{fr:"huit",en:"8 — eight"},
+      {fr:"neuf",en:"9 — nine"},{fr:"dix",en:"10 — ten"},{fr:"onze",en:"11 — eleven"},
+      {fr:"douze",en:"12 — twelve"},{fr:"treize",en:"13 — thirteen"},{fr:"quatorze",en:"14 — fourteen"},
+      {fr:"quinze",en:"15 — fifteen"},{fr:"seize",en:"16 — sixteen"},{fr:"dix-sept",en:"17 — seventeen"},
+      {fr:"dix-huit",en:"18 — eighteen"},{fr:"dix-neuf",en:"19 — nineteen"},{fr:"vingt",en:"20 — twenty"},
+      {fr:"vingt et un",en:"21 — twenty-one"},{fr:"trente",en:"30 — thirty"},{fr:"quarante",en:"40 — forty"},
+      {fr:"cinquante",en:"50 — fifty"},{fr:"soixante",en:"60 — sixty"},{fr:"soixante-dix",en:"70 — seventy"},
+      {fr:"quatre-vingts",en:"80 — eighty"},{fr:"quatre-vingt-dix",en:"90 — ninety"},{fr:"cent",en:"100 — one hundred"},
+    ]
+  },
+  days: {
+    name: "Days of the Week",
+    icon: "📅",
+    tip: "Days are lowercase in French. The week starts on Monday.",
+    words: [
+      {fr:"lundi",en:"Monday"},{fr:"mardi",en:"Tuesday"},{fr:"mercredi",en:"Wednesday"},
+      {fr:"jeudi",en:"Thursday"},{fr:"vendredi",en:"Friday"},{fr:"samedi",en:"Saturday"},
+      {fr:"dimanche",en:"Sunday"},{fr:"aujourd'hui",en:"today"},{fr:"demain",en:"tomorrow"},
+      {fr:"hier",en:"yesterday"},{fr:"le week-end",en:"the weekend"},{fr:"la semaine",en:"the week"},
+      {fr:"le matin",en:"the morning"},{fr:"l'après-midi",en:"the afternoon"},{fr:"le soir",en:"the evening"},
+    ]
+  },
+  months: {
+    name: "Months & Seasons",
+    icon: "🗓️",
+    tip: "Months are lowercase in French. Menton is beautiful year-round.",
+    words: [
+      {fr:"janvier",en:"January"},{fr:"février",en:"February"},{fr:"mars",en:"March"},
+      {fr:"avril",en:"April"},{fr:"mai",en:"May"},{fr:"juin",en:"June"},
+      {fr:"juillet",en:"July"},{fr:"août",en:"August"},{fr:"septembre",en:"September"},
+      {fr:"octobre",en:"October"},{fr:"novembre",en:"November"},{fr:"décembre",en:"December"},
+      {fr:"le printemps",en:"spring"},{fr:"l'été",en:"summer"},{fr:"l'automne",en:"autumn"},
+      {fr:"l'hiver",en:"winter"},
+    ]
+  },
+  colors: {
+    name: "Colors",
+    icon: "🎨",
+    tip: "Colors agree with the noun — rouge stays rouge, but some change for feminine.",
+    words: [
+      {fr:"rouge",en:"red"},{fr:"bleu / bleue",en:"blue"},{fr:"vert / verte",en:"green"},
+      {fr:"jaune",en:"yellow"},{fr:"orange",en:"orange"},{fr:"violet / violette",en:"purple"},
+      {fr:"rose",en:"pink"},{fr:"blanc / blanche",en:"white"},{fr:"noir / noire",en:"black"},
+      {fr:"gris / grise",en:"grey"},{fr:"marron",en:"brown"},{fr:"beige",en:"beige"},
+      {fr:"clair",en:"light"},{fr:"foncé",en:"dark"},
+    ]
+  },
+  food: {
+    name: "Food & Drink",
+    icon: "🥖",
+    tip: "Essential for the market, café, and boulangerie in Menton.",
+    words: [
+      {fr:"le pain",en:"bread"},{fr:"la baguette",en:"baguette"},{fr:"le croissant",en:"croissant"},
+      {fr:"le café",en:"coffee"},{fr:"le thé",en:"tea"},{fr:"l'eau",en:"water"},
+      {fr:"le vin",en:"wine"},{fr:"la bière",en:"beer"},{fr:"le jus",en:"juice"},
+      {fr:"le fromage",en:"cheese"},{fr:"le jambon",en:"ham"},{fr:"le poulet",en:"chicken"},
+      {fr:"le poisson",en:"fish"},{fr:"les légumes",en:"vegetables"},{fr:"les fruits",en:"fruits"},
+      {fr:"la salade",en:"salad"},{fr:"la soupe",en:"soup"},{fr:"le dessert",en:"dessert"},
+      {fr:"le menu",en:"the set menu"},{fr:"l'addition",en:"the bill"},
+    ]
+  },
+  measures: {
+    name: "Measures & Quantities",
+    icon: "⚖️",
+    tip: "Essential at the market — vendors will ask how much you want.",
+    words: [
+      {fr:"un kilo",en:"a kilogram"},{fr:"un demi-kilo",en:"half a kilogram"},
+      {fr:"cent grammes",en:"100 grams"},{fr:"deux cents grammes",en:"200 grams"},
+      {fr:"un litre",en:"a litre"},{fr:"une bouteille",en:"a bottle"},
+      {fr:"une tranche",en:"a slice"},{fr:"un morceau",en:"a piece"},
+      {fr:"une boîte",en:"a tin / box"},{fr:"un paquet",en:"a packet"},
+      {fr:"assez",en:"enough"},{fr:"beaucoup",en:"a lot"},{fr:"un peu",en:"a little"},
+      {fr:"combien ?",en:"how much / how many?"},{fr:"c'est tout",en:"that's all"},
+    ]
+  },
+  keywords: {
+    name: "Key Words",
+    icon: "🔑",
+    tip: "High-frequency words that appear in almost every conversation.",
+    words: [
+      {fr:"oui",en:"yes"},{fr:"non",en:"no"},{fr:"s'il vous plaît",en:"please (formal)"},
+      {fr:"merci",en:"thank you"},{fr:"pardon",en:"sorry / excuse me"},
+      {fr:"voilà",en:"here you are / there it is"},{fr:"d'accord",en:"okay / agreed"},
+      {fr:"bien sûr",en:"of course"},{fr:"peut-être",en:"maybe"},
+      {fr:"maintenant",en:"now"},{fr:"après",en:"after"},{fr:"avant",en:"before"},
+      {fr:"ici",en:"here"},{fr:"là",en:"there"},{fr:"très",en:"very"},
+      {fr:"trop",en:"too much"},{fr:"encore",en:"again / more"},
+      {fr:"toujours",en:"always"},{fr:"jamais",en:"never"},{fr:"vite",en:"quickly"},
+      {fr:"lentement",en:"slowly"},{fr:"ensemble",en:"together"},
+      {fr:"avec",en:"with"},{fr:"sans",en:"without"},{fr:"pour",en:"for"},
+    ]
+  }
+};
+
+// Q&A pairs — question + ideal answer
+const qaPairs = [
+  { q:"Comment vous appelez-vous ?",    qt:"What is your name?",
+    a:"Je m'appelle Jack.",             at:"My name is Jack." },
+  { q:"D'où venez-vous ?",             qt:"Where do you come from?",
+    a:"Je viens des États-Unis.",        at:"I come from the United States." },
+  { q:"Où habitez-vous ?",              qt:"Where do you live?",
+    a:"J'habite à Menton.",            at:"I live in Menton." },
+  { q:"Quelle est votre nationalité ?", qt:"What is your nationality?",
+    a:"Je suis américain.",             at:"I am American." },
+  { q:"Quelle langue parlez-vous ?",    qt:"What language do you speak?",
+    a:"Je parle anglais et un peu français.", at:"I speak English and a little French." },
+  { q:"Vous êtes en vacances ?",        qt:"Are you on holiday?",
+    a:"Non, j'habite ici.",            at:"No, I live here." },
+  { q:"Qu'est-ce que vous faites dans la vie ?", qt:"What do you do for work?",
+    a:"Je suis à la retraite.",         at:"I am retired." },
+  { q:"Comment allez-vous ?",           qt:"How are you?",
+    a:"Je vais bien, merci. Et vous ?", at:"I am well, thank you. And you?" },
+  { q:"Où est la pharmacie ?",          qt:"Where is the pharmacy?",
+    a:"Je ne sais pas. Désolé.",        at:"I don't know. Sorry." },
+  { q:"Parlez-vous français ?",         qt:"Do you speak French?",
+    a:"Je parle un peu français.",      at:"I speak a little French." },
+  { q:"Vous aimez Menton ?",            qt:"Do you like Menton?",
+    a:"Oui, j'aime beaucoup Menton.", at:"Yes, I love Menton very much." },
+  { q:"C'est combien ?",               qt:"How much is it?",
+    a:"Pouvez-vous répéter, s'il vous plaît ?", at:"Can you repeat, please?" },
+  { q:"Vous désirez ?",                 qt:"What would you like?",
+    a:"Je voudrais un café, s'il vous plaît.", at:"I would like a coffee, please." },
+  { q:"Bonne journée !",                qt:"Have a good day!",
+    a:"Merci, vous aussi !",            at:"Thank you, you too!" },
+  { q:"Au revoir !",                    qt:"Goodbye!",
+    a:"Au revoir, à bientôt !",         at:"Goodbye, see you soon!" },
+
+  // From Manali's class 3/10
+  { q:"Qui est votre femme ?",           qt:"Who is your wife?",
+    a:"Ma femme s'appelle Donna.",      at:"My wife's name is Donna." },
+  { q:"Qui est-ce ?",                    qt:"Who is this?",
+    a:"Il est mon père.",                at:"He is my father." },
+  { q:"Quand est votre anniversaire ?",  qt:"When is your birthday?",
+    a:"Mon anniversaire est le vingt-cinq décembre.", at:"My birthday is December 25th." },
+  { q:"Quand est la fête ?",             qt:"When is the party?",
+    a:"La fête est demain.",             at:"The party is tomorrow." },
+  { q:"Qu'est-ce que ta fille fait ?",  qt:"What does your daughter do?",
+    a:"Elle est médecin.",               at:"She is a doctor." },
+  { q:"Qu'est-ce que vous aimez ?",     qt:"What do you like?",
+    a:"J'aime la joie de vie.",         at:"I love the joy of life." },
+  { q:"Qu'est-ce que vous détestez ?",  qt:"What do you hate?",
+    a:"Je déteste le fascisme.",         at:"I hate fascism." },
+  { q:"Vous travaillez ?",               qt:"Do you work?",
+    a:"Non, je suis à la retraite.",     at:"No, I am retired." },
+  { q:"Vous habitez où ?",               qt:"Where do you live?",
+    a:"J'habite à San Diego.",          at:"I live in San Diego." },
+  { q:"Vous allez déménager où ?",       qt:"Where are you moving to?",
+    a:"Je vais déménager à Menton.",     at:"I am moving to Menton." },
+  { q:"Est-ce que vous avez des amis ?", qt:"Do you have friends?",
+    a:"Oui, j'ai beaucoup d'amis.",   at:"Yes, I have many friends." },
+  { q:"Comment tu t'appelles ?",        qt:"What is your name? (informal)",
+    a:"Je m'appelle Jack.",             at:"My name is Jack." },
+  { q:"Qu'est-ce que c'est ?",         qt:"What is it?",
+    a:"C'est une ville américaine.",    at:"It is an American city." },
+  { q:"Où est la gare ?",                qt:"Where is the train station?",
+    a:"La gare est tout droit.",         at:"The station is straight ahead." },
+  { q:"Qu'est-ce que vous faites ?",    qt:"What are you doing?",
+    a:"Je vais déménager à Menton.",     at:"I am moving to Menton." },
+];
+
 const verbs=[
   {verb:"Être",meaning:"To be",note:"Most important verb. Identity, nationality, feelings.",forms:[
     {p:"Je",fr:"Je suis",en:"I am",ex:"Je suis américain."},
@@ -316,6 +518,13 @@ const verbs=[
     {p:"Vous",fr:"Vous vous appelez",en:"Your name is",ex:"Comment vous appelez-vous ?"},
     {p:"Nous",fr:"Nous nous appelons",en:"Our names are",ex:"Nous nous appelons Jack et Marie."},
     {p:"Il/Elle",fr:"Il s'appelle",en:"His name is",ex:"Il s'appelle Marc."},
+  ]},
+  {verb:"Aller",meaning:"To go",note:"Used for going places and near future — Je vais + verb = I am going to...",forms:[
+    {p:"Je",fr:"Je vais",en:"I go / I am going",ex:"Je vais déménager à Menton."},
+    {p:"Tu",fr:"Tu vas",en:"You go",ex:"Tu vas où ?"},
+    {p:"Vous",fr:"Vous allez",en:"You go",ex:"Vous allez déménager où ?"},
+    {p:"Nous",fr:"Nous allons",en:"We go",ex:"Nous allons au marché."},
+    {p:"Il/Elle",fr:"Il va",en:"He goes",ex:"Il va à la gare."},
   ]},
 ];
 
@@ -419,30 +628,39 @@ function updateProg(){
 // ══════════════════════════════════════════
 function buildQueue(){
   const sel=gel('drillUnit').value;
+  missed=[];idx=0;
+
+  if(sel==='qa'){
+    queue=[];
+    qaPairs.sort(()=>Math.random()-0.5).forEach(p=>{
+      queue.push({fr:p.q, en:p.qt, type:'question', pair:p});
+      queue.push({fr:p.a, en:p.at, type:'answer', pair:p});
+      queue.push({fr:p.q, en:p.qt, type:'combined', pair:p});
+    });
+    return;
+  }
+
+  if(sel==='vocab'){
+    queue=[];
+    Object.values(vocab).forEach(cat=>{
+      cat.words.sort(()=>Math.random()-0.5).forEach(w=>{
+        queue.push({fr:w.fr, en:w.en, type:'phrase'});
+      });
+    });
+    return;
+  }
+
   const keys=sel==='all'?Object.keys(units):[sel];
   const words=[], phrases=[];
   keys.forEach(k=>{
     if(!units[k])return;
     units[k].phrases.forEach(p=>{
-      const item={...p,unit:k};
-      // single words (no spaces, no punctuation except accents)
+      const item={...p,unit:k,type:'phrase'};
       if(p.fr.trim().split(/\s+/).length<=2) words.push(item);
       else phrases.push(item);
     });
   });
-  // shuffle each group independently then concat: words first
   queue=[...words.sort(()=>Math.random()-0.5), ...phrases.sort(()=>Math.random()-0.5)];
-  missed=[];idx=0;
-}
-
-// ══════════════════════════════════════════
-// DRILL LOOP
-// ══════════════════════════════════════════
-async function unlockAudio(){
-  // Chrome requires a user gesture before audio plays
-  const ctx = new (window.AudioContext || window.webkitAudioContext)();
-  await ctx.resume();
-  ctx.close();
 }
 
 async function startDrill(){
@@ -479,24 +697,35 @@ async function drillLoop(){
 
 async function runItem(item){
   const speed=parseFloat(gel('speedSel').value);
-  fr(item.fr); en(item.en);
 
-  // 1. Say it once
-  pill('LISTEN');
-  await speak(item.fr,'fr-FR',speed);
-  if(paused)return;
+  if(item.type==='combined'){
+    // Full Q&A — hear question, answer it, hear correct answer
+    fr(item.fr); en(item.en);
+    pill('QUESTION');
+    await speak(item.fr,'fr-FR',speed);
+    if(paused)return;
+    pill('YOUR ANSWER — speak it');
+    await pause(5000);
+    if(paused)return;
+    pill('CORRECT ANSWER');
+    fr(item.pair.a); en(item.pair.at);
+    await speak(item.pair.a,'fr-FR',speed);
+    if(paused)return;
+  } else {
+    // Phrase or single Q or A — standard repeat flow
+    fr(item.fr); en(item.en);
+    pill(item.type==='question'?'LISTEN — QUESTION':item.type==='answer'?'LISTEN — ANSWER':'LISTEN');
+    await speak(item.fr,'fr-FR',speed);
+    if(paused)return;
+    pill('YOUR TURN — say it out loud');
+    await pause(4000);
+    if(paused)return;
+    pill('AGAIN');
+    await speak(item.fr,'fr-FR',speed);
+    if(paused)return;
+  }
 
-  // 2. Four second pause — you say it
-  pill('YOUR TURN — say it out loud');
-  await pause(4000);
-  if(paused)return;
-
-  // 3. Say it again
-  pill('AGAIN');
-  await speak(item.fr,'fr-FR',speed);
-  if(paused)return;
-
-  // 4. Show Next immediately
+  // Show Next
   gel('nextBtn').style.display='inline-block';
   gel('skipBtn').style.display='none';
   gel('pauseBtn').style.display='none';
@@ -550,8 +779,67 @@ function showAfter(on){}
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
+// ══════════════════════════════════════════
+// VOCABULARY
+// ══════════════════════════════════════════
+let currentVocabCat = 'numbers';
+function setVocabCat(cat){
+  currentVocabCat = cat;
+  document.querySelectorAll('#vocabPills .unit-pill').forEach(b=>
+    b.classList.toggle('active', b.getAttribute('onclick') && b.getAttribute('onclick').includes("'"+cat+"'"))
+  );
+  renderVocab();
+}
+function renderVocab(){
+  const cat = vocab[currentVocabCat];
+  if(!cat) return;
+  const list = document.getElementById('vocabList');
+  list.innerHTML = '<div class="section-title">'+cat.icon+' '+cat.name+'</div><div class="tip-box">💡 '+cat.tip+'</div>';
+  cat.words.forEach(w=>{
+    const c = document.createElement('div');
+    c.className = 'phrase-card';
+    c.style.padding = '10px 14px';
+    c.innerHTML =
+      '<button class="play-btn" onclick="event.stopPropagation();tts(''+w.fr.replace(/'/g,"\'")+"','fr-FR')">▶ Hear</button>"+
+      '<div class="phrase-french" style="font-size:1.05rem">'+w.fr+'</div>'+
+      '<div class="phrase-english">'+w.en+'</div>';
+    list.appendChild(c);
+  });
+}
+
+function renderQA(){
+  const list=document.getElementById('qaList');
+  if(!list)return;
+  list.innerHTML='';
+  qaPairs.forEach((p,i)=>{
+    const c=document.createElement('div');
+    c.className='phrase-card';
+    c.style.marginBottom='10px';
+    c.innerHTML=
+      '<div style="font-size:0.65rem;font-weight:700;letter-spacing:0.1em;color:var(--gold);margin-bottom:6px">PAIR '+(i+1)+'</div>'+
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">'+
+        '<div style="flex:1">'+
+          '<div style="font-size:0.7rem;color:var(--muted);margin-bottom:2px">QUESTION</div>'+
+          '<div class="phrase-french" style="font-size:1rem">'+ p.q +'</div>'+
+          '<div class="phrase-english">'+ p.qt +'</div>'+
+        '</div>'+
+        '<button class="play-btn" onclick="tts(\''+ p.q.replace(/'/g,"\\'") +'\',\'fr-FR\')">▶</button>'+
+      '</div>'+
+      '<div style="border-top:1px solid rgba(255,255,255,0.06);margin:8px 0"></div>'+
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">'+
+        '<div style="flex:1">'+
+          '<div style="font-size:0.7rem;color:var(--muted);margin-bottom:2px">ANSWER</div>'+
+          '<div class="phrase-french" style="font-size:1rem">'+ p.a +'</div>'+
+          '<div class="phrase-english">'+ p.at +'</div>'+
+        '</div>'+
+        '<button class="play-btn" onclick="tts(\''+ p.a.replace(/'/g,"\\'") +'\',\'fr-FR\')">▶</button>'+
+      '</div>';
+    list.appendChild(c);
+  });
+}
+
 window.addEventListener('load',()=>{
-  renderPhrases();renderVerbs();
+  renderPhrases();renderVerbs();renderQA();renderVocab();
   window.speechSynthesis.getVoices();
   setTimeout(()=>window.speechSynthesis.getVoices(),500);
 });
