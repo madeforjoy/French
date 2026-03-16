@@ -179,6 +179,7 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
       <button class="btn-gold" id="startBtn" onclick="startDrill()">▶ Start</button>
       <button class="btn-dim" id="pauseBtn" onclick="togglePause()" disabled>⏸ Pause</button>
       <button class="btn-ghost" id="skipBtn" onclick="skip()" disabled>Skip →</button>
+      <button class="btn-green" id="nextBtn" onclick="nextItem()" style="display:none">Next →</button>
     </div>
 
   </div>
@@ -437,7 +438,16 @@ function buildQueue(){
 // ══════════════════════════════════════════
 // DRILL LOOP
 // ══════════════════════════════════════════
+async function unlockAudio(){
+  // Chrome requires a user gesture before audio plays
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  await ctx.resume();
+  ctx.close();
+}
+
 async function startDrill(){
+  if(running)return;
+  await unlockAudio();
   buildQueue();
   if(!queue.length)return;
   running=true;paused=false;
@@ -483,9 +493,13 @@ async function runItem(item){
   pill('YOUR TURN — say it out loud');
   await pause(3000);
   if(paused)return;
-  pill('READY FOR NEXT');
+  // Show Next button and wait
+  gel('nextBtn').style.display='inline-block';
+  gel('skipBtn').style.display='none';
+  pill('READY — tap Next');
   fr(item.fr); en(item.en);
   await new Promise(res=>{_nextResolve=res;});
+  gel('nextBtn').style.display='none';
 }
 
 
