@@ -168,16 +168,7 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
 
     <div class="wave" id="wave"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
 
-    <!-- MIC — user taps when ready -->
-    <div class="mic-section" id="micSection">
-      <div class="mic-label" id="micLabel">Tap when ready to speak</div>
-      <button class="mic-btn" id="micBtn" onclick="startListening()">🎤</button>
-      <div class="mic-live" id="micLive"></div>
-    </div>
 
-    <div class="you-said-box" id="youSaid"></div>
-    <div class="spinner" id="spinner"></div>
-    <div class="feedback" id="feedbackBox"></div>
 
     <div class="speed-row">
       <label>SPEED</label>
@@ -190,11 +181,6 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
       <button class="btn-ghost" id="skipBtn" onclick="skip()" disabled>Skip →</button>
     </div>
 
-    <!-- shown after feedback -->
-    <div class="btn-row" id="afterRow" style="display:none;margin-top:10px">
-      <button class="btn-dim" id="retryBtn" onclick="retryItem()">↺ Try Again</button>
-      <button class="btn-green" id="nextBtn" onclick="nextItem()">Next →</button>
-    </div>
   </div>
 </div>
 
@@ -414,21 +400,13 @@ function pause(ms){return new Promise(res=>setTimeout(res,ms));}
 // DRILL STATE
 // ══════════════════════════════════════════
 let queue=[], missed=[], idx=0, running=false, paused=false;
-let isRetry=false, attemptCount=0;
-let micResolve=null, recognition=null;
-let _nextResolve=null, _retryResolve=null;
+let _nextResolve=null;
 
 // UI helpers
 const gel = id => document.getElementById(id);
 function pill(t){gel('statusPill').textContent=t;}
 function fr(t){gel('drillFr').textContent=t;}
 function en(t){gel('drillEn').textContent=t;}
-function showMic(on){gel('micSection').style.display=on?'flex':'none';}
-function showAfter(on){gel('afterRow').style.display=on?'flex':'none';}
-function showSpinner(on){gel('spinner').style.display=on?'block':'none';}
-function showYouSaid(t){const e=gel('youSaid');e.textContent='"'+t+'"';e.style.display=t?'block':'none';}
-function showFeedback(html,type){const e=gel('feedbackBox');e.innerHTML=html;e.className='feedback '+type;e.style.display='block';}
-function hideFeedback(){gel('feedbackBox').style.display='none';}
 function updateProg(){
   const total=queue.length;const pct=total?(idx/total)*100:0;
   gel('progFill').style.width=pct+'%';
@@ -491,128 +469,26 @@ async function drillLoop(){
 
 async function runItem(item){
   const speed=parseFloat(gel('speedSel').value);
-  hideFeedback();showYouSaid('');showMic(false);showAfter(false);
-  attemptCount=0;
-
-  // Show French + English always
+  fr(item.fr); en(item.en);
   pill('LISTEN');
-  fr(item.fr);
-  en(item.en);
-
-  // Speak it
   await speak(item.fr,'fr-FR',speed);
   if(paused)return;
-
-  // Pause — let it sink in
   pill('...');
   await pause(1200);
   if(paused)return;
-
-  // Say it again
   pill('AGAIN');
   await speak(item.fr,'fr-FR',speed);
   if(paused)return;
-
-  // Longer silence gap so mic doesn't pick up app's voice
-  await pause(1200);
-
-  // Show mic — user taps when ready
-  showMic(true);
-  gel('micLabel').textContent='Tap 🎤 when ready to speak';
-  gel('micLive').textContent='';
-  gel('micBtn').classList.remove('listening');
-  gel('micBtn').textContent='🎤';
-  gel('micBtn').onclick=()=>startListening();
-  pill('YOUR TURN');
-
-  // Wait for mic result
-  const said=await waitForMic();
-  showMic(false);
-
-  if(!said){
-    // nothing caught — offer retry
-    showFeedback("I didn't catch anything. Tap Try Again or move on.",'ok');
-    showAfter(true);
-    gel('retryBtn').style.display='inline-block';
-    await waitNext();
-    return;
-  }
-
-  showYouSaid(said);
-  pill('CHECKING...');
-  showSpinner(true);
-  const fb=await getAIFeedback(item.fr,item.en,said);
-  showSpinner(false);
-
-  const first=fb.trim().split(/\s+/)[0].toLowerCase();
-  let type='ok';
-  if(first.includes('excellent')||first.includes('good')||first.includes('parfait'))type='good';
-  else if(first.includes('try')||first.includes('again')||first.includes('incorrect'))type='retry';
-
-  var fbParts=fb.split("|||"); showFeedback('<div class="feedback-score">'+fbParts[0]+'</div>'+(fbParts.slice(1).join('<br>')),type);
-
-  // Read feedback in English
-  await speak(fb,'en-US',0.88);
-
-  // Show correct answer again
-  pill('CORRECT PHRASE');
-  fr(item.fr);en(item.en);
-  await speak(item.fr,'fr-FR',speed);
-
-  // If not good — allow one retry, and add to missed
-  const showRetry = type==='ok'||type==='retry';
-  if(showRetry && attemptCount===0) missed.push(item);
-
-  showAfter(true);
-  gel('retryBtn').style.display=(showRetry&&attemptCount===0)?'inline-block':'none';
+  await pause(800);
+  pill('YOUR TURN — say it out loud');
+  await pause(3000);
+  if(paused)return;
   pill('READY FOR NEXT');
-
-  await waitNext();
+  fr(item.fr); en(item.en);
+  await new Promise(res=>{_nextResolve=res;});
 }
 
-// one retry — same item, second attempt
-async function retryItem(){
-  const speed=parseFloat(gel('speedSel').value);
-  showAfter(false);hideFeedback();showYouSaid('');
-  attemptCount=1;
 
-  pill('TRY AGAIN');
-  fr(queue[idx].fr);en(queue[idx].en);
-  await speak(queue[idx].fr,'fr-FR',speed);
-  await pause(1200);
-
-  showMic(true);
-  gel('micLabel').textContent='Tap 🎤 — one more try';
-  gel('micLive').textContent='';
-  gel('micBtn').classList.remove('listening');
-  gel('micBtn').textContent='🎤';
-  gel('micBtn').onclick=()=>startListening();
-  pill('YOUR TURN');
-
-  const said=await waitForMic();
-  showMic(false);
-
-  if(said){
-    showYouSaid(said);
-    pill('CHECKING...');
-    showSpinner(true);
-    const fb=await getAIFeedback(queue[idx].fr,queue[idx].en,said);
-    showSpinner(false);
-    const first=fb.trim().split(/\s+/)[0].toLowerCase();
-    let type='ok';
-    if(first.includes('excellent')||first.includes('good')||first.includes('parfait'))type='good';
-    else if(first.includes('try')||first.includes('again')||first.includes('incorrect'))type='retry';
-    var fbParts=fb.split("|||"); showFeedback('<div class="feedback-score">'+fbParts[0]+'</div>'+(fbParts.slice(1).join('<br>')),type);
-    await speak(fb,'en-US',0.88);
-    fr(queue[idx].fr);en(queue[idx].en);
-    await speak(queue[idx].fr,'fr-FR',speed);
-  }
-
-  showAfter(true);
-  gel('retryBtn').style.display='none'; // no third attempt
-  pill('READY FOR NEXT');
-  await waitNext();
-}
 
 function nextItem(){if(_nextResolve){_nextResolve();_nextResolve=null;}}
 function waitNext(){return new Promise(res=>{_nextResolve=res;});}
@@ -620,7 +496,7 @@ function waitNext(){return new Promise(res=>{_nextResolve=res;});}
 function finishDrill(){
   running=false;
   pill('COMPLETE!');fr('Très bien, Jack !');en('Well done.');
-  setWave(false);hideFeedback();showYouSaid('');showMic(false);showAfter(false);
+  setWave(false);
   gel('startBtn').disabled=false;gel('startBtn').textContent='↺ Again';
   gel('pauseBtn').disabled=true;gel('skipBtn').style.display='none';
   gel('progCount').textContent='Session complete!';
@@ -628,10 +504,7 @@ function finishDrill(){
 
 function skip(){
   window.speechSynthesis.cancel();
-  if(recognition){try{recognition.stop();}catch(e){}}
-  if(micResolve){micResolve('');micResolve=null;}
   if(_nextResolve){_nextResolve();_nextResolve=null;}
-  showMic(false);hideFeedback();showYouSaid('');showAfter(false);
   idx++;
   if(idx>=queue.length){finishDrill();return;}
   updateProg();drillLoop();
@@ -651,106 +524,11 @@ function togglePause(){
   }
 }
 
-// ══════════════════════════════════════════
-// MIC — continuous, stays open until tap
-// ══════════════════════════════════════════
-function startListening(){
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){alert('Use Safari on iPhone or Chrome on desktop.');return;}
 
-  // Stop all speech first
-  window.speechSynthesis.cancel();setWave(false);
-
-  const btn=gel('micBtn'), hint=gel('micLive'), label=gel('micLabel');
-  btn.classList.add('listening');btn.textContent='⏹';
-  label.textContent='Listening... tap ⏹ to stop';
-  hint.textContent='';
-  pill('LISTENING');
-
-  setTimeout(()=>{
-    recognition=new SR();
-    recognition.lang='fr-FR';
-    recognition.interimResults=true;
-    recognition.maxAlternatives=1;
-    recognition.continuous=true;
-
-    let finalT='', interimT='';
-
-    recognition.onresult=e=>{
-      finalT='';interimT='';
-      for(let i=0;i<e.results.length;i++){
-        if(e.results[i].isFinal) finalT+=e.results[i][0].transcript+' ';
-        else interimT+=e.results[i][0].transcript;
-      }
-      const disp=(finalT+interimT).trim();
-      if(disp) hint.textContent='"'+disp+'"';
-    };
-
-    recognition.onend=()=>{
-      // Safari auto-stops — restart if still in listening mode
-      if(btn.classList.contains('listening')){
-        try{recognition.start();}catch(e){
-          // restart failed — treat as user stop
-          btn.classList.remove('listening');btn.textContent='🎤';
-          btn.onclick=()=>startListening();
-          label.textContent='Tap 🎤 to try again';
-          const result=(finalT+interimT).trim();
-          if(micResolve){micResolve(result);micResolve=null;}
-        }
-        return;
-      }
-      btn.textContent='🎤';
-      btn.onclick=()=>startListening();
-      label.textContent='Tap 🎤 to try again';
-      const result=(finalT+interimT).trim();
-      if(micResolve){micResolve(result);micResolve=null;}
-    };
-
-    recognition.onerror=e=>{
-      if(e.error==='no-speech')return; // ignore — keep going
-      btn.classList.remove('listening');btn.textContent='🎤';
-      btn.onclick=()=>startListening();
-      const msgs={'not-allowed':'Mic denied — Settings > Safari > Microphone','network':'Network error'};
-      label.textContent=msgs[e.error]||'Error: '+e.error+' — tap to retry';
-      if(micResolve){micResolve(finalT.trim()||'');micResolve=null;}
-    };
-
-    // Tap stop
-    btn.onclick=()=>{
-      btn.classList.remove('listening');
-      try{recognition.stop();}catch(e){}
-    };
-
-    recognition.start();
-  },500);
-}
-
-function waitForMic(){return new Promise(res=>{micResolve=res;});}
-
-// ══════════════════════════════════════════
-// AI FEEDBACK
-// ══════════════════════════════════════════
-function getAIFeedback(phrase, meaning, said){
-  var normalize = function(s){ return s.toLowerCase().replace(/[?.!,]/g,"").replace(/\s+/g," ").trim(); };
-  var target = normalize(phrase);
-  var heard = normalize(said);
-  var SEP = "|||";
-  if(heard === target || heard.includes(target) || target.includes(heard)){
-    return Promise.resolve("Excellent"+SEP+"Perfect - that is exactly right!"+SEP+"Keep going!");
-  }
-  var tw = target.split(" ");
-  var hw = heard.split(" ");
-  var matches = tw.filter(function(w){ return w.length>2 && hw.some(function(h){ return h.includes(w)||w.includes(h); }); });
-  var score = tw.length ? matches.length/tw.length : 0;
-  if(score>=0.75){
-    return Promise.resolve("Good"+SEP+"You got most of it - "+matches.join(", ")+" came through."+SEP+"Say the full phrase: "+phrase);
-  } else if(score>=0.4){
-    var ng = tw.filter(function(w){ return w.length>2 && !hw.some(function(h){ return h.includes(w)||w.includes(h); }); });
-    return Promise.resolve("Almost"+SEP+"You got: "+matches.join(", ")+SEP+"Work on: "+ng.slice(0,3).join(", ")+" - full phrase: "+phrase);
-  } else {
-    return Promise.resolve("Try Again"+SEP+"I heard: "+said+SEP+"Listen again and repeat: "+phrase);
-  }
-}
+function hideFeedback(){}
+function showYouSaid(t){}
+function showMic(on){}
+function showAfter(on){}
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
