@@ -480,28 +480,32 @@ async function drillLoop(){
 async function runItem(item){
   const speed=parseFloat(gel('speedSel').value);
   fr(item.fr); en(item.en);
+
+  // 1. Say it once
   pill('LISTEN');
   await speak(item.fr,'fr-FR',speed);
   if(paused)return;
-  pill('...');
-  await pause(1200);
+
+  // 2. Four second pause — you say it
+  pill('YOUR TURN — say it out loud');
+  await pause(4000);
   if(paused)return;
+
+  // 3. Say it again
   pill('AGAIN');
   await speak(item.fr,'fr-FR',speed);
   if(paused)return;
-  await pause(800);
-  pill('YOUR TURN — say it out loud');
-  await pause(3000);
-  if(paused)return;
-  // Show Next button and wait
+
+  // 4. Show Next immediately
   gel('nextBtn').style.display='inline-block';
   gel('skipBtn').style.display='none';
-  pill('READY — tap Next');
-  fr(item.fr); en(item.en);
+  gel('pauseBtn').style.display='none';
+  pill('READY — tap Next →');
   await new Promise(res=>{_nextResolve=res;});
   gel('nextBtn').style.display='none';
+  gel('skipBtn').style.display='inline-block';
+  gel('pauseBtn').style.display='inline-block';
 }
-
 
 
 function nextItem(){if(_nextResolve){_nextResolve();_nextResolve=null;}}
