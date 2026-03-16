@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>French — Jack Abbott</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1a2744;--gold:#c9a84c;--cream:#f7f3ec;--white:#fff;--green:#2e7d4f;--red:#7a2828;--muted:#a89878;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--navy);color:var(--cream);font-family:'Source Sans 3',sans-serif;min-height:100vh;}
+.nav{background:rgba(0,0,0,0.3);border-bottom:1px solid rgba(201,168,76,0.2);padding:12px 16px;position:sticky;top:0;z-index:100;}
+.nav-title{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);}
+.nav-sub{font-size:0.66rem;color:var(--muted);}
+.tab-bar{display:flex;overflow-x:auto;border-bottom:1px solid rgba(201,168,76,0.15);background:rgba(0,0,0,0.15);padding:0 6px;scrollbar-width:none;}
+.tab-bar::-webkit-scrollbar{display:none;}
+.tab-btn{font-size:0.68rem;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;white-space:nowrap;padding:11px 14px;border:none;background:transparent;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;font-family:'Source Sans 3',sans-serif;}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
+.page{display:none;padding:16px 14px 80px;max-width:600px;margin:0 auto;}
+.page.active{display:block;}
+
+/* phrase cards */
+.section-title{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--gold);margin:20px 0 4px;}
+.section-sub{font-size:0.78rem;color:var(--muted);margin-bottom:12px;line-height:1.5;}
+.tip-box{background:rgba(201,168,76,0.08);border-left:3px solid var(--gold);border-radius:0 7px 7px 0;padding:9px 12px;margin:8px 0 14px;font-size:0.79rem;color:var(--muted);line-height:1.5;}
+.phrase-card{background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.2);border-radius:11px;padding:13px 15px;margin-bottom:8px;transition:background 0.2s;}
+.phrase-card:hover{background:rgba(255,255,255,0.08);}
+.phrase-french{font-family:'Playfair Display',serif;font-size:1.12rem;color:var(--white);margin-bottom:2px;}
+.phrase-english{font-size:0.86rem;color:var(--gold);font-style:italic;}
+.phrase-note{font-size:0.74rem;color:var(--muted);margin-top:4px;line-height:1.4;}
+.play-btn{float:right;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);border-radius:16px;color:var(--gold);font-size:0.68rem;font-weight:700;padding:3px 9px;cursor:pointer;}
+.unit-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.unit-pill{font-size:0.67rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:5px 11px;border-radius:16px;border:1px solid rgba(201,168,76,0.3);background:transparent;color:var(--muted);cursor:pointer;transition:all 0.2s;font-family:'Source Sans 3',sans-serif;}
+.unit-pill.active{background:var(--gold);color:var(--navy);border-color:var(--gold);}
+.badge{display:inline-block;font-size:0.58rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:var(--gold);color:var(--navy);padding:2px 7px;border-radius:8px;margin-right:5px;}
+.unit-card{background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:14px 16px;margin-bottom:9px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:background 0.2s;}
+.unit-card:hover{background:rgba(255,255,255,0.08);}
+.unit-icon{font-size:1.5rem;flex-shrink:0;}
+.unit-info{flex:1;}
+.unit-name{font-family:'Playfair Display',serif;font-size:0.98rem;color:var(--white);margin-bottom:2px;}
+.unit-desc{font-size:0.73rem;color:var(--muted);line-height:1.35;}
+.unit-count{font-size:0.65rem;color:var(--gold);font-weight:700;margin-top:2px;}
+.unit-arrow{color:var(--gold);}
+
+/* ── DRILL ── */
+.drill-wrap{background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:16px;padding:24px 20px;text-align:center;}
+.prog-wrap{background:rgba(255,255,255,0.08);border-radius:4px;height:4px;margin-bottom:14px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--gold);border-radius:4px;transition:width 0.5s;}
+.prog-count{font-size:0.7rem;color:var(--muted);margin-bottom:10px;}
+
+/* big status pill */
+.status-pill{display:inline-block;font-size:0.65rem;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;padding:4px 14px;border-radius:20px;background:rgba(201,168,76,0.15);color:var(--gold);border:1px solid rgba(201,168,76,0.3);margin-bottom:16px;min-width:120px;}
+
+/* main French display */
+.drill-french{font-family:'Playfair Display',serif;font-size:2rem;color:var(--white);line-height:1.3;margin-bottom:8px;min-height:64px;display:flex;align-items:center;justify-content:center;}
+.drill-english{font-size:1.05rem;color:var(--gold);font-style:italic;font-weight:600;margin-bottom:20px;min-height:26px;}
+
+/* wave */
+.wave{display:flex;gap:4px;justify-content:center;align-items:flex-end;height:26px;margin-bottom:16px;}
+.wave-bar{width:4px;background:var(--gold);border-radius:3px;opacity:0.1;}
+.wave-bar.active{opacity:1;animation:wp 0.6s ease-in-out infinite alternate;}
+.wave-bar:nth-child(1){height:12px;animation-delay:0s}.wave-bar:nth-child(2){height:22px;animation-delay:.1s}.wave-bar:nth-child(3){height:18px;animation-delay:.2s}.wave-bar:nth-child(4){height:26px;animation-delay:.05s}.wave-bar:nth-child(5){height:16px;animation-delay:.15s}.wave-bar:nth-child(6){height:22px;animation-delay:.25s}.wave-bar:nth-child(7){height:12px;animation-delay:.1s}
+@keyframes wp{from{transform:scaleY(0.35)}to{transform:scaleY(1)}}
+
+/* mic */
+.mic-section{display:none;flex-direction:column;align-items:center;gap:8px;margin-bottom:14px;}
+.mic-btn{width:70px;height:70px;border-radius:50%;background:var(--gold);border:none;cursor:pointer;font-size:1.8rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(201,168,76,0.3);transition:transform 0.15s;}
+.mic-btn:active{transform:scale(0.95);}
+.mic-btn.listening{background:#e05555;animation:mp 1.2s ease-in-out infinite;}
+@keyframes mp{0%{box-shadow:0 0 0 0 rgba(224,85,85,0.6)}70%{box-shadow:0 0 0 18px rgba(224,85,85,0)}100%{box-shadow:0 0 0 0 rgba(224,85,85,0)}}
+.mic-label{font-size:0.8rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);}
+.mic-live{font-size:0.88rem;color:var(--cream);font-style:italic;min-height:22px;margin-top:2px;}
+
+/* you said */
+.you-said-box{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:8px 14px;font-size:0.92rem;color:var(--cream);font-style:italic;margin-bottom:10px;display:none;}
+
+/* feedback */
+.feedback{border-radius:10px;padding:12px 16px;text-align:left;margin-bottom:12px;font-size:0.88rem;line-height:1.55;display:none;}
+.feedback.good{background:rgba(46,125,79,0.2);border:1px solid rgba(46,125,79,0.5);color:#7eeaa8;}
+.feedback.ok{background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.35);color:#f0d080;}
+.feedback.retry{background:rgba(122,40,40,0.25);border:1px solid rgba(180,60,60,0.5);color:#f08080;}
+.feedback-score{font-size:1rem;font-weight:700;margin-bottom:3px;}
+.spinner{width:18px;height:18px;border:3px solid rgba(201,168,76,0.2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;display:none;margin:0 auto 10px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* buttons */
+.btn-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:4px;}
+button{font-family:'Source Sans 3',sans-serif;font-size:0.85rem;font-weight:600;letter-spacing:0.05em;padding:10px 22px;border-radius:8px;border:none;cursor:pointer;transition:transform 0.15s,opacity 0.15s;}
+button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allowed}
+.btn-gold{background:var(--gold);color:var(--navy);}
+.btn-green{background:var(--green);color:#fff;}
+.btn-dim{background:rgba(255,255,255,0.1);color:var(--cream);border:1px solid rgba(255,255,255,0.15);}
+.btn-ghost{background:transparent;color:var(--muted);font-size:0.76rem;padding:8px 14px;border:1px solid rgba(255,255,255,0.12);}
+
+.speed-row{display:flex;gap:7px;justify-content:center;margin-bottom:14px;align-items:center;}
+.speed-row label{font-size:0.7rem;color:var(--muted);letter-spacing:.06em;}
+.speed-row select{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:var(--cream);font-family:'Source Sans 3',sans-serif;font-size:0.8rem;padding:4px 8px;border-radius:5px;}
+
+.drill-select{width:100%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:var(--cream);font-family:'Source Sans 3',sans-serif;font-size:0.88rem;padding:8px 10px;border-radius:7px;margin-bottom:12px;}
+
+.missed-badge{display:inline-block;background:rgba(122,40,40,0.3);border:1px solid rgba(180,60,60,0.4);color:#f08080;font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:8px;}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-title">French — Menton</div>
+  <div class="nav-sub">Jack Abbott · Practical Conversation</div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showPage('home')">🏠 Home</button>
+  <button class="tab-btn" onclick="showPage('phrases')">💬 Phrases</button>
+  <button class="tab-btn" onclick="showPage('drill')">🎤 Drill</button>
+  <button class="tab-btn" onclick="showPage('verbs')">📖 Verbs</button>
+</div>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div style="text-align:center;padding:18px 0 8px">
+    <div style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--gold);margin-bottom:5px">Bonjour, Jack!</div>
+    <div style="font-size:0.82rem;color:var(--muted);line-height:1.6">Your personal French app — built from your class notes.<br>Aim for 10–15 minutes daily.</div>
+  </div>
+  <div class="tip-box" style="margin-top:14px">💡 <strong style="color:var(--gold)">How to use:</strong> Browse <strong>Phrases</strong> to review vocabulary, then go to <strong>Drill</strong> to practice speaking. The app will say each phrase twice, then you repeat it — and get feedback on how you did.</div>
+  <div class="section-title">Your Units</div>
+  <div class="unit-card" onclick="showPage('phrases');setUnit('greetings')"><div class="unit-icon">👋</div><div class="unit-info"><div class="unit-name">Greetings & Farewells</div><div class="unit-desc">Bonjour, au revoir, ça va — the essentials</div><div class="unit-count">13 phrases</div></div><div class="unit-arrow">›</div></div>
+  <div class="unit-card" onclick="showPage('phrases');setUnit('introductions')"><div class="unit-icon">🤝</div><div class="unit-info"><div class="unit-name">Introducing Yourself</div><div class="unit-desc">Who you are, where you're from, where you live</div><div class="unit-count">11 phrases</div></div><div class="unit-arrow">›</div></div>
+  <div class="unit-card" onclick="showPage('phrases');setUnit('directions')"><div class="unit-icon">🗺️</div><div class="unit-info"><div class="unit-name">Directions & Places</div><div class="unit-desc">Gare, pharmacie, à gauche, tout droit</div><div class="unit-count">10 phrases</div></div><div class="unit-arrow">›</div></div>
+  <div class="unit-card" onclick="showPage('phrases');setUnit('cafe')"><div class="unit-icon">☕</div><div class="unit-info"><div class="unit-name">Café & Boulangerie</div><div class="unit-desc">Ordering coffee, bread, croissants</div><div class="unit-count">10 phrases</div></div><div class="unit-arrow">›</div></div>
+  <div class="unit-card" onclick="showPage('phrases');setUnit('polite')"><div class="unit-icon">🎩</div><div class="unit-info"><div class="unit-name">Polite Responses</div><div class="unit-desc">Merci, avec plaisir, pas grave</div><div class="unit-count">10 phrases</div></div><div class="unit-arrow">›</div></div>
+  <div class="unit-card" onclick="showPage('phrases');setUnit('lifestyle')"><div class="unit-icon">🌅</div><div class="unit-info"><div class="unit-name">Lifestyle & Living</div><div class="unit-desc">J'aime, je déteste, le style de vie</div><div class="unit-count">9 phrases</div></div><div class="unit-arrow">›</div></div>
+  <div class="tip-box" style="margin-top:6px">Always say <strong style="color:var(--gold)">madame</strong> or <strong style="color:var(--gold)">monsieur</strong> after Bonjour with strangers. Use <strong style="color:var(--gold)">vous</strong> — not tu — with anyone you don't know well.</div>
+</div>
+
+<!-- PHRASES -->
+<div class="page" id="page-phrases">
+  <div class="unit-pills" id="unitPills">
+    <button class="unit-pill active" onclick="setUnit('greetings')">Greetings</button>
+    <button class="unit-pill" onclick="setUnit('introductions')">Introductions</button>
+    <button class="unit-pill" onclick="setUnit('directions')">Directions</button>
+    <button class="unit-pill" onclick="setUnit('cafe')">Café</button>
+    <button class="unit-pill" onclick="setUnit('polite')">Polite</button>
+    <button class="unit-pill" onclick="setUnit('lifestyle')">Lifestyle</button>
+  </div>
+  <div id="phraseList"></div>
+</div>
+
+<!-- DRILL -->
+<div class="page" id="page-drill">
+  <select class="drill-select" id="drillUnit">
+    <option value="all">All Units</option>
+    <option value="greetings">Greetings & Farewells</option>
+    <option value="introductions">Introducing Yourself</option>
+    <option value="directions">Directions & Places</option>
+    <option value="cafe">Café & Boulangerie</option>
+    <option value="polite">Polite Responses</option>
+    <option value="lifestyle">Lifestyle & Living</option>
+  </select>
+
+  <div class="drill-wrap">
+    <div class="prog-wrap"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    <div class="prog-count" id="progCount">Press Start to begin</div>
+
+    <div class="status-pill" id="statusPill">Ready</div>
+
+    <div class="drill-french" id="drillFr">—</div>
+    <div class="drill-english" id="drillEn">—</div>
+
+    <div class="wave" id="wave"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+
+    <!-- MIC — user taps when ready -->
+    <div class="mic-section" id="micSection">
+      <div class="mic-label" id="micLabel">Tap when ready to speak</div>
+      <button class="mic-btn" id="micBtn" onclick="startListening()">🎤</button>
+      <div class="mic-live" id="micLive"></div>
+    </div>
+
+    <div class="you-said-box" id="youSaid"></div>
+    <div class="spinner" id="spinner"></div>
+    <div class="feedback" id="feedbackBox"></div>
+
+    <div class="speed-row">
+      <label>SPEED</label>
+      <select id="speedSel"><option value="0.75">Slow</option><option value="0.9" selected>Normal</option><option value="1.1">Fast</option></select>
+    </div>
+
+    <div class="btn-row" id="btnRow">
+      <button class="btn-gold" id="startBtn" onclick="startDrill()">▶ Start</button>
+      <button class="btn-dim" id="pauseBtn" onclick="togglePause()" disabled>⏸ Pause</button>
+      <button class="btn-ghost" id="skipBtn" onclick="skip()" disabled>Skip →</button>
+    </div>
+
+    <!-- shown after feedback -->
+    <div class="btn-row" id="afterRow" style="display:none;margin-top:10px">
+      <button class="btn-dim" id="retryBtn" onclick="retryItem()">↺ Try Again</button>
+      <button class="btn-green" id="nextBtn" onclick="nextItem()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- VERBS -->
+<div class="page" id="page-verbs">
+  <div class="section-title" style="margin-top:6px">Key Verbs</div>
+  <div class="section-sub">The forms you'll actually use. Tap ▶ to hear.</div>
+  <div id="verbList"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+const units={
+  greetings:{name:"Greetings & Farewells",tip:"Always add madame or monsieur — it makes a real difference in Menton.",phrases:[
+    {fr:"Bonjour",en:"Hello / Good morning",note:"Use before ~6pm with everyone."},
+    {fr:"Bonjour madame",en:"Hello madam",note:"Add madame or monsieur — always more polite."},
+    {fr:"Bonsoir",en:"Good evening",note:"Use after ~6pm."},
+    {fr:"Bonne nuit",en:"Good night",note:"When parting at night."},
+    {fr:"Salut",en:"Hi",note:"Casual — friends only, never strangers."},
+    {fr:"Au revoir",en:"Goodbye",note:"Standard farewell, any situation."},
+    {fr:"À bientôt",en:"See you soon",note:"Friendly — use with neighbors and regulars."},
+    {fr:"Bonne journée",en:"Have a good day",note:"Said when parting during the day."},
+    {fr:"Bonne soirée",en:"Have a good evening",note:"Said when parting in the evening."},
+    {fr:"Bon week-end",en:"Have a good weekend",note:"Shopkeepers love this."},
+    {fr:"Comment allez-vous ?",en:"How are you? (formal)",note:"Use with strangers and shopkeepers."},
+    {fr:"Ça va ?",en:"How's it going?",note:"Casual — with people you know."},
+    {fr:"Ça va bien, merci. Et vous ?",en:"I'm well, thank you. And you?",note:"Standard polite response."},
+  ]},
+  introductions:{name:"Introducing Yourself",tip:"Even a few words in French will make locals warm to you immediately.",phrases:[
+    {fr:"Je m'appelle Jack.",en:"My name is Jack.",note:"Standard way to give your name."},
+    {fr:"Je suis américain.",en:"I am American.",note:"Américain for men, américaine for women."},
+    {fr:"Je viens des États-Unis.",en:"I come from the United States.",note:"Des — not du — before États-Unis."},
+    {fr:"Je viens de San Diego.",en:"I come from San Diego.",note:"De before city names."},
+    {fr:"J'habite à Menton.",en:"I live in Menton.",note:"À before city names."},
+    {fr:"Je suis à la retraite.",en:"I am retired.",note:"People always ask — have this ready."},
+    {fr:"Je suis avec ma femme.",en:"I am with my wife.",note:"Ma femme = my wife."},
+    {fr:"Je parle un peu français.",en:"I speak a little French.",note:"Very important — sets expectations kindly."},
+    {fr:"Je ne parle pas bien français.",en:"I don't speak French well.",note:"Honest and appreciated."},
+    {fr:"Parlez-vous anglais ?",en:"Do you speak English?",note:"Polite fallback when stuck."},
+    {fr:"Enchanté de faire votre connaissance.",en:"Pleased to meet you.",note:"Formal and impressive."},
+  ]},
+  directions:{name:"Directions & Places",tip:"Où est... is one of the most useful phrases you'll use every day in Menton.",phrases:[
+    {fr:"Où est la gare ?",en:"Where is the train station?",note:"La gare — feminine."},
+    {fr:"Où est la pharmacie ?",en:"Where is the pharmacy?",note:"La pharmacie — you'll need this."},
+    {fr:"Où est le supermarché ?",en:"Where is the supermarket?",note:"Le supermarché — masculine."},
+    {fr:"Où est l'arrêt de bus ?",en:"Where is the bus stop?"},
+    {fr:"Où est la mairie ?",en:"Where is the town hall?",note:"Needed for admin."},
+    {fr:"C'est à gauche.",en:"It's on the left.",note:"À gauche."},
+    {fr:"C'est à droite.",en:"It's on the right.",note:"À droite — with the e."},
+    {fr:"C'est tout droit.",en:"It's straight ahead.",note:"Very common answer."},
+    {fr:"C'est loin ?",en:"Is it far?",note:"Useful follow-up."},
+    {fr:"C'est près d'ici.",en:"It's nearby.",note:"Reassuring answer."},
+  ]},
+  cafe:{name:"Café & Boulangerie",tip:"Always greet before ordering — skipping Bonjour is considered rude.",phrases:[
+    {fr:"Bonjour madame. Une baguette, s'il vous plaît.",en:"Hello madam. A baguette, please.",note:"Always greet first."},
+    {fr:"Je voudrais un café.",en:"I'd like a coffee.",note:"Je voudrais is more polite than je veux."},
+    {fr:"Je voudrais un croissant.",en:"I'd like a croissant."},
+    {fr:"Un café, s'il vous plaît.",en:"A coffee, please.",note:"Short — fine once you've greeted."},
+    {fr:"L'addition, s'il vous plaît.",en:"The bill, please."},
+    {fr:"C'est combien ?",en:"How much is it?"},
+    {fr:"Voilà.",en:"Here you are.",note:"Said when handing something over."},
+    {fr:"Merci beaucoup.",en:"Thank you very much.",note:"Always say when leaving a shop."},
+    {fr:"Bon appétit.",en:"Enjoy your meal.",note:"Say to anyone sitting down to eat."},
+    {fr:"C'est délicieux.",en:"It's delicious.",note:"Appreciated by any French chef or baker."},
+  ]},
+  polite:{name:"Polite Responses",tip:"French people value politeness above almost everything. These phrases make you stand out.",phrases:[
+    {fr:"Merci.",en:"Thank you.",note:"Universal. Use constantly."},
+    {fr:"Merci beaucoup.",en:"Thank you very much."},
+    {fr:"Avec plaisir.",en:"With pleasure / My pleasure.",note:"Warmer than de rien. Use this one."},
+    {fr:"De rien.",en:"You're welcome.",note:"Standard but a bit flat."},
+    {fr:"Pas du tout.",en:"Not at all.",note:"Dismisses an apology completely."},
+    {fr:"Pas grave.",en:"No worries. It's fine.",note:"Someone is late or makes a small mistake."},
+    {fr:"Pardon.",en:"Sorry / Excuse me.",note:"Bumping into someone."},
+    {fr:"Excusez-moi.",en:"Excuse me. (formal)",note:"More formal than pardon."},
+    {fr:"Je suis désolé.",en:"I am sorry.",note:"For a real apology."},
+    {fr:"S'il vous plaît.",en:"Please. (formal)",note:"Always add to any request."},
+  ]},
+  lifestyle:{name:"Lifestyle & Living",tip:"French people love talking about le style de vie. These phrases connect you with locals.",phrases:[
+    {fr:"J'aime la France.",en:"I love France."},
+    {fr:"J'aime le style de vie ici.",en:"I love the lifestyle here.",note:"Great conversation opener."},
+    {fr:"J'aime vivre ici.",en:"I love living here.",note:"Locals will be touched."},
+    {fr:"Je déteste la circulation.",en:"I hate the traffic.",note:"Instant connection — universal complaint."},
+    {fr:"C'est magnifique.",en:"It's magnificent.",note:"The view, the food, anything beautiful."},
+    {fr:"C'est très bien.",en:"It's very good.",note:"Safe, versatile positive response."},
+    {fr:"Je suis à la retraite.",en:"I am retired."},
+    {fr:"Nous habitons à Menton.",en:"We live in Menton.",note:"Nous = we — you and your wife."},
+    {fr:"J'habite ici depuis peu.",en:"I've lived here recently.",note:"Depuis peu = not long. Explains your French level."},
+  ]}
+};
+
+const verbs=[
+  {verb:"Être",meaning:"To be",note:"Most important verb. Identity, nationality, feelings.",forms:[
+    {p:"Je",fr:"Je suis",en:"I am",ex:"Je suis américain."},
+    {p:"Tu",fr:"Tu es",en:"You are",ex:"Tu es français ?"},
+    {p:"Vous",fr:"Vous êtes",en:"You are",ex:"Vous êtes de Menton ?"},
+    {p:"Nous",fr:"Nous sommes",en:"We are",ex:"Nous sommes voisins."},
+    {p:"Il/Elle",fr:"Il est",en:"He/she is",ex:"Il est très sympa."},
+  ]},
+  {verb:"Avoir",meaning:"To have",note:"Age, possession, sensations — faim, soif, chaud, froid.",forms:[
+    {p:"Je",fr:"J'ai",en:"I have",ex:"J'ai soixante-huit ans."},
+    {p:"Tu",fr:"Tu as",en:"You have",ex:"Tu as l'heure ?"},
+    {p:"Vous",fr:"Vous avez",en:"You have",ex:"Vous avez une table ?"},
+    {p:"Nous",fr:"Nous avons",en:"We have",ex:"Nous avons de la chance."},
+    {p:"Il/Elle",fr:"Il a",en:"He has",ex:"Il a quarante ans."},
+  ]},
+  {verb:"Habiter",meaning:"To live somewhere",note:"habiter à + city name.",forms:[
+    {p:"Je",fr:"J'habite",en:"I live",ex:"J'habite à Menton."},
+    {p:"Tu",fr:"Tu habites",en:"You live",ex:"Tu habites ici ?"},
+    {p:"Vous",fr:"Vous habitez",en:"You live",ex:"Vous habitez à Menton ?"},
+    {p:"Nous",fr:"Nous habitons",en:"We live",ex:"Nous habitons près de la mer."},
+    {p:"Il/Elle",fr:"Il habite",en:"He lives",ex:"Il habite à Nice."},
+  ]},
+  {verb:"Parler",meaning:"To speak",note:"Regular -er verb — all -er verbs follow this pattern.",forms:[
+    {p:"Je",fr:"Je parle",en:"I speak",ex:"Je parle un peu français."},
+    {p:"Tu",fr:"Tu parles",en:"You speak",ex:"Tu parles anglais ?"},
+    {p:"Vous",fr:"Vous parlez",en:"You speak",ex:"Vous parlez très bien !"},
+    {p:"Nous",fr:"Nous parlons",en:"We speak",ex:"Nous parlons anglais."},
+    {p:"Il/Elle",fr:"Il parle",en:"He speaks",ex:"Il parle trois langues."},
+  ]},
+  {verb:"Venir",meaning:"To come from",note:"Je viens de + city. Des before États-Unis.",forms:[
+    {p:"Je",fr:"Je viens",en:"I come",ex:"Je viens des États-Unis."},
+    {p:"Tu",fr:"Tu viens",en:"You come",ex:"Tu viens d'où ?"},
+    {p:"Vous",fr:"Vous venez",en:"You come",ex:"Vous venez d'où ?"},
+    {p:"Nous",fr:"Nous venons",en:"We come",ex:"Nous venons de San Diego."},
+    {p:"Il/Elle",fr:"Il vient",en:"He comes",ex:"Il vient de Paris."},
+  ]},
+  {verb:"S'appeler",meaning:"My name is",note:"Reflexive — most natural way to give your name.",forms:[
+    {p:"Je",fr:"Je m'appelle",en:"My name is",ex:"Je m'appelle Jack."},
+    {p:"Tu",fr:"Tu t'appelles",en:"Your name is",ex:"Comment tu t'appelles ?"},
+    {p:"Vous",fr:"Vous vous appelez",en:"Your name is",ex:"Comment vous appelez-vous ?"},
+    {p:"Nous",fr:"Nous nous appelons",en:"Our names are",ex:"Nous nous appelons Jack et Marie."},
+    {p:"Il/Elle",fr:"Il s'appelle",en:"His name is",ex:"Il s'appelle Marc."},
+  ]},
+];
+
+// ══════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.tab-bar .tab-btn').forEach(b=>b.classList.toggle('active',b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+id+"'")));
+}
+
+// ══════════════════════════════════════════
+// PHRASES
+// ══════════════════════════════════════════
+let currentUnit='greetings';
+function setUnit(u){
+  currentUnit=u;
+  document.querySelectorAll('.unit-pill').forEach(b=>b.classList.toggle('active',b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+u+"'")));
+  renderPhrases();
+}
+function renderPhrases(){
+  const u=units[currentUnit];if(!u)return;
+  const list=document.getElementById('phraseList');
+  list.innerHTML=`<div class="section-title">${u.name}</div><div class="tip-box">💡 ${u.tip}</div>`;
+  u.phrases.forEach(p=>{
+    const c=document.createElement('div');c.className='phrase-card';
+    c.innerHTML=`<button class="play-btn" onclick="event.stopPropagation();tts('${p.fr.replace(/'/g,"\\'")}','fr-FR')">▶ Hear</button><div class="phrase-french">${p.fr}</div><div class="phrase-english">${p.en}</div>${p.note?`<div class="phrase-note">${p.note}</div>`:''}`;
+    list.appendChild(c);
+  });
+}
+
+// ══════════════════════════════════════════
+// VERBS
+// ══════════════════════════════════════════
+function renderVerbs(){
+  const list=document.getElementById('verbList');list.innerHTML='';
+  verbs.forEach(v=>{
+    const sec=document.createElement('div');
+    sec.innerHTML=`<div class="section-title" style="margin-top:18px">${v.verb} <span style="font-size:0.9rem;font-weight:400;color:var(--muted)">— ${v.meaning}</span></div><div class="tip-box">${v.note}</div>`;
+    v.forms.forEach(f=>{
+      const c=document.createElement('div');c.className='phrase-card';c.style.padding='11px 14px';
+      c.innerHTML=`<button class="play-btn" onclick="tts('${f.fr.replace(/'/g,"\\'")}','fr-FR')">▶ Hear</button><span class="badge">${f.p}</span><div class="phrase-french" style="font-size:1.05rem">${f.fr}</div><div class="phrase-english">${f.en}</div><div class="phrase-note" style="margin-top:3px;font-style:italic">${f.ex}</div>`;
+      sec.appendChild(c);
+    });
+    list.appendChild(sec);
+  });
+}
+
+// ══════════════════════════════════════════
+// TTS
+// ══════════════════════════════════════════
+function getVoice(lang){
+  const vs=window.speechSynthesis.getVoices();
+  const pref={'fr-FR':['Thomas','Amelie','Marie'],'en-US':['Samantha','Alex','Karen','Daniel']};
+  const pfx=lang.split('-')[0];
+  for(const n of(pref[lang]||[])){const v=vs.find(v=>v.name.includes(n)&&v.lang.startsWith(pfx));if(v)return v;}
+  return vs.find(v=>v.lang===lang)||vs.find(v=>v.lang.startsWith(pfx))||null;
+}
+function tts(text,lang,rate=0.9){
+  if(!window.speechSynthesis)return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=rate;
+  const v=getVoice(lang);if(v)u.voice=v;
+  window.speechSynthesis.speak(u);
+}
+function setWave(on){document.querySelectorAll('.wave-bar').forEach(b=>b.classList.toggle('active',on));}
+function speak(text,lang,rate){
+  return new Promise(res=>{
+    if(!window.speechSynthesis){res();return;}
+    window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=rate;
+    const v=getVoice(lang);if(v)u.voice=v;
+    setWave(true);
+    u.onend=()=>{setWave(false);res();};
+    u.onerror=()=>{setWave(false);res();};
+    window.speechSynthesis.speak(u);
+  });
+}
+function pause(ms){return new Promise(res=>setTimeout(res,ms));}
+
+// ══════════════════════════════════════════
+// DRILL STATE
+// ══════════════════════════════════════════
+let queue=[], missed=[], idx=0, running=false, paused=false;
+let isRetry=false, attemptCount=0;
+let micResolve=null, recognition=null;
+let _nextResolve=null, _retryResolve=null;
+
+// UI helpers
+const gel = id => document.getElementById(id);
+function pill(t){gel('statusPill').textContent=t;}
+function fr(t){gel('drillFr').textContent=t;}
+function en(t){gel('drillEn').textContent=t;}
+function showMic(on){gel('micSection').style.display=on?'flex':'none';}
+function showAfter(on){gel('afterRow').style.display=on?'flex':'none';}
+function showSpinner(on){gel('spinner').style.display=on?'block':'none';}
+function showYouSaid(t){const e=gel('youSaid');e.textContent='"'+t+'"';e.style.display=t?'block':'none';}
+function showFeedback(html,type){const e=gel('feedbackBox');e.innerHTML=html;e.className='feedback '+type;e.style.display='block';}
+function hideFeedback(){gel('feedbackBox').style.display='none';}
+function updateProg(){
+  const total=queue.length;const pct=total?(idx/total)*100:0;
+  gel('progFill').style.width=pct+'%';
+  gel('progCount').textContent=`${Math.min(idx+1,total)} of ${total}${missed.length?' · '+missed.length+' to review':''}`;
+}
+
+// ══════════════════════════════════════════
+// BUILD QUEUE — words first, then phrases
+// ══════════════════════════════════════════
+function buildQueue(){
+  const sel=gel('drillUnit').value;
+  const keys=sel==='all'?Object.keys(units):[sel];
+  const words=[], phrases=[];
+  keys.forEach(k=>{
+    if(!units[k])return;
+    units[k].phrases.forEach(p=>{
+      const item={...p,unit:k};
+      // single words (no spaces, no punctuation except accents)
+      if(p.fr.trim().split(/\s+/).length<=2) words.push(item);
+      else phrases.push(item);
+    });
+  });
+  // shuffle each group independently then concat: words first
+  queue=[...words.sort(()=>Math.random()-0.5), ...phrases.sort(()=>Math.random()-0.5)];
+  missed=[];idx=0;
+}
+
+// ══════════════════════════════════════════
+// DRILL LOOP
+// ══════════════════════════════════════════
+async function startDrill(){
+  buildQueue();
+  if(!queue.length)return;
+  running=true;paused=false;
+  gel('startBtn').disabled=true;
+  gel('pauseBtn').disabled=false;
+  gel('skipBtn').disabled=false;
+  await drillLoop();
+}
+
+async function drillLoop(){
+  while(idx<queue.length){
+    updateProg();
+    await runItem(queue[idx]);
+    if(paused){await waitResume();}
+    idx++;
+  }
+  // missed items come back
+  if(missed.length){
+    queue=[...missed.sort(()=>Math.random()-0.5)];
+    missed=[];idx=0;
+    pill('REVIEW — missed items');
+    fr('');en('');
+    await pause(1200);
+    await drillLoop();
+    return;
+  }
+  finishDrill();
+}
+
+async function runItem(item){
+  const speed=parseFloat(gel('speedSel').value);
+  hideFeedback();showYouSaid('');showMic(false);showAfter(false);
+  attemptCount=0;
+
+  // Show French + English always
+  pill('LISTEN');
+  fr(item.fr);
+  en(item.en);
+
+  // Speak it
+  await speak(item.fr,'fr-FR',speed);
+  if(paused)return;
+
+  // Pause — let it sink in
+  pill('...');
+  await pause(1200);
+  if(paused)return;
+
+  // Say it again
+  pill('AGAIN');
+  await speak(item.fr,'fr-FR',speed);
+  if(paused)return;
+
+  await pause(400);
+
+  // Show mic — user taps when ready
+  showMic(true);
+  gel('micLabel').textContent='Tap 🎤 when ready to speak';
+  gel('micLive').textContent='';
+  gel('micBtn').classList.remove('listening');
+  gel('micBtn').textContent='🎤';
+  gel('micBtn').onclick=()=>startListening();
+  pill('YOUR TURN');
+
+  // Wait for mic result
+  const said=await waitForMic();
+  showMic(false);
+
+  if(!said){
+    // nothing caught — offer retry
+    showFeedback("I didn't catch anything. Tap Try Again or move on.",'ok');
+    showAfter(true);
+    gel('retryBtn').style.display='inline-block';
+    await waitNext();
+    return;
+  }
+
+  showYouSaid(said);
+  pill('CHECKING...');
+  showSpinner(true);
+  const fb=await getAIFeedback(item.fr,item.en,said);
+  showSpinner(false);
+
+  const first=fb.trim().split(/\s+/)[0].toLowerCase();
+  let type='ok';
+  if(first.includes('excellent')||first.includes('good')||first.includes('parfait'))type='good';
+  else if(first.includes('try')||first.includes('again')||first.includes('incorrect'))type='retry';
+
+  showFeedback(`<div class="feedback-score">${fb.split('\n')[0]}</div>${fb.split('\n').slice(1).join('<br>')}`,type);
+
+  // Read feedback in English
+  await speak(fb,'en-US',0.88);
+
+  // Show correct answer again
+  pill('CORRECT PHRASE');
+  fr(item.fr);en(item.en);
+  await speak(item.fr,'fr-FR',speed);
+
+  // If not good — allow one retry, and add to missed
+  const showRetry = type==='ok'||type==='retry';
+  if(showRetry && attemptCount===0) missed.push(item);
+
+  showAfter(true);
+  gel('retryBtn').style.display=(showRetry&&attemptCount===0)?'inline-block':'none';
+  pill('READY FOR NEXT');
+
+  await waitNext();
+}
+
+// one retry — same item, second attempt
+async function retryItem(){
+  const speed=parseFloat(gel('speedSel').value);
+  showAfter(false);hideFeedback();showYouSaid('');
+  attemptCount=1;
+
+  pill('TRY AGAIN');
+  fr(queue[idx].fr);en(queue[idx].en);
+  await speak(queue[idx].fr,'fr-FR',speed);
+  await pause(600);
+
+  showMic(true);
+  gel('micLabel').textContent='Tap 🎤 — one more try';
+  gel('micLive').textContent='';
+  gel('micBtn').classList.remove('listening');
+  gel('micBtn').textContent='🎤';
+  gel('micBtn').onclick=()=>startListening();
+  pill('YOUR TURN');
+
+  const said=await waitForMic();
+  showMic(false);
+
+  if(said){
+    showYouSaid(said);
+    pill('CHECKING...');
+    showSpinner(true);
+    const fb=await getAIFeedback(queue[idx].fr,queue[idx].en,said);
+    showSpinner(false);
+    const first=fb.trim().split(/\s+/)[0].toLowerCase();
+    let type='ok';
+    if(first.includes('excellent')||first.includes('good')||first.includes('parfait'))type='good';
+    else if(first.includes('try')||first.includes('again')||first.includes('incorrect'))type='retry';
+    showFeedback(`<div class="feedback-score">${fb.split('\n')[0]}</div>${fb.split('\n').slice(1).join('<br>')}`,type);
+    await speak(fb,'en-US',0.88);
+    fr(queue[idx].fr);en(queue[idx].en);
+    await speak(queue[idx].fr,'fr-FR',speed);
+  }
+
+  showAfter(true);
+  gel('retryBtn').style.display='none'; // no third attempt
+  pill('READY FOR NEXT');
+  await waitNext();
+}
+
+function nextItem(){if(_nextResolve){_nextResolve();_nextResolve=null;}}
+function waitNext(){return new Promise(res=>{_nextResolve=res;});}
+
+function finishDrill(){
+  running=false;
+  pill('COMPLETE!');fr('Très bien, Jack !');en('Well done.');
+  setWave(false);hideFeedback();showYouSaid('');showMic(false);showAfter(false);
+  gel('startBtn').disabled=false;gel('startBtn').textContent='↺ Again';
+  gel('pauseBtn').disabled=true;gel('skipBtn').style.display='none';
+  gel('progCount').textContent='Session complete!';
+}
+
+function skip(){
+  window.speechSynthesis.cancel();
+  if(recognition){try{recognition.stop();}catch(e){}}
+  if(micResolve){micResolve('');micResolve=null;}
+  if(_nextResolve){_nextResolve();_nextResolve=null;}
+  showMic(false);hideFeedback();showYouSaid('');showAfter(false);
+  idx++;
+  if(idx>=queue.length){finishDrill();return;}
+  updateProg();drillLoop();
+}
+
+let resumeResolve=null;
+function waitResume(){return new Promise(res=>{resumeResolve=res;});}
+function togglePause(){
+  if(!running)return;
+  paused=!paused;
+  gel('pauseBtn').textContent=paused?'▶ Resume':'⏸ Pause';
+  if(!paused){
+    window.speechSynthesis.cancel();setWave(false);
+    if(resumeResolve){resumeResolve();resumeResolve=null;}
+  }else{
+    window.speechSynthesis.cancel();setWave(false);pill('PAUSED');
+  }
+}
+
+// ══════════════════════════════════════════
+// MIC — continuous, stays open until tap
+// ══════════════════════════════════════════
+function startListening(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){alert('Use Safari on iPhone or Chrome on desktop.');return;}
+
+  // Stop all speech first
+  window.speechSynthesis.cancel();setWave(false);
+
+  const btn=gel('micBtn'), hint=gel('micLive'), label=gel('micLabel');
+  btn.classList.add('listening');btn.textContent='⏹';
+  label.textContent='Listening... tap ⏹ to stop';
+  hint.textContent='';
+  pill('LISTENING');
+
+  setTimeout(()=>{
+    recognition=new SR();
+    recognition.lang='fr-FR';
+    recognition.interimResults=true;
+    recognition.maxAlternatives=1;
+    recognition.continuous=true;
+
+    let finalT='', interimT='';
+
+    recognition.onresult=e=>{
+      finalT='';interimT='';
+      for(let i=0;i<e.results.length;i++){
+        if(e.results[i].isFinal) finalT+=e.results[i][0].transcript+' ';
+        else interimT+=e.results[i][0].transcript;
+      }
+      const disp=(finalT+interimT).trim();
+      if(disp) hint.textContent='"'+disp+'"';
+    };
+
+    recognition.onend=()=>{
+      // Safari auto-stops — restart if still in listening mode
+      if(btn.classList.contains('listening')){
+        try{recognition.start();}catch(e){
+          // restart failed — treat as user stop
+          btn.classList.remove('listening');btn.textContent='🎤';
+          btn.onclick=()=>startListening();
+          label.textContent='Tap 🎤 to try again';
+          const result=(finalT+interimT).trim();
+          if(micResolve){micResolve(result);micResolve=null;}
+        }
+        return;
+      }
+      btn.textContent='🎤';
+      btn.onclick=()=>startListening();
+      label.textContent='Tap 🎤 to try again';
+      const result=(finalT+interimT).trim();
+      if(micResolve){micResolve(result);micResolve=null;}
+    };
+
+    recognition.onerror=e=>{
+      if(e.error==='no-speech')return; // ignore — keep going
+      btn.classList.remove('listening');btn.textContent='🎤';
+      btn.onclick=()=>startListening();
+      const msgs={'not-allowed':'Mic denied — Settings > Safari > Microphone','network':'Network error'};
+      label.textContent=msgs[e.error]||'Error: '+e.error+' — tap to retry';
+      if(micResolve){micResolve(finalT.trim()||'');micResolve=null;}
+    };
+
+    // Tap stop
+    btn.onclick=()=>{
+      btn.classList.remove('listening');
+      try{recognition.stop();}catch(e){}
+    };
+
+    recognition.start();
+  },500);
+}
+
+function waitForMic(){return new Promise(res=>{micResolve=res;});}
+
+// ══════════════════════════════════════════
+// AI FEEDBACK
+// ══════════════════════════════════════════
+async function getAIFeedback(phrase,meaning,said){
+  return new Promise(res=>{
+    const prompt=`French tutor helping Jack (68, American, beginner) learning French for Menton.
+Phrase: "${phrase}" (means: "${meaning}")
+Jack said: "${said}"
+Reply in exactly 3 plain text lines, no markdown:
+Line 1: Score — Excellent / Good / Almost / Try Again
+Line 2: What he got right (be specific and brief)
+Line 3: One simple correction, or "Keep going!" if good`;
+    try{
+      sendPrompt(prompt);
+      // sendPrompt is async via message event
+      window._aiFeedbackResolve = res;
+    }catch(e){
+      res("Could not get feedback. Keep practicing!");
+    }
+  });
+}
+
+// Listen for Claude's response to sendPrompt
+window.addEventListener('message', e=>{
+  if(window._aiFeedbackResolve && e.data && typeof e.data === 'string'){
+    const resolve = window._aiFeedbackResolve;
+    window._aiFeedbackResolve = null;
+    resolve(e.data);
+  }
+});
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+window.addEventListener('load',()=>{
+  renderPhrases();renderVerbs();
+  window.speechSynthesis.getVoices();
+  setTimeout(()=>window.speechSynthesis.getVoices(),500);
+});
+</script>
+</body>
+</html>
