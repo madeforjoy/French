@@ -549,7 +549,7 @@ async function runItem(item){
   if(first.includes('excellent')||first.includes('good')||first.includes('parfait'))type='good';
   else if(first.includes('try')||first.includes('again')||first.includes('incorrect'))type='retry';
 
-  showFeedback(`<div class="feedback-score">${fb.split('\n')[0]}</div>${fb.split('\n').slice(1).join('<br>')}`,type);
+  var fbParts=fb.split("|||"); showFeedback('<div class="feedback-score">'+fbParts[0]+'</div>'+(fbParts.slice(1).join('<br>')),type);
 
   // Read feedback in English
   await speak(fb,'en-US',0.88);
@@ -602,7 +602,7 @@ async function retryItem(){
     let type='ok';
     if(first.includes('excellent')||first.includes('good')||first.includes('parfait'))type='good';
     else if(first.includes('try')||first.includes('again')||first.includes('incorrect'))type='retry';
-    showFeedback(`<div class="feedback-score">${fb.split('\n')[0]}</div>${fb.split('\n').slice(1).join('<br>')}`,type);
+    var fbParts=fb.split("|||"); showFeedback('<div class="feedback-score">'+fbParts[0]+'</div>'+(fbParts.slice(1).join('<br>')),type);
     await speak(fb,'en-US',0.88);
     fr(queue[idx].fr);en(queue[idx].en);
     await speak(queue[idx].fr,'fr-FR',speed);
@@ -731,6 +731,32 @@ function waitForMic(){return new Promise(res=>{micResolve=res;});}
 // AI FEEDBACK
 // ══════════════════════════════════════════
 function getAIFeedback(phrase, meaning, said){
+  var normalize = function(s){ return s.toLowerCase().replace(/[?.!,]/g,"").replace(/\s+/g," ").trim(); };
+  var target = normalize(phrase);
+  var heard = normalize(said);
+  var SEP = "|||";
+  if(heard === target || heard.includes(target) || target.includes(heard)){
+    return Promise.resolve("Excellent"+SEP+"Perfect - that is exactly right!"+SEP+"Keep going!");
+  }
+  var tw = target.split(" ");
+  var hw = heard.split(" ");
+  var matches = tw.filter(function(w){ return w.length>2 && hw.some(function(h){ return h.includes(w)||w.includes(h); }); });
+  var score = tw.length ? matches.length/tw.length : 0;
+  if(score>=0.75){
+    return Promise.resolve("Good"+SEP+"You got most of it - "+matches.join(", ")+" came through."+SEP+"Say the full phrase: "+phrase);
+  } else if(score>=0.4){
+    var ng = tw.filter(function(w){ return w.length>2 && !hw.some(function(h){ return h.includes(w)||w.includes(h); }); });
+    return Promise.resolve("Almost"+SEP+"You got: "+matches.join(", ")+SEP+"Work on: "+ng.slice(0,3).join(", ")+" - full phrase: "+phrase);
+  } else {
+    return Promise.resolve("Try Again"+SEP+"I heard: "+said+SEP+"Listen again and repeat: "+phrase);
+  }
+}
+function waitForMic(){return new Promise(res=>{micResolve=res;});}
+
+// ══════════════════════════════════════════
+// AI FEEDBACK
+// ══════════════════════════════════════════
+function getAIFeedback(phrase, meaning, said){
   // Smart local feedback — works everywhere, no internet needed
   const normalize = s => s.toLowerCase()
     .replace(/[?.!,’']/g,'')
@@ -742,9 +768,7 @@ function getAIFeedback(phrase, meaning, said){
 
   // Exact or near-exact match
   if(heard === target || heard.includes(target) || target.includes(heard)){
-    return Promise.resolve("Excellent
-Perfect — that's exactly right!
-Keep going!");
+    return Promise.resolve("Excellent\nPerfect — that\'s exactly right!\nKeep going!");
   }
 
   // Count matching words
@@ -754,18 +778,12 @@ Keep going!");
   const score = matches.length / targetWords.length;
 
   if(score >= 0.75){
-    return Promise.resolve(`Good
-You got most of it — ${matches.join(', ')} came through clearly.
-Say the full phrase: ${phrase}`);
+    return Promise.resolve('Good\nYou got most of it — ' + matches.join(', ') + ' came through clearly.\nSay the full phrase: ' + phrase);
   } else if(score >= 0.4){
     const missed = targetWords.filter(w => w.length > 2 && !heardWords.some(h => h.includes(w) || w.includes(h)));
-    return Promise.resolve(`Almost
-You got: ${matches.join(', ')}.
-Work on: ${missed.slice(0,3).join(', ')} — full phrase: ${phrase}`);
+    return Promise.resolve('Almost\nYou got: ' + matches.join(', ') + '.\nWork on: ' + missed.slice(0,3).join(', ') + ' — full phrase: ' + phrase);
   } else {
-    return Promise.resolve(`Try Again
-I heard "${said}" but expected "${phrase}".
-Listen again and repeat: ${phrase}`);
+    return Promise.resolve('Try Again\nI heard "' + said + '" but expected "' + phrase + '".\nListen again and repeat: ' + phrase);
   }
 }
 
