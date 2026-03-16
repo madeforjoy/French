@@ -751,42 +751,6 @@ function getAIFeedback(phrase, meaning, said){
     return Promise.resolve("Try Again"+SEP+"I heard: "+said+SEP+"Listen again and repeat: "+phrase);
   }
 }
-function waitForMic(){return new Promise(res=>{micResolve=res;});}
-
-// ══════════════════════════════════════════
-// AI FEEDBACK
-// ══════════════════════════════════════════
-function getAIFeedback(phrase, meaning, said){
-  // Smart local feedback — works everywhere, no internet needed
-  const normalize = s => s.toLowerCase()
-    .replace(/[?.!,’']/g,'')
-    .replace(/\s+/g,' ')
-    .trim();
-
-  const target = normalize(phrase);
-  const heard  = normalize(said);
-
-  // Exact or near-exact match
-  if(heard === target || heard.includes(target) || target.includes(heard)){
-    return Promise.resolve("Excellent\nPerfect — that\'s exactly right!\nKeep going!");
-  }
-
-  // Count matching words
-  const targetWords = target.split(' ');
-  const heardWords  = heard.split(' ');
-  const matches = targetWords.filter(w => w.length > 2 && heardWords.some(h => h.includes(w) || w.includes(h)));
-  const score = matches.length / targetWords.length;
-
-  if(score >= 0.75){
-    return Promise.resolve('Good\nYou got most of it — ' + matches.join(', ') + ' came through clearly.\nSay the full phrase: ' + phrase);
-  } else if(score >= 0.4){
-    const missed = targetWords.filter(w => w.length > 2 && !heardWords.some(h => h.includes(w) || w.includes(h)));
-    return Promise.resolve('Almost\nYou got: ' + matches.join(', ') + '.\nWork on: ' + missed.slice(0,3).join(', ') + ' — full phrase: ' + phrase);
-  } else {
-    return Promise.resolve('Try Again\nI heard "' + said + '" but expected "' + phrase + '".\nListen again and repeat: ' + phrase);
-  }
-}
-
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
