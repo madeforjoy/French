@@ -115,6 +115,7 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
   <button class="tab-btn" onclick="showPage('phrases')">💬 Phrases</button>
   <button class="tab-btn" onclick="showPage('drill')">🎤 Drill</button>
   <button class="tab-btn" onclick="showPage('qa');qaInit()">💬 Q&amp;A</button>
+  <button class="tab-btn" onclick="showPage('drive')">🚗 Drive</button>
 </div>
 
 <!-- HOME -->
@@ -132,6 +133,7 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
   <div class="unit-card" onclick="showPage('phrases');setUnit('polite')"><div class="unit-icon">🎩</div><div class="unit-info"><div class="unit-name">Polite Responses</div><div class="unit-desc">Merci, avec plaisir, pas grave</div><div class="unit-count">10 phrases</div></div><div class="unit-arrow">›</div></div>
   <div class="unit-card" onclick="showPage('phrases');setUnit('lifestyle')"><div class="unit-icon">🌅</div><div class="unit-info"><div class="unit-name">Lifestyle & Living</div><div class="unit-desc">J'aime, je déteste, le style de vie</div><div class="unit-count">9 phrases</div></div><div class="unit-arrow">›</div></div>
   <div class="unit-card" onclick="showPage('drill');document.getElementById('drillUnit').value='qa'"><div class="unit-icon">💬</div><div class="unit-info"><div class="unit-name">Q&amp;A Practice</div><div class="unit-desc">Real conversations — questions you'll be asked in Menton</div><div class="unit-count">15 pairs · Go straight to Drill</div></div><div class="unit-arrow">›</div></div>
+  <div class="unit-card" onclick="showPage('drive')" style="background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(201,168,76,0.04));border:1px solid rgba(201,168,76,0.3)"><div class="unit-icon">🚗</div><div class="unit-info"><div class="unit-name" style="color:var(--gold)">Driving Mode</div><div class="unit-desc">Hands-free French — listen &amp; repeat or quiz mode</div><div class="unit-count">All categories · no tapping required</div></div><div class="unit-arrow">›</div></div>
   <div class="tip-box" style="margin-top:6px">Always say <strong style="color:var(--gold)">madame</strong> or <strong style="color:var(--gold)">monsieur</strong> after Bonjour with strangers. Use <strong style="color:var(--gold)">vous</strong> — not tu — with anyone you don't know well.</div>
 </div>
 
@@ -1443,5 +1445,322 @@ window.addEventListener('load',()=>{
   setTimeout(()=>window.speechSynthesis.getVoices(),500);
 });
 </script>
+
+<!-- DRIVE MODE PAGE -->
+<div class="page" id="page-drive">
+<style>
+#page-drive{padding:0;overflow:hidden;height:calc(100vh - 90px);position:relative;}
+.dv-screen{position:absolute;inset:0;display:flex;flex-direction:column;transition:opacity 0.3s,transform 0.3s;background:#0d1117;}
+.dv-screen.dv-hidden{opacity:0;pointer-events:none;transform:scale(0.97);}
+#dv-home{background:radial-gradient(ellipse at 30% 15%,#1a2a0a 0%,#0d1117 55%);align-items:center;padding:24px 22px 18px;overflow-y:auto;gap:0;}
+.dv-logo{width:64px;height:64px;background:linear-gradient(135deg,#f0a500,#e05c2a);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:30px;margin-bottom:12px;box-shadow:0 6px 22px rgba(240,165,0,0.3);}
+.dv-title{font-family:'Playfair Display',serif;font-size:22px;color:#f0a500;text-align:center;margin-bottom:4px;}
+.dv-sub{color:#7d8590;font-size:12px;text-align:center;margin-bottom:20px;line-height:1.5;}
+.dv-slabel{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#7d8590;margin-bottom:8px;align-self:flex-start;width:100%;}
+.dv-modes{width:100%;display:flex;gap:8px;margin-bottom:14px;}
+.dv-mbtn{flex:1;padding:11px 6px;border-radius:12px;border:2px solid #161b22;background:#161b22;cursor:pointer;text-align:center;transition:all 0.2s;-webkit-tap-highlight-color:transparent;}
+.dv-mbtn.dv-sel{border-color:#f0a500;background:rgba(240,165,0,0.1);}
+.dv-mbtn span{display:block;}.dv-mi{font-size:18px;margin-bottom:2px;}.dv-mn{font-size:11px;font-weight:600;color:#e6edf3;}.dv-md{font-size:9px;color:#7d8590;line-height:1.3;margin-top:1px;}
+.dv-cgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;width:100%;margin-bottom:13px;}
+.dv-cbtn{background:#161b22;border:2px solid transparent;border-radius:11px;padding:10px 9px;cursor:pointer;text-align:left;transition:all 0.2s;-webkit-tap-highlight-color:transparent;}
+.dv-cbtn.dv-sel{border-color:#f0a500;background:rgba(240,165,0,0.1);}
+.dv-ce{font-size:17px;display:block;margin-bottom:2px;}.dv-cn{font-size:11px;font-weight:500;color:#e6edf3;display:block;}.dv-cc{font-size:9px;color:#7d8590;}
+.dv-srow{width:100%;display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;background:#161b22;border-radius:12px;padding:11px 14px;}
+.dv-srow label{font-size:12px;color:#7d8590;}
+.dv-srow span{font-size:13px;font-weight:500;color:#f0a500;min-width:44px;text-align:right;}
+#dv-slider{-webkit-appearance:none;height:4px;background:#7d8590;border-radius:2px;width:80px;}
+#dv-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;background:#f0a500;border-radius:50%;}
+.dv-start{width:100%;padding:15px;background:linear-gradient(135deg,#f0a500,#e05c2a);border:none;border-radius:14px;font-family:'Source Sans 3',sans-serif;font-size:16px;font-weight:700;color:#0d1117;cursor:pointer;box-shadow:0 4px 18px rgba(240,165,0,0.35);transition:transform 0.15s;-webkit-tap-highlight-color:transparent;}
+.dv-start:active{transform:scale(0.97);}
+#dv-session{background:#0d1117;}
+.dv-hdr{display:flex;align-items:center;padding:14px 16px 0;gap:10px;}
+.dv-back{background:#161b22;border:none;color:#e6edf3;font-size:12px;font-weight:600;padding:7px 12px;border-radius:18px;cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap;}
+.dv-back:active{opacity:0.7;}
+.dv-pwrap{flex:1;height:4px;background:#161b22;border-radius:2px;overflow:hidden;}
+.dv-pbar{height:100%;background:linear-gradient(90deg,#f0a500,#e05c2a);border-radius:2px;transition:width 0.4s;}
+.dv-cnt{font-size:11px;color:#7d8590;min-width:32px;text-align:right;}
+.dv-card{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 24px;text-align:center;user-select:none;}
+.dv-badge{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;padding:4px 12px;border-radius:18px;margin-bottom:18px;font-weight:700;}
+.dv-badge.bl{background:rgba(240,165,0,0.15);color:#f0a500;}
+.dv-badge.bg{background:rgba(63,185,80,0.15);color:#3fb950;}
+.dv-badge.bb{background:rgba(88,166,255,0.15);color:#58a6ff;}
+.dv-main{font-family:'Playfair Display',serif;font-size:clamp(22px,6vw,40px);line-height:1.3;color:#e6edf3;margin-bottom:14px;min-height:80px;display:flex;align-items:center;justify-content:center;}
+.dv-eng{font-size:14px;color:#7d8590;font-style:italic;min-height:22px;}
+.dv-rwrap{position:relative;width:88px;height:88px;margin-top:22px;}
+.dv-pulse{position:absolute;inset:0;border-radius:50%;border:3px solid #3fb950;opacity:0;}
+.dv-pulse.on{animation:dvpulse 1.4s ease-out infinite;}
+@keyframes dvpulse{0%{transform:scale(0.9);opacity:0.7}100%{transform:scale(1.6);opacity:0}}
+svg.dv-ring{transform:rotate(-90deg);width:88px;height:88px;}
+.dv-rb{fill:none;stroke:#161b22;stroke-width:6;}.dv-rf{fill:none;stroke-width:6;stroke-linecap:round;stroke-dasharray:251;stroke-dashoffset:251;transition:stroke-dashoffset 0.15s linear,stroke 0.4s;}
+.dv-rnum{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:300;color:#e6edf3;}
+.dv-foot{padding:12px 16px 22px;display:flex;gap:8px;}
+.dv-btn{flex:1;padding:13px 5px;border:2px solid #161b22;border-radius:12px;background:#161b22;color:#e6edf3;font-family:'Source Sans 3',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;-webkit-tap-highlight-color:transparent;}
+.dv-btn.gld{background:#f0a500;border-color:#f0a500;color:#0d1117;flex:2;font-size:13px;}
+.dv-btn:active{transform:scale(0.96);}
+#dv-done{background:radial-gradient(ellipse at center,#142010 0%,#0d1117 60%);align-items:center;justify-content:center;gap:12px;padding:32px 24px;text-align:center;}
+.dv-de{font-size:60px;}.dv-dt{font-family:'Playfair Display',serif;font-size:26px;color:#f0a500;}.dv-ds{color:#7d8590;font-size:13px;line-height:1.6;}
+.dv-da{display:flex;flex-direction:column;gap:9px;width:100%;margin-top:6px;}
+.dv-dbtn{width:100%;padding:14px;border:2px solid #161b22;border-radius:13px;background:#161b22;color:#e6edf3;font-family:'Source Sans 3',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:transform 0.15s;-webkit-tap-highlight-color:transparent;}
+.dv-dbtn.gld{background:linear-gradient(135deg,#f0a500,#e05c2a);border-color:transparent;color:#0d1117;}
+.dv-dbtn:active{transform:scale(0.97);}
+</style>
+
+<div class="dv-screen" id="dv-home">
+  <div class="dv-logo">🚗</div>
+  <div class="dv-title">Driving Mode</div>
+  <div class="dv-sub">Hands-free French — eyes on the road.</div>
+  <div class="dv-slabel">Mode</div>
+  <div class="dv-modes">
+    <button class="dv-mbtn dv-sel" id="dv-m-listen" onclick="dvSelectMode('listen',this)">
+      <span class="dv-mi">🔊</span><span class="dv-mn">Listen & Repeat</span><span class="dv-md">Hear French, repeat aloud</span>
+    </button>
+    <button class="dv-mbtn" id="dv-m-quiz" onclick="dvSelectMode('quiz',this)">
+      <span class="dv-mi">🧠</span><span class="dv-mn">Quiz Me</span><span class="dv-md">Hear English, say French</span>
+    </button>
+  </div>
+  <div class="dv-slabel">Category</div>
+  <div class="dv-cgrid" id="dv-cgrid"></div>
+  <div class="dv-srow">
+    <label id="dv-slbl">Repeat time</label>
+    <input type="range" id="dv-slider" min="3" max="12" value="6" step="1" oninput="dvSlider(this)">
+    <span id="dv-sval">6 sec</span>
+  </div>
+  <button class="dv-start" onclick="dvStart()">Start 🚗</button>
+</div>
+
+<div class="dv-screen dv-hidden" id="dv-session">
+  <div class="dv-hdr">
+    <button class="dv-back" onclick="dvGoHome()">🏠 Menu</button>
+    <div class="dv-pwrap"><div class="dv-pbar" id="dv-pbar" style="width:0%"></div></div>
+    <div class="dv-cnt" id="dv-cnt">1/1</div>
+  </div>
+  <div class="dv-card">
+    <div class="dv-badge bl" id="dv-badge">LISTEN</div>
+    <div class="dv-main" id="dv-main">–</div>
+    <div class="dv-eng" id="dv-eng"></div>
+    <div class="dv-rwrap" id="dv-rwrap" style="display:none">
+      <div class="dv-pulse" id="dv-pulse"></div>
+      <svg class="dv-ring"><circle class="dv-rb" cx="44" cy="44" r="40"/><circle class="dv-rf" id="dv-rf" cx="44" cy="44" r="40"/></svg>
+      <div class="dv-rnum" id="dv-rnum">–</div>
+    </div>
+  </div>
+  <div class="dv-foot">
+    <button class="dv-btn" onclick="dvReplay()">🔁 Replay</button>
+    <button class="dv-btn gld" id="dv-pausebtn" onclick="dvPause()">⏸ Pause</button>
+    <button class="dv-btn" onclick="dvSkip()">⏭ Skip</button>
+  </div>
+</div>
+
+<div class="dv-screen dv-hidden" id="dv-done">
+  <div class="dv-de">🎉</div>
+  <div class="dv-dt">Très bien !</div>
+  <div class="dv-ds">Bonne route, Jack ! 🇫🇷<br><span id="dv-done-sub"></span></div>
+  <div class="dv-da">
+    <button class="dv-dbtn gld" onclick="dvRepeatSet()">Repeat This Set 🔁</button>
+    <button class="dv-dbtn" onclick="dvGoHome()">Back to Menu 🏠</button>
+  </div>
+</div>
+</div>
+
+<script>
+(function(){
+const DV_CATS=[
+  {id:'greet',emoji:'👋',name:'Greetings',phrases:[
+    {fr:'Bonjour',en:'Hello'},{fr:'Bonsoir',en:'Good evening'},{fr:'Bonne nuit',en:'Good night'},
+    {fr:'Salut !',en:'Hi (informal)'},{fr:'Au revoir',en:'Goodbye'},{fr:'Ça va ?',en:'How are you?'},
+    {fr:'Ça va bien, merci.',en:"I'm well, thanks."},{fr:'Très bien, merci.',en:'Very well, thanks.'},
+    {fr:'Comment allez-vous ?',en:'How are you? (formal)'},{fr:'Bonne journée !',en:'Have a good day!'},
+    {fr:'Bonne soirée !',en:'Have a good evening!'},{fr:'Bon week-end !',en:'Have a good weekend!'},
+  ]},
+  {id:'intro',emoji:'🙋',name:'About Me',phrases:[
+    {fr:"Je m'appelle Jack.",en:'My name is Jack.'},{fr:'Je suis américain.',en:'I am American.'},
+    {fr:'Je viens des États-Unis.',en:'I come from the United States.'},{fr:'Je viens de San Diego.',en:'I come from San Diego.'},
+    {fr:"J'habite à Menton.",en:'I live in Menton.'},{fr:'Je suis à la retraite.',en:'I am retired.'},
+    {fr:'Je suis avec ma femme.',en:'I am with my wife.'},{fr:'Je parle anglais.',en:'I speak English.'},
+    {fr:'Je parle un peu français.',en:'I speak a little French.'},{fr:'Je ne parle pas très bien français.',en:"I don't speak French very well."},
+  ]},
+  {id:'questions',emoji:'❓',name:'Questions',phrases:[
+    {fr:'Où est la gare ?',en:'Where is the train station?'},{fr:"Où est l'arrêt de bus ?",en:'Where is the bus stop?'},
+    {fr:'Où est le supermarché ?',en:'Where is the supermarket?'},{fr:'Où est la pharmacie ?',en:'Where is the pharmacy?'},
+    {fr:'Qui est votre ami ?',en:'Who is your friend?'},{fr:'Quand est le rendez-vous ?',en:'When is the appointment?'},
+    {fr:'Comment allez-vous ?',en:'How are you? (formal)'},{fr:'Comment vous appelez-vous ?',en:'What is your name? (formal)'},
+    {fr:"D'où venez-vous ?",en:'Where are you from?'},
+  ]},
+  {id:'directions',emoji:'🧭',name:'Directions',phrases:[
+    {fr:'À gauche',en:'To the left'},{fr:'À droite',en:'To the right'},{fr:'Tout droit',en:'Straight ahead'},
+    {fr:'Tournez à gauche.',en:'Turn left.'},{fr:'Tournez à droite.',en:'Turn right.'},
+    {fr:'Continuez tout droit.',en:'Continue straight ahead.'},{fr:"C'est à gauche.",en:"It's on the left."},
+    {fr:"C'est à droite.",en:"It's on the right."},{fr:'Où est le parc ?',en:'Where is the park?'},
+  ]},
+  {id:'verbs',emoji:'⚡',name:'Key Verbs',phrases:[
+    {fr:'Je suis américain.',en:'I am American.'},{fr:'Je parle français.',en:'I speak French.'},
+    {fr:'Vous parlez anglais ?',en:'Do you speak English?'},{fr:"J'habite à Menton.",en:'I live in Menton.'},
+    {fr:"J'ai faim.",en:"I'm hungry."},{fr:"J'ai soif.",en:"I'm thirsty."},
+    {fr:"J'ai chaud.",en:"I'm hot."},{fr:"J'ai froid.",en:"I'm cold."},
+    {fr:'Je connais Menton.',en:'I know Menton.'},{fr:"Il y a une boulangerie.",en:'There is a bakery.'},
+  ]},
+  {id:'polite',emoji:'🎩',name:'Polite',phrases:[
+    {fr:"S'il vous plaît",en:'Please (formal)'},{fr:'Merci beaucoup',en:'Thank you very much'},
+    {fr:'De rien',en:"You're welcome"},{fr:'Je vous en prie',en:"You're welcome (formal)"},
+    {fr:'Pardon',en:'Excuse me / Sorry'},{fr:'Excusez-moi',en:'Excuse me (formal)'},
+    {fr:'Je suis désolé.',en:"I'm sorry."},{fr:'Voilà !',en:'Here you go!'},
+    {fr:"D'accord.",en:'Okay / Agreed.'},{fr:'Bien sûr !',en:'Of course!'},
+  ]},
+];
+
+let dvMode='listen',dvCat='greet',dvSecs=6;
+let dvPhrases=[],dvIdx=0,dvPhase='idle',dvPaused=false;
+let dvTimer=null,dvCdVal=0,dvCdMax=6;
+const dvCirc=251;
+
+// build category grid
+const grid=document.getElementById('dv-cgrid');
+DV_CATS.forEach(cat=>{
+  const b=document.createElement('button');
+  b.className='dv-cbtn'+(cat.id==='greet'?' dv-sel':'');
+  b.innerHTML=`<span class="dv-ce">${cat.emoji}</span><span class="dv-cn">${cat.name}</span><span class="dv-cc">${cat.phrases.length} phrases</span>`;
+  b.onclick=()=>{dvCat=cat.id;document.querySelectorAll('.dv-cbtn').forEach(x=>x.classList.remove('dv-sel'));b.classList.add('dv-sel');};
+  grid.appendChild(b);
+});
+
+function dvShow(id){['dv-home','dv-session','dv-done'].forEach(s=>document.getElementById(s).classList.toggle('dv-hidden',s!==id));}
+window.dvSelectMode=function(m,btn){dvMode=m;document.querySelectorAll('.dv-mbtn').forEach(b=>b.classList.remove('dv-sel'));btn.classList.add('dv-sel');document.getElementById('dv-slbl').textContent=m==='quiz'?'Think time':'Repeat time';};
+window.dvSlider=function(el){dvSecs=parseInt(el.value);document.getElementById('dv-sval').textContent=dvSecs+' sec';};
+
+function dvSpeak(text,lang,cb){
+  if(!window.speechSynthesis){cb&&cb();return;}
+  speechSynthesis.cancel();
+  setTimeout(()=>{
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang=lang||'fr-FR';u.rate=lang==='en-US'?0.95:0.82;
+    const vv=speechSynthesis.getVoices();
+    const v=vv.find(x=>x.lang.startsWith(lang==='en-US'?'en':'fr'));
+    if(v)u.voice=v;
+    u.onend=()=>{if(!dvPaused)cb&&cb();};
+    u.onerror=()=>{if(!dvPaused)cb&&cb();};
+    speechSynthesis.speak(u);
+  },80);
+}
+
+function dvSetRing(val,max,color){
+  document.getElementById('dv-rf').style.strokeDashoffset=dvCirc*(1-Math.max(0,val/max));
+  document.getElementById('dv-rf').style.stroke=color;
+  document.getElementById('dv-rnum').textContent=val;
+  document.getElementById('dv-rwrap').style.display='block';
+}
+function dvHideRing(){document.getElementById('dv-rwrap').style.display='none';}
+function dvPulseOn(on){document.getElementById('dv-pulse').classList.toggle('on',on);}
+function dvSetBadge(txt,cls){const el=document.getElementById('dv-badge');el.className='dv-badge '+cls;el.textContent=txt;}
+function dvUpdateHdr(){
+  document.getElementById('dv-pbar').style.width=(dvPhrases.length?dvIdx/dvPhrases.length*100:0)+'%';
+  document.getElementById('dv-cnt').textContent=(dvIdx+1)+'/'+dvPhrases.length;
+}
+function dvStopAll(){clearInterval(dvTimer);clearTimeout(dvTimer);dvTimer=null;speechSynthesis&&speechSynthesis.cancel();dvPhase='idle';dvPaused=false;dvPulseOn(false);}
+
+function dvCountdown(secs,color,onDone){
+  clearInterval(dvTimer);dvTimer=null;
+  dvCdMax=secs;dvCdVal=secs;dvSetRing(dvCdVal,dvCdMax,color);
+  dvTimer=setInterval(()=>{
+    if(dvPaused)return;
+    dvCdVal--;dvSetRing(dvCdVal,dvCdMax,color);
+    if(dvCdVal<=0){clearInterval(dvTimer);dvTimer=null;onDone&&onDone();}
+  },1000);
+}
+
+// LISTEN mode
+function dvListenSpeak(){
+  if(dvIdx>=dvPhrases.length){dvDone();return;}
+  dvPhase='speaking';const p=dvPhrases[dvIdx];dvUpdateHdr();
+  dvSetBadge('LISTEN','bl');
+  document.getElementById('dv-main').textContent=p.fr;
+  document.getElementById('dv-eng').textContent=p.en;
+  dvPulseOn(false);dvHideRing();
+  dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused&&dvPhase==='speaking')dvListenRepeat();});
+}
+function dvListenRepeat(){
+  dvPhase='repeating';dvSetBadge('YOUR TURN — REPEAT','bg');
+  document.getElementById('dv-eng').textContent='';dvPulseOn(true);
+  dvCountdown(dvSecs,'#3fb950',()=>{dvPulseOn(false);dvIdx++;dvListenSpeak();});
+}
+
+// QUIZ mode
+function dvQuizPrompt(){
+  if(dvIdx>=dvPhrases.length){dvDone();return;}
+  dvPhase='prompting';const p=dvPhrases[dvIdx];dvUpdateHdr();
+  dvSetBadge('HOW DO YOU SAY...','bb');
+  document.getElementById('dv-main').textContent=p.en;
+  document.getElementById('dv-eng').textContent='';dvPulseOn(false);dvHideRing();
+  dvSpeak(p.en,'en-US',()=>{if(!dvPaused&&dvPhase==='prompting')dvQuizThink();});
+}
+function dvQuizThink(){
+  dvPhase='thinking';dvSetBadge('SAY IT IN FRENCH !','bb');dvPulseOn(true);
+  dvCountdown(dvSecs,'#58a6ff',()=>{dvPulseOn(false);dvQuizReveal();});
+}
+function dvQuizReveal(){
+  dvPhase='revealing';const p=dvPhrases[dvIdx];
+  dvSetBadge('ANSWER','bg');
+  document.getElementById('dv-main').textContent=p.fr;
+  document.getElementById('dv-eng').textContent=p.en;dvHideRing();
+  dvSpeak(p.fr,'fr-FR',()=>{
+    if(!dvPaused&&dvPhase==='revealing')dvTimer=setTimeout(()=>{dvIdx++;dvQuizPrompt();},1200);
+  });
+}
+
+// Controls — on window so inline onclick works
+window.dvReplay=function(){
+  clearInterval(dvTimer);clearTimeout(dvTimer);dvTimer=null;
+  speechSynthesis&&speechSynthesis.cancel();
+  if(dvIdx>=dvPhrases.length)return;
+  const p=dvPhrases[dvIdx];
+  if(dvMode==='listen'){
+    dvPhase='speaking';dvSetBadge('LISTEN','bl');
+    document.getElementById('dv-main').textContent=p.fr;
+    document.getElementById('dv-eng').textContent=p.en;
+    dvPulseOn(false);dvHideRing();
+    dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused)dvListenRepeat();});
+  } else {
+    dvPhase='prompting';dvSetBadge('HOW DO YOU SAY...','bb');
+    document.getElementById('dv-main').textContent=p.en;
+    document.getElementById('dv-eng').textContent='';
+    dvPulseOn(false);dvHideRing();
+    dvSpeak(p.en,'en-US',()=>{if(!dvPaused)dvQuizThink();});
+  }
+};
+window.dvPause=function(){
+  dvPaused=!dvPaused;
+  document.getElementById('dv-pausebtn').textContent=dvPaused?'▶ Resume':'⏸ Pause';
+  if(dvPaused){speechSynthesis&&speechSynthesis.cancel();}
+  else{
+    if(dvMode==='listen'){if(dvPhase==='speaking')dvListenSpeak();else if(dvPhase==='repeating')dvListenRepeat();}
+    else{if(dvPhase==='prompting')dvQuizPrompt();else if(dvPhase==='thinking')dvQuizThink();else if(dvPhase==='revealing')dvQuizReveal();}
+  }
+};
+window.dvSkip=function(){dvStopAll();dvIdx++;if(dvIdx>=dvPhrases.length){dvDone();return;}dvMode==='listen'?dvListenSpeak():dvQuizPrompt();};
+window.dvStart=function(){
+  const cat=DV_CATS.find(c=>c.id===dvCat);
+  dvPhrases=[...cat.phrases].sort(()=>Math.random()-0.5);
+  dvIdx=0;dvPaused=false;
+  document.getElementById('dv-pausebtn').textContent='⏸ Pause';
+  dvShow('dv-session');
+  setTimeout(()=>dvMode==='listen'?dvListenSpeak():dvQuizPrompt(),400);
+};
+window.dvGoHome=function(){dvStopAll();dvShow('dv-home');};
+window.dvRepeatSet=function(){
+  dvPhrases=[...dvPhrases].sort(()=>Math.random()-0.5);
+  dvIdx=0;dvPaused=false;
+  document.getElementById('dv-pausebtn').textContent='⏸ Pause';
+  dvShow('dv-session');
+  setTimeout(()=>dvMode==='listen'?dvListenSpeak():dvQuizPrompt(),300);
+};
+function dvDone(){
+  dvStopAll();
+  document.getElementById('dv-done-sub').textContent=dvPhrases.length+' phrases · '+(dvMode==='quiz'?'Quiz mode':'Listen mode');
+  dvShow('dv-done');
+  setTimeout(()=>dvSpeak('Très bien ! Excellent travail !','fr-FR'),500);
+}
+if(window.speechSynthesis){speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();speechSynthesis.getVoices();}
+})();
+</script>
+
 </body>
 </html>
