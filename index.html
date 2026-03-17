@@ -144,6 +144,7 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
     <button class="unit-pill" onclick="setUnit('cafe')">Café</button>
     <button class="unit-pill" onclick="setUnit('polite')">Polite</button>
     <button class="unit-pill" onclick="setUnit('lifestyle')">Lifestyle</button>
+    <button class="unit-pill" onclick="setUnit('daily')">Daily Life</button>
   </div>
   <div id="phraseList"></div>
 </div>
@@ -158,6 +159,7 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
     <option value="cafe">Café & Boulangerie</option>
     <option value="polite">Polite Responses</option>
     <option value="lifestyle">Lifestyle & Living</option>
+    <option value="daily">Daily Life</option>
     <option value="qa">Q&amp;A Practice</option>
     <option value="vocab">Vocabulary</option>
   </select>
@@ -194,7 +196,11 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
 <!-- VOCABULARY -->
 <div class="page" id="page-vocabulary">
   <div class="unit-pills" id="vocabPills" style="margin-top:4px">
-    <button class="unit-pill active" onclick="setVocabCat('numbers')">🔢 Numbers</button>
+    <button class="unit-pill active" onclick="setVocabCat('identity')">📋 ID Form</button>
+    <button class="unit-pill" onclick="setVocabCat('objects')">🎒 Objects</button>
+    <button class="unit-pill" onclick="setVocabCat('household')">🏠 Household</button>
+    <button class="unit-pill" onclick="setVocabCat('family')">👨‍👩‍👧 Family</button>
+    <button class="unit-pill" onclick="setVocabCat('numbers')">🔢 Numbers</button>
     <button class="unit-pill" onclick="setVocabCat('days')">📅 Days</button>
     <button class="unit-pill" onclick="setVocabCat('months')">🗓️ Months</button>
     <button class="unit-pill" onclick="setVocabCat('colors')">🎨 Colors</button>
@@ -301,6 +307,20 @@ const units={
     {fr:"Je suis à la retraite.",en:"I am retired."},
     {fr:"Nous habitons à Menton.",en:"We live in Menton.",note:"Nous = we — you and your wife."},
     {fr:"J'habite ici depuis peu.",en:"I've lived here recently.",note:"Depuis peu = not long. Explains your French level."},
+  ]},
+  daily:{name:"Daily Life",tip:"From your group class 3/16 — practical phrases for your move to France.",phrases:[
+    {fr:"Je fais le ménage.",en:"I do the housework."},
+    {fr:"Je fais les courses.",en:"I do the grocery shopping.",note:"Courses = grocery shopping in French."},
+    {fr:"Je fais du shopping.",en:"I go shopping.",note:"For clothes, non-grocery shopping."},
+    {fr:"Je fais la vaisselle.",en:"I do the dishes."},
+    {fr:"Je fais la lessive.",en:"I do the laundry."},
+    {fr:"Je fais la cuisine.",en:"I cook.",note:"Faire la cuisine is more natural than cuisiner."},
+    {fr:"J'organise mes affaires pour le voyage.",en:"I am organising my things for the trip."},
+    {fr:"Je cherche un appartement à Menton.",en:"I am looking for an apartment in Menton."},
+    {fr:"Il y a douze mois dans l'année.",en:"There are twelve months in the year."},
+    {fr:"Aujourd'hui c'est lundi.",en:"Today is Monday.",note:"Always useful for orientation."},
+    {fr:"Le vol est demain.",en:"The flight is tomorrow."},
+    {fr:"Je fais ma valise.",en:"I am packing my suitcase.",note:"Literally: I make my suitcase."},
   ]}
 };
 
@@ -391,6 +411,88 @@ const vocab = {
       {fr:"combien ?",en:"how much / how many?"},{fr:"c'est tout",en:"that's all"},
     ]
   },
+  identity: {
+    name: "ID Form — La Fiche",
+    icon: "📋",
+    tip: "Essential for any French form or bureaucracy. Manali covered this 3/16.",
+    words: [
+      {fr:"le nom",en:"last name / surname"},
+      {fr:"le prénom",en:"first name"},
+      {fr:"la date de naissance",en:"date of birth"},
+      {fr:"le pays",en:"country"},
+      {fr:"la nationalité",en:"nationality"},
+      {fr:"le courriel",en:"email address"},
+      {fr:"le numéro de téléphone",en:"phone number"},
+      {fr:"l'adresse",en:"address"},
+      {fr:"l'âge",en:"age"},
+      {fr:"la situation de famille",en:"marital status"},
+      {fr:"marié(e)",en:"married"},
+      {fr:"célibataire",en:"single"},
+      {fr:"divorcé(e)",en:"divorced"},
+      {fr:"la profession",en:"profession / job"},
+      {fr:"à la retraite",en:"retired"},
+    ]
+  },
+  objects: {
+    name: "Everyday Objects",
+    icon: "🎒",
+    tip: "Words from your group class 3/16 — things you'll see and use every day.",
+    words: [
+      {fr:"le portable",en:"mobile phone / cell phone"},
+      {fr:"l'ordinateur",en:"computer"},
+      {fr:"la table",en:"table"},
+      {fr:"la boîte",en:"box / tin"},
+      {fr:"le sac",en:"bag"},
+      {fr:"les lunettes de soleil",en:"sunglasses"},
+      {fr:"la chaise",en:"chair"},
+      {fr:"le stylo",en:"pen"},
+      {fr:"la poste",en:"post office / mail"},
+      {fr:"la valise",en:"suitcase"},
+      {fr:"le vol",en:"flight"},
+      {fr:"les affaires",en:"belongings / things"},
+    ]
+  },
+  household: {
+    name: "Household Tasks",
+    icon: "🏠",
+    tip: "Faire = to do. These are the most common daily activity phrases in French.",
+    words: [
+      {fr:"faire le ménage",en:"to do the housework"},
+      {fr:"faire les courses",en:"to do the grocery shopping"},
+      {fr:"faire du shopping",en:"to go shopping"},
+      {fr:"faire la vaisselle",en:"to do the dishes"},
+      {fr:"faire la lessive",en:"to do the laundry"},
+      {fr:"faire la cuisine",en:"to cook"},
+      {fr:"nettoyer",en:"to clean"},
+      {fr:"chercher",en:"to search / look for"},
+      {fr:"commencer",en:"to start"},
+      {fr:"terminer",en:"to finish / end"},
+      {fr:"organiser",en:"to organise"},
+      {fr:"Je fais le ménage.",en:"I do the housework."},
+      {fr:"Je fais les courses.",en:"I do the grocery shopping."},
+      {fr:"Je organise mes affaires pour le voyage.",en:"I am organising my things for the trip."},
+    ]
+  },
+  family: {
+    name: "Family",
+    icon: "👨‍👩‍👧‍👦",
+    tip: "French people love talking about family — have these ready.",
+    words: [
+      {fr:"ma femme",en:"my wife"},
+      {fr:"ma fille",en:"my daughter"},
+      {fr:"mon fils",en:"my son"},
+      {fr:"mon père",en:"my father"},
+      {fr:"ma mère",en:"my mother"},
+      {fr:"mon frère",en:"my brother"},
+      {fr:"ma sœur",en:"my sister"},
+      {fr:"les enfants",en:"the children"},
+      {fr:"l'anniversaire",en:"birthday"},
+      {fr:"bon anniversaire",en:"happy birthday"},
+      {fr:"bon anniversaire de mariage",en:"happy wedding anniversary"},
+      {fr:"Bonne année",en:"Happy New Year"},
+      {fr:"Ils ne sont pas mariés.",en:"They are not married."},
+    ]
+  },
   keywords: {
     name: "Key Words",
     icon: "🔑",
@@ -474,6 +576,22 @@ const qaPairs = [
     a:"La gare est tout droit.",         at:"The station is straight ahead." },
   { q:"Qu'est-ce que vous faites ?",    qt:"What are you doing?",
     a:"Je vais déménager à Menton.",     at:"I am moving to Menton." },
+
+  // From group class 3/16
+  { q:"Quel est votre nom ?",            qt:"What is your last name?",
+    a:"Mon nom est Abbott.",             at:"My last name is Abbott." },
+  { q:"Quelle est votre date de naissance ?", qt:"What is your date of birth?",
+    a:"Je suis né le vingt-cinq décembre 1956.", at:"I was born on December 25, 1956." },
+  { q:"Quelle est votre nationalité ?",  qt:"What is your nationality?",
+    a:"Je suis américain.",              at:"I am American." },
+  { q:"Quelle est votre situation de famille ?", qt:"What is your marital status?",
+    a:"Je suis marié.",                  at:"I am married." },
+  { q:"Vous faites quoi comme activité ?", qt:"What activities do you do?",
+    a:"Je fais le ménage et les courses.", at:"I do the housework and the shopping." },
+  { q:"Vous cherchez quoi ?",            qt:"What are you looking for?",
+    a:"Je cherche un appartement à Menton.", at:"I am looking for an apartment in Menton." },
+  { q:"Quel est votre numéro de téléphone ?", qt:"What is your phone number?",
+    a:"Mon numéro est le zéro six...",   at:"My number is 06..." },
 ];
 
 const verbs=[
@@ -525,6 +643,20 @@ const verbs=[
     {p:"Vous",fr:"Vous allez",en:"You go",ex:"Vous allez déménager où ?"},
     {p:"Nous",fr:"Nous allons",en:"We go",ex:"Nous allons au marché."},
     {p:"Il/Elle",fr:"Il va",en:"He goes",ex:"Il va à la gare."},
+  ]},
+  {verb:"Faire",meaning:"To do / to make",note:"Extremely common — faire le ménage, faire les courses, faire la cuisine.",forms:[
+    {p:"Je",fr:"Je fais",en:"I do / I make",ex:"Je fais le ménage."},
+    {p:"Tu",fr:"Tu fais",en:"You do",ex:"Tu fais les courses ?"},
+    {p:"Vous",fr:"Vous faites",en:"You do",ex:"Vous faites du shopping ?"},
+    {p:"Nous",fr:"Nous faisons",en:"We do",ex:"Nous faisons la cuisine."},
+    {p:"Il/Elle",fr:"Il fait",en:"He does",ex:"Il fait beau aujourd'hui."},
+  ]},
+  {verb:"Chercher",meaning:"To look for / to search",note:"Regular -er verb. Je cherche = I am looking for.",forms:[
+    {p:"Je",fr:"Je cherche",en:"I look for",ex:"Je cherche la pharmacie."},
+    {p:"Tu",fr:"Tu cherches",en:"You look for",ex:"Tu cherches quoi ?"},
+    {p:"Vous",fr:"Vous cherchez",en:"You look for",ex:"Vous cherchez la gare ?"},
+    {p:"Nous",fr:"Nous cherchons",en:"We look for",ex:"Nous cherchons un appartement."},
+    {p:"Il/Elle",fr:"Il cherche",en:"He looks for",ex:"Il cherche son portable."},
   ]},
 ];
 
@@ -782,7 +914,7 @@ function showAfter(on){}
 // ══════════════════════════════════════════
 // VOCABULARY
 // ══════════════════════════════════════════
-let currentVocabCat = 'numbers';
+let currentVocabCat = 'identity';
 function setVocabCat(cat){
   currentVocabCat = cat;
   document.querySelectorAll('#vocabPills .unit-pill').forEach(b=>
@@ -791,18 +923,28 @@ function setVocabCat(cat){
   renderVocab();
 }
 function renderVocab(){
-  const cat = vocab[currentVocabCat];
+  var cat = vocab[currentVocabCat];
   if(!cat) return;
-  const list = document.getElementById('vocabList');
-  list.innerHTML = '<div class="section-title">'+cat.icon+' '+cat.name+'</div><div class="tip-box">💡 '+cat.tip+'</div>';
-  cat.words.forEach(w=>{
-    const c = document.createElement('div');
+  var list = document.getElementById('vocabList');
+  list.innerHTML = '<div class="section-title">' + cat.icon + ' ' + cat.name + '</div><div class="tip-box">&#128161; ' + cat.tip + '</div>';
+  cat.words.forEach(function(w){
+    var c = document.createElement('div');
     c.className = 'phrase-card';
     c.style.padding = '10px 14px';
-    c.innerHTML =
-      '<button class="play-btn" onclick="event.stopPropagation();tts(''+w.fr.replace(/'/g,"\'")+"','fr-FR')">▶ Hear</button>"+
-      '<div class="phrase-french" style="font-size:1.05rem">'+w.fr+'</div>'+
-      '<div class="phrase-english">'+w.en+'</div>';
+    var btn = document.createElement('button');
+    btn.className = 'play-btn';
+    btn.textContent = '&#9654; Hear';
+    btn.onclick = function(){ tts(w.fr, 'fr-FR'); };
+    var frDiv = document.createElement('div');
+    frDiv.className = 'phrase-french';
+    frDiv.style.fontSize = '1.05rem';
+    frDiv.textContent = w.fr;
+    var enDiv = document.createElement('div');
+    enDiv.className = 'phrase-english';
+    enDiv.textContent = w.en;
+    c.appendChild(btn);
+    c.appendChild(frDiv);
+    c.appendChild(enDiv);
     list.appendChild(c);
   });
 }
