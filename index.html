@@ -161,15 +161,7 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
     <option value="lifestyle">Lifestyle & Living</option>
     <option value="daily">Daily Life</option>
     <option value="qa">Q&amp;A Practice</option>
-    <option value="vocab">All Vocabulary</option>
-    <option value="vocab_identity">Vocab — ID Form</option>
-    <option value="vocab_objects">Vocab — Objects</option>
-    <option value="vocab_household">Vocab — Household</option>
-    <option value="vocab_family">Vocab — Family</option>
-    <option value="vocab_numbers">Vocab — Numbers</option>
-    <option value="vocab_days">Vocab — Days</option>
-    <option value="vocab_food">Vocab — Food</option>
-    <option value="vocab_keywords">Vocab — Key Words</option>
+
   </select>
 
   <div class="drill-wrap">
@@ -195,6 +187,7 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
       <button class="btn-dim" id="pauseBtn" onclick="togglePause()" disabled>⏸ Pause</button>
       <button class="btn-ghost" id="skipBtn" onclick="skip()" disabled>Skip →</button>
       <button class="btn-green" id="nextBtn" onclick="nextItem()" style="display:none">Next →</button>
+      <button class="btn-dim" id="replayBtn" onclick="replayItem()" style="display:none">↺ Hear again</button>
     </div>
 
   </div>
@@ -858,6 +851,7 @@ function resetDrill(){
   var pb=document.getElementById('pauseBtn');if(pb)pb.disabled=true;
   var sb=document.getElementById('skipBtn');if(sb)sb.disabled=true;
   var nb=document.getElementById('nextBtn');if(nb)nb.style.display='none';
+  var rb=document.getElementById('replayBtn');if(rb)rb.style.display='none';
   if(_nextResolve){_nextResolve();_nextResolve=null;}
   pill('Ready');fr('—');en('—');
   document.getElementById('progFill').style.width='0%';
@@ -941,19 +935,25 @@ async function runItem(item){
     if(paused)return;
   }
 
-  // Show Next
+  // Show Next + Replay
   gel('nextBtn').style.display='inline-block';
+  gel('replayBtn').style.display='inline-block';
   gel('skipBtn').style.display='none';
   gel('pauseBtn').style.display='none';
   pill('READY — tap Next →');
   await new Promise(res=>{_nextResolve=res;});
   gel('nextBtn').style.display='none';
+  gel('replayBtn').style.display='none';
   gel('skipBtn').style.display='inline-block';
   gel('pauseBtn').style.display='inline-block';
 }
 
 
 function nextItem(){if(_nextResolve){_nextResolve();_nextResolve=null;}}
+function replayItem(){
+  var speed=parseFloat(gel('speedSel').value);
+  if(queue[idx]) tts(queue[idx].fr,'fr-FR',speed);
+}
 function waitNext(){return new Promise(res=>{_nextResolve=res;});}
 
 function finishDrill(){
@@ -961,6 +961,7 @@ function finishDrill(){
   pill('COMPLETE!');fr('Très bien, Jack !');en('Well done.');
   setWave(false);
   gel('startBtn').disabled=false;gel('startBtn').textContent='↺ Again';
+  gel('replayBtn').style.display='none';
   gel('pauseBtn').disabled=true;gel('skipBtn').style.display='none';
   gel('progCount').textContent='Session complete!';
 }
