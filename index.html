@@ -731,9 +731,15 @@ function speak(text,lang,rate){
     const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=rate;
     const v=getVoice(lang);if(v)u.voice=v;
     setWave(true);
-    u.onend=()=>{setWave(false);res();};
-    u.onerror=()=>{setWave(false);res();};
+    // Timeout fallback — if speech never fires onend, continue anyway
+    const timeout=setTimeout(()=>{setWave(false);res();}, 8000);
+    u.onend=()=>{clearTimeout(timeout);setWave(false);res();};
+    u.onerror=()=>{clearTimeout(timeout);setWave(false);res();};
     window.speechSynthesis.speak(u);
+    // Chrome sometimes needs a kick
+    setTimeout(()=>{
+      if(window.speechSynthesis.paused) window.speechSynthesis.resume();
+    },100);
   });
 }
 function pause(ms){return new Promise(res=>setTimeout(res,ms));}
@@ -797,9 +803,10 @@ function buildQueue(){
 
 async function startDrill(){
   if(running)return;
-  await unlockAudio();
+  // Unlock audio context for Chrome
+  try{const c=new(window.AudioContext||window.webkitAudioContext)();await c.resume();c.close();}catch(e){}
   buildQueue();
-  if(!queue.length)return;
+  if(!queue || !queue.length){ alert('No items found. Please select a drill unit.'); running=false; gel('startBtn').disabled=false; return; }
   running=true;paused=false;
   gel('startBtn').disabled=true;
   gel('pauseBtn').disabled=false;
@@ -830,7 +837,7 @@ async function drillLoop(){
 async function runItem(item){
   const speed=parseFloat(gel('speedSel').value);
 
-  if(item.type==='combined'){
+  if(item && item.type==='combined'){
     // Full Q&A — hear question, answer it, hear correct answer
     fr(item.fr); en(item.en);
     pill('QUESTION');
@@ -844,9 +851,10 @@ async function runItem(item){
     await speak(item.pair.a,'fr-FR',speed);
     if(paused)return;
   } else {
-    // Phrase or single Q or A — standard repeat flow
+    // Phrase or vocab word — standard repeat flow
     fr(item.fr); en(item.en);
-    pill(item.type==='question'?'LISTEN — QUESTION':item.type==='answer'?'LISTEN — ANSWER':'LISTEN');
+    var label = item.type==='question'?'LISTEN — QUESTION':item.type==='answer'?'LISTEN — ANSWER':'LISTEN';
+    pill(label);
     await speak(item.fr,'fr-FR',speed);
     if(paused)return;
     pill('YOUR TURN — say it out loud');
