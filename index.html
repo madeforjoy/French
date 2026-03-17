@@ -151,7 +151,7 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
 
 <!-- DRILL -->
 <div class="page" id="page-drill">
-  <select class="drill-select" id="drillUnit">
+  <select class="drill-select" id="drillUnit" onchange="resetDrill()">
     <option value="all">All Units</option>
     <option value="greetings">Greetings & Farewells</option>
     <option value="introductions">Introducing Yourself</option>
@@ -679,27 +679,39 @@ function setUnit(u){
   renderPhrases();
 }
 function renderPhrases(){
-  const u=units[currentUnit];if(!u)return;
-  const list=document.getElementById('phraseList');
-  list.innerHTML=`<div class="section-title">${u.name}</div><div class="tip-box">💡 ${u.tip}</div>`;
-  u.phrases.forEach(p=>{
-    const c=document.createElement('div');c.className='phrase-card';
-    c.innerHTML=`<button class="play-btn" onclick="event.stopPropagation();tts('${p.fr.replace(/'/g,"\\'")}','fr-FR')">▶ Hear</button><div class="phrase-french">${p.fr}</div><div class="phrase-english">${p.en}</div>${p.note?`<div class="phrase-note">${p.note}</div>`:''}`;
+  var u=units[currentUnit];if(!u)return;
+  var list=document.getElementById('phraseList');
+  list.innerHTML='<div class="section-title">'+u.name+'</div><div class="tip-box">&#128161; '+u.tip+'</div>';
+  u.phrases.forEach(function(p){
+    var c=document.createElement('div');c.className='phrase-card';
+    var btn=document.createElement('button');btn.className='play-btn';btn.textContent='▶ Hear';
+    btn.onclick=function(e){e.stopPropagation();tts(p.fr,'fr-FR');};
+    var frDiv=document.createElement('div');frDiv.className='phrase-french';frDiv.textContent=p.fr;
+    var enDiv=document.createElement('div');enDiv.className='phrase-english';enDiv.textContent=p.en;
+    c.appendChild(btn);c.appendChild(frDiv);c.appendChild(enDiv);
+    if(p.note){var n=document.createElement('div');n.className='phrase-note';n.textContent=p.note;c.appendChild(n);}
     list.appendChild(c);
   });
 }
 
-// ══════════════════════════════════════════
-// VERBS
-// ══════════════════════════════════════════
 function renderVerbs(){
-  const list=document.getElementById('verbList');list.innerHTML='';
-  verbs.forEach(v=>{
-    const sec=document.createElement('div');
-    sec.innerHTML=`<div class="section-title" style="margin-top:18px">${v.verb} <span style="font-size:0.9rem;font-weight:400;color:var(--muted)">— ${v.meaning}</span></div><div class="tip-box">${v.note}</div>`;
-    v.forms.forEach(f=>{
-      const c=document.createElement('div');c.className='phrase-card';c.style.padding='11px 14px';
-      c.innerHTML=`<button class="play-btn" onclick="tts('${f.fr.replace(/'/g,"\\'")}','fr-FR')">▶ Hear</button><span class="badge">${f.p}</span><div class="phrase-french" style="font-size:1.05rem">${f.fr}</div><div class="phrase-english">${f.en}</div><div class="phrase-note" style="margin-top:3px;font-style:italic">${f.ex}</div>`;
+  var list=document.getElementById('verbList');list.innerHTML='';
+  verbs.forEach(function(v){
+    var sec=document.createElement('div');
+    var title=document.createElement('div');title.className='section-title';title.style.marginTop='18px';
+    title.textContent=v.verb;
+    var span=document.createElement('span');span.style.cssText='font-size:0.9rem;font-weight:400;color:var(--muted)';
+    span.textContent=' — '+v.meaning;title.appendChild(span);sec.appendChild(title);
+    var tip=document.createElement('div');tip.className='tip-box';tip.textContent=v.note;sec.appendChild(tip);
+    v.forms.forEach(function(f){
+      var c=document.createElement('div');c.className='phrase-card';c.style.padding='11px 14px';
+      var btn=document.createElement('button');btn.className='play-btn';btn.textContent='▶ Hear';
+      btn.onclick=(function(fr){return function(){tts(fr,'fr-FR');};})(f.fr);
+      var badge=document.createElement('span');badge.className='badge';badge.textContent=f.p;
+      var frDiv=document.createElement('div');frDiv.className='phrase-french';frDiv.style.fontSize='1.05rem';frDiv.textContent=f.fr;
+      var enDiv=document.createElement('div');enDiv.className='phrase-english';enDiv.textContent=f.en;
+      var exDiv=document.createElement('div');exDiv.className='phrase-note';exDiv.style.cssText='margin-top:3px;font-style:italic';exDiv.textContent=f.ex;
+      c.appendChild(btn);c.appendChild(badge);c.appendChild(frDiv);c.appendChild(enDiv);c.appendChild(exDiv);
       sec.appendChild(c);
     });
     list.appendChild(sec);
@@ -801,12 +813,30 @@ function buildQueue(){
   queue=[...words.sort(()=>Math.random()-0.5), ...phrases.sort(()=>Math.random()-0.5)];
 }
 
+function resetDrill(){
+  if(running){
+    window.speechSynthesis.cancel();
+    running=false;paused=false;
+    queue=[];idx=0;missed=[];
+  }
+  var btn=document.getElementById('startBtn');
+  if(btn){btn.disabled=false;btn.textContent='▶ Start';}
+  var pb=document.getElementById('pauseBtn');if(pb)pb.disabled=true;
+  var sb=document.getElementById('skipBtn');if(sb)sb.disabled=true;
+  var nb=document.getElementById('nextBtn');if(nb)nb.style.display='none';
+  if(_nextResolve){_nextResolve();_nextResolve=null;}
+  pill('Ready');fr('—');en('—');
+  document.getElementById('progFill').style.width='0%';
+  document.getElementById('progCount').textContent='Press Start to begin';
+  setWave(false);
+}
+
 async function startDrill(){
   if(running)return;
   // Unlock audio context for Chrome
   try{const c=new(window.AudioContext||window.webkitAudioContext)();await c.resume();c.close();}catch(e){}
   buildQueue();
-  if(!queue || !queue.length){ alert('No items found. Please select a drill unit.'); running=false; gel('startBtn').disabled=false; return; }
+  if(!queue || !queue.length){ gel('statusPill').textContent='ERROR: No items in queue for: '+gel('drillUnit').value; running=false; gel('startBtn').disabled=false; return; }
   running=true;paused=false;
   gel('startBtn').disabled=true;
   gel('pauseBtn').disabled=false;
@@ -958,32 +988,81 @@ function renderVocab(){
 }
 
 function renderQA(){
-  const list=document.getElementById('qaList');
+  var list=document.getElementById('qaList');
   if(!list)return;
   list.innerHTML='';
-  qaPairs.forEach((p,i)=>{
-    const c=document.createElement('div');
+  qaPairs.forEach(function(p,i){
+    var c=document.createElement('div');
     c.className='phrase-card';
     c.style.marginBottom='10px';
-    c.innerHTML=
-      '<div style="font-size:0.65rem;font-weight:700;letter-spacing:0.1em;color:var(--gold);margin-bottom:6px">PAIR '+(i+1)+'</div>'+
-      '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">'+
-        '<div style="flex:1">'+
-          '<div style="font-size:0.7rem;color:var(--muted);margin-bottom:2px">QUESTION</div>'+
-          '<div class="phrase-french" style="font-size:1rem">'+ p.q +'</div>'+
-          '<div class="phrase-english">'+ p.qt +'</div>'+
-        '</div>'+
-        '<button class="play-btn" onclick="tts(\''+ p.q.replace(/'/g,"\\'") +'\',\'fr-FR\')">▶</button>'+
-      '</div>'+
-      '<div style="border-top:1px solid rgba(255,255,255,0.06);margin:8px 0"></div>'+
-      '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">'+
-        '<div style="flex:1">'+
-          '<div style="font-size:0.7rem;color:var(--muted);margin-bottom:2px">ANSWER</div>'+
-          '<div class="phrase-french" style="font-size:1rem">'+ p.a +'</div>'+
-          '<div class="phrase-english">'+ p.at +'</div>'+
-        '</div>'+
-        '<button class="play-btn" onclick="tts(\''+ p.a.replace(/'/g,"\\'") +'\',\'fr-FR\')">▶</button>'+
-      '</div>';
+
+    // Pair number
+    var label=document.createElement('div');
+    label.style.cssText='font-size:0.65rem;font-weight:700;letter-spacing:0.1em;color:var(--gold);margin-bottom:8px';
+    label.textContent='PAIR '+(i+1)+' of '+qaPairs.length;
+    c.appendChild(label);
+
+    // Question - always visible
+    var qLabel=document.createElement('div');
+    qLabel.style.cssText='font-size:0.7rem;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.08em';
+    qLabel.textContent='Question';
+    c.appendChild(qLabel);
+
+    var qRow=document.createElement('div');
+    qRow.style.cssText='display:flex;justify-content:space-between;align-items:center;margin-bottom:4px';
+    var qFr=document.createElement('div');
+    qFr.className='phrase-french';qFr.style.fontSize='1.05rem';qFr.textContent=p.q;
+    var qBtn=document.createElement('button');qBtn.className='play-btn';qBtn.textContent='▶';
+    qBtn.onclick=(function(q){return function(){tts(q,'fr-FR');};})(p.q);
+    qRow.appendChild(qFr);qRow.appendChild(qBtn);
+    c.appendChild(qRow);
+
+    var qEn=document.createElement('div');
+    qEn.className='phrase-english';qEn.style.marginBottom='12px';qEn.textContent=p.qt;
+    c.appendChild(qEn);
+
+    // Answer - hidden until tapped
+    var answerDiv=document.createElement('div');
+    answerDiv.style.display='none';
+
+    var divider=document.createElement('div');
+    divider.style.cssText='border-top:1px solid rgba(255,255,255,0.08);margin-bottom:10px';
+    answerDiv.appendChild(divider);
+
+    var aLabel=document.createElement('div');
+    aLabel.style.cssText='font-size:0.7rem;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.08em';
+    aLabel.textContent='Answer';
+    answerDiv.appendChild(aLabel);
+
+    var aRow=document.createElement('div');
+    aRow.style.cssText='display:flex;justify-content:space-between;align-items:center;margin-bottom:4px';
+    var aFr=document.createElement('div');
+    aFr.className='phrase-french';aFr.style.fontSize='1.05rem';aFr.textContent=p.a;
+    var aBtn=document.createElement('button');aBtn.className='play-btn';aBtn.textContent='▶';
+    aBtn.onclick=(function(a){return function(){tts(a,'fr-FR');};})(p.a);
+    aRow.appendChild(aFr);aRow.appendChild(aBtn);
+    answerDiv.appendChild(aRow);
+
+    if(p.at){
+      var aEn=document.createElement('div');
+      aEn.className='phrase-english';aEn.textContent=p.at;
+      answerDiv.appendChild(aEn);
+    }
+
+    c.appendChild(answerDiv);
+
+    // Show Answer button
+    var showBtn=document.createElement('button');
+    showBtn.className='btn-dim';
+    showBtn.style.cssText='width:100%;margin-top:4px;font-size:0.82rem;padding:8px';
+    showBtn.textContent='Show Answer';
+    showBtn.onclick=function(){
+      answerDiv.style.display='block';
+      showBtn.style.display='none';
+      tts(p.a,'fr-FR');
+    };
+    c.appendChild(showBtn);
+
     list.appendChild(c);
   });
 }
