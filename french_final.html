@@ -116,6 +116,7 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
   <button class="tab-btn" onclick="showPage('drill')">🎤 Drill</button>
   <button class="tab-btn" onclick="showPage('qa');qaInit()">💬 Q&amp;A</button>
   <button class="tab-btn" onclick="showPage('drive')">🚗 Drive</button>
+  <button class="tab-btn" onclick="showPage('bilan')">📝 Bilan</button>
 </div>
 
 <!-- HOME -->
@@ -133,7 +134,10 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
   <div class="unit-card" onclick="showPage('phrases');setUnit('polite')"><div class="unit-icon">🎩</div><div class="unit-info"><div class="unit-name">Polite Responses</div><div class="unit-desc">Merci, avec plaisir, pas grave</div><div class="unit-count">10 phrases</div></div><div class="unit-arrow">›</div></div>
   <div class="unit-card" onclick="showPage('phrases');setUnit('lifestyle')"><div class="unit-icon">🌅</div><div class="unit-info"><div class="unit-name">Lifestyle & Living</div><div class="unit-desc">J'aime, je déteste, le style de vie</div><div class="unit-count">9 phrases</div></div><div class="unit-arrow">›</div></div>
   <div class="unit-card" onclick="showPage('drill');document.getElementById('drillUnit').value='qa'"><div class="unit-icon">💬</div><div class="unit-info"><div class="unit-name">Q&amp;A Practice</div><div class="unit-desc">Real conversations — questions you'll be asked in Menton</div><div class="unit-count">15 pairs · Go straight to Drill</div></div><div class="unit-arrow">›</div></div>
+  <div class="unit-card" onclick="showPage('phrases');setUnit('negation')"><div class="unit-icon">🚫</div><div class="unit-info"><div class="unit-name">La Négation</div><div class="unit-desc">Ne...pas, ne...pas de — group class 3/11 &amp; 3/18</div><div class="unit-count">15 phrases</div></div><div class="unit-arrow">›</div></div>
+  <div class="unit-card" onclick="showPage('phrases');setUnit('passe')"><div class="unit-icon">⏪</div><div class="unit-info"><div class="unit-name">Passé Composé</div><div class="unit-desc">J'ai parlé, j'ai mangé — group class 3/18</div><div class="unit-count">10 phrases</div></div><div class="unit-arrow">›</div></div>
   <div class="unit-card" onclick="showPage('drive')" style="background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(201,168,76,0.04));border:1px solid rgba(201,168,76,0.3)"><div class="unit-icon">🚗</div><div class="unit-info"><div class="unit-name" style="color:var(--gold)">Driving Mode</div><div class="unit-desc">Hands-free French — listen &amp; repeat or quiz mode</div><div class="unit-count">All categories · no tapping required</div></div><div class="unit-arrow">›</div></div>
+  <div class="unit-card" onclick="showPage('bilan')" style="background:linear-gradient(135deg,rgba(46,125,79,0.12),rgba(46,125,79,0.04));border:1px solid rgba(46,125,79,0.3)"><div class="unit-icon">📝</div><div class="unit-info"><div class="unit-name" style="color:#7eeaa8">Bilan 1 — Homework</div><div class="unit-desc">Être, avoir, négation, c'est vs il y a — 3/18 class</div><div class="unit-count">5 exercises · interactive</div></div><div class="unit-arrow">›</div></div>
   <div class="tip-box" style="margin-top:6px">Always say <strong style="color:var(--gold)">madame</strong> or <strong style="color:var(--gold)">monsieur</strong> after Bonjour with strangers. Use <strong style="color:var(--gold)">vous</strong> — not tu — with anyone you don't know well.</div>
 </div>
 
@@ -147,6 +151,8 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
     <button class="unit-pill" onclick="setUnit('polite')">Polite</button>
     <button class="unit-pill" onclick="setUnit('lifestyle')">Lifestyle</button>
     <button class="unit-pill" onclick="setUnit('daily')">Daily Life</button>
+    <button class="unit-pill" onclick="setUnit('negation')">🚫 Négation</button>
+    <button class="unit-pill" onclick="setUnit('passe')">⏪ Passé</button>
   </div>
   <div id="phraseList"></div>
 </div>
@@ -162,6 +168,8 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
     <option value="polite">Polite Responses</option>
     <option value="lifestyle">Lifestyle & Living</option>
     <option value="daily">Daily Life</option>
+    <option value="negation">🚫 La Négation</option>
+    <option value="passe">⏪ Passé Composé</option>
     <option value="qa">Q&amp;A Practice</option>
 
   </select>
@@ -363,6 +371,35 @@ const units={
     {fr:"Aujourd'hui c'est lundi.",en:"Today is Monday.",note:"Always useful for orientation."},
     {fr:"Le vol est demain.",en:"The flight is tomorrow."},
     {fr:"Je fais ma valise.",en:"I am packing my suitcase.",note:"Literally: I make my suitcase."},
+  ]},
+  negation:{name:"La Négation",tip:"Wrap ne...pas around the verb. In spoken French, ne is often dropped — you'll hear 'je suis pas' instead of 'je ne suis pas'.",phrases:[
+    {fr:"Je ne suis pas français.",en:"I am not French.",note:"ne + verb + pas. Both words needed in writing."},
+    {fr:"Je ne parle pas bien français.",en:"I don't speak French well."},
+    {fr:"Il n'est pas américain.",en:"He is not American.",note:"ne becomes n' before a vowel."},
+    {fr:"Ce n'est pas grave.",en:"It's not serious. / No worries.",note:"Very useful everyday phrase."},
+    {fr:"Ce n'est pas possible.",en:"That's not possible."},
+    {fr:"Il n'y a pas de problème.",en:"There is no problem.",note:"Un/une/des → pas de in negatives."},
+    {fr:"Je ne suis pas contente.",en:"I am not happy.",note:"Contente = feminine form."},
+    {fr:"Ils n'ont pas de ticket.",en:"They don't have a ticket.",note:"Des → pas de after negation."},
+    {fr:"Vous n'êtes pas là demain.",en:"You won't be there tomorrow."},
+    {fr:"Je n'ai pas le temps.",en:"I don't have the time.",note:"Le/la/les stay the same after negation."},
+    {fr:"Je n'ai pas de voiture.",en:"I don't have a car.",note:"Un/une → pas de after negation."},
+    {fr:"Nous n'avons pas faim.",en:"We are not hungry."},
+    {fr:"Je ne connais pas Menton.",en:"I don't know Menton."},
+    {fr:"Ce n'est pas la même chose.",en:"It's not the same thing.",note:"From the train dialogue in class."},
+    {fr:"Je n'ai pas ma carte sur moi.",en:"I don't have my card on me.",note:"Also from the train dialogue."},
+  ]},
+  passe:{name:"Passé Composé",tip:"Past tense with avoir: J'ai + past participle. Most -er verbs: parler → parlé, habiter → habité.",phrases:[
+    {fr:"J'ai parlé en français.",en:"I spoke in French.",note:"Parler → parlé. The key pattern for -er verbs."},
+    {fr:"J'ai mangé une baguette.",en:"I ate a baguette.",note:"Manger → mangé."},
+    {fr:"J'ai habité à San Diego.",en:"I lived in San Diego.",note:"Habiter → habité."},
+    {fr:"J'ai travaillé aujourd'hui.",en:"I worked today.",note:"Travailler → travaillé."},
+    {fr:"Tu as un cheval.",en:"You have a horse.",note:"Avoir present — don't confuse with past tense."},
+    {fr:"Il a une voiture.",en:"He has a car.",note:"Il/elle/on a — same pronunciation as 'a'."},
+    {fr:"Nous avons des chevaux.",en:"We have horses.",note:"Un → des for plural."},
+    {fr:"Vous avez des citrons.",en:"You have lemons."},
+    {fr:"Ils ont des chevaux.",en:"They have horses.",note:"Ils ont — the s makes a z sound before ont."},
+    {fr:"J'ai un chien.",en:"I have a dog.",note:"Un animal → des animaux in plural."},
   ]}
 };
 
@@ -1439,10 +1476,50 @@ function renderQA(){
   });
 }
 
+// ══════════════════════════════════════════
+// CHROME MOBILE AUDIO UNLOCK
+// ══════════════════════════════════════════
+let audioUnlocked = false;
+function unlockAudio() {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const buf = ctx.createBuffer(1,1,22050);
+    const src = ctx.createBufferSource();
+    src.buffer = buf; src.connect(ctx.destination); src.start(0);
+    setTimeout(() => ctx.close(), 100);
+  } catch(e) {}
+  if (window.speechSynthesis) {
+    const u = new SpeechSynthesisUtterance('\u200b');
+    u.volume = 0; window.speechSynthesis.speak(u);
+    window.speechSynthesis.getVoices();
+    setTimeout(() => window.speechSynthesis.getVoices(), 300);
+    setTimeout(() => window.speechSynthesis.getVoices(), 1200);
+  }
+  const ov = document.getElementById('audioUnlockOverlay');
+  if (ov) { ov.style.opacity='0'; setTimeout(()=>ov.remove(),400); }
+}
+
 window.addEventListener('load',()=>{
   renderPhrases();renderVerbs();renderQA();renderVocab();qaInit();
-  window.speechSynthesis.getVoices();
-  setTimeout(()=>window.speechSynthesis.getVoices(),500);
+  if (window.speechSynthesis) {
+    window.speechSynthesis.getVoices();
+    setTimeout(()=>window.speechSynthesis.getVoices(),500);
+    setTimeout(()=>window.speechSynthesis.getVoices(),1500);
+  }
+  // Chrome mobile needs a tap to unlock audio
+  const isChromeMobile = /Chrome/.test(navigator.userAgent) && /Mobi|Android/i.test(navigator.userAgent);
+  if (isChromeMobile) {
+    const ov = document.createElement('div');
+    ov.id = 'audioUnlockOverlay';
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(26,39,68,0.97);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:32px;text-align:center;transition:opacity 0.4s;';
+    ov.innerHTML = '<div style="font-family:\'Playfair Display\',serif;font-size:2rem;color:#c9a84c">French — Menton</div>'
+      + '<div style="font-size:0.88rem;color:#a89878;line-height:1.7">Tap below to enable audio.<br>Required on Chrome mobile.</div>'
+      + '<button onclick="unlockAudio()" style="background:#c9a84c;color:#1a2744;border:none;border-radius:14px;padding:18px 44px;font-size:1.1rem;font-weight:700;font-family:\'Source Sans 3\',sans-serif;cursor:pointer;box-shadow:0 4px 20px rgba(201,168,76,0.4)">Tap to Start 🇫🇷</button>';
+    document.body.appendChild(ov);
+  }
+  document.addEventListener('touchstart', unlockAudio, {once:true});
 });
 </script>
 
@@ -1504,19 +1581,14 @@ svg.dv-ring{transform:rotate(-90deg);width:88px;height:88px;}
 .dv-dbtn.gld{background:linear-gradient(135deg,#f0a500,#e05c2a);border-color:transparent;color:#0d1117;}
 .dv-dbtn:active{transform:scale(0.97);}
 </style>
-
 <div class="dv-screen" id="dv-home">
   <div class="dv-logo">🚗</div>
   <div class="dv-title">Driving Mode</div>
   <div class="dv-sub">Hands-free French — eyes on the road.</div>
   <div class="dv-slabel">Mode</div>
   <div class="dv-modes">
-    <button class="dv-mbtn dv-sel" id="dv-m-listen" onclick="dvSelectMode('listen',this)">
-      <span class="dv-mi">🔊</span><span class="dv-mn">Listen & Repeat</span><span class="dv-md">Hear French, repeat aloud</span>
-    </button>
-    <button class="dv-mbtn" id="dv-m-quiz" onclick="dvSelectMode('quiz',this)">
-      <span class="dv-mi">🧠</span><span class="dv-mn">Quiz Me</span><span class="dv-md">Hear English, say French</span>
-    </button>
+    <button class="dv-mbtn dv-sel" id="dv-m-listen" onclick="dvSelectMode('listen',this)"><span class="dv-mi">🔊</span><span class="dv-mn">Listen & Repeat</span><span class="dv-md">Hear French, repeat aloud</span></button>
+    <button class="dv-mbtn" id="dv-m-quiz" onclick="dvSelectMode('quiz',this)"><span class="dv-mi">🧠</span><span class="dv-mn">Quiz Me</span><span class="dv-md">Hear English, say French</span></button>
   </div>
   <div class="dv-slabel">Category</div>
   <div class="dv-cgrid" id="dv-cgrid"></div>
@@ -1527,7 +1599,6 @@ svg.dv-ring{transform:rotate(-90deg);width:88px;height:88px;}
   </div>
   <button class="dv-start" onclick="dvStart()">Start 🚗</button>
 </div>
-
 <div class="dv-screen dv-hidden" id="dv-session">
   <div class="dv-hdr">
     <button class="dv-back" onclick="dvGoHome()">🏠 Menu</button>
@@ -1550,7 +1621,6 @@ svg.dv-ring{transform:rotate(-90deg);width:88px;height:88px;}
     <button class="dv-btn" onclick="dvSkip()">⏭ Skip</button>
   </div>
 </div>
-
 <div class="dv-screen dv-hidden" id="dv-done">
   <div class="dv-de">🎉</div>
   <div class="dv-dt">Très bien !</div>
@@ -1562,7 +1632,116 @@ svg.dv-ring{transform:rotate(-90deg);width:88px;height:88px;}
 </div>
 </div>
 
+<!-- BILAN 1 PAGE -->
+<div class="page" id="page-bilan">
+<style>
+.bl-title{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--gold);margin:16px 0 4px;}
+.bl-sub{font-size:0.78rem;color:var(--muted);margin-bottom:14px;line-height:1.5;}
+.bl-ex{background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:16px;margin-bottom:14px;}
+.bl-ex-title{font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+.bl-item{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.bl-num{font-size:0.75rem;font-weight:700;color:var(--muted);min-width:18px;}
+.bl-text{font-size:0.9rem;color:var(--cream);flex:1;line-height:1.5;}
+.bl-blank{display:inline-block;min-width:90px;border-bottom:2px solid rgba(201,168,76,0.5);color:var(--gold);font-family:'Playfair Display',serif;font-size:0.95rem;text-align:center;padding:1px 6px;cursor:pointer;border-radius:3px;transition:background 0.2s;}
+.bl-blank.revealed{background:rgba(46,125,79,0.2);border-color:var(--green);color:#7eeaa8;}
+.bl-blank.wrong{background:rgba(122,40,40,0.2);border-color:var(--red);color:#f08080;}
+.bl-reveal-btn{width:100%;margin-top:10px;padding:9px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);border-radius:8px;color:var(--gold);font-family:'Source Sans 3',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;letter-spacing:0.05em;}
+.bl-reveal-btn:active{opacity:0.7;}
+.bl-note{font-size:0.73rem;color:var(--muted);margin-top:3px;font-style:italic;line-height:1.4;}
+.bl-rule{background:rgba(201,168,76,0.08);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:9px 12px;margin:10px 0;font-size:0.78rem;color:var(--muted);line-height:1.5;}
+.bl-score{text-align:center;font-size:0.85rem;color:var(--muted);margin-top:4px;}
+.bl-score span{color:var(--gold);font-weight:700;font-size:1rem;}
+</style>
+
+<div class="bl-title">📝 Bilan 1 — Homework</div>
+<div class="bl-sub">Group class 3/18. Tap any blank to reveal the answer. Work through each exercise.</div>
+
+<!-- EX 1: RELIER -->
+<div class="bl-ex">
+  <div class="bl-ex-title">Exercise 1 — Reliez (Match)</div>
+  <div class="bl-rule">Match the subject to the correct verb form. Each pronoun takes a different form of être or avoir.</div>
+  <div class="bl-item"><span class="bl-num">1.</span><span class="bl-text">Anne et Jean <span class="bl-blank" onclick="revealBlank(this,'ont trois enfants')">?</span></span></div>
+  <div class="bl-item"><span class="bl-num">2.</span><span class="bl-text">Nous <span class="bl-blank" onclick="revealBlank(this,'avons rendez-vous à 9h')">?</span></span></div>
+  <div class="bl-item"><span class="bl-num">3.</span><span class="bl-text">L'appartement <span class="bl-blank" onclick="revealBlank(this,'est au centre ville')">?</span></span></div>
+  <div class="bl-item"><span class="bl-num">4.</span><span class="bl-text">Vous <span class="bl-blank" onclick="revealBlank(this,'avez mal à la tête')">?</span></span></div>
+  <div class="bl-item"><span class="bl-num">5.</span><span class="bl-text">Le restaurant <span class="bl-blank" onclick="revealBlank(this,'est ouvert')">?</span></span></div>
+  <div class="bl-item"><span class="bl-num">6.</span><span class="bl-text">J' <span class="bl-blank" onclick="revealBlank(this,'ai faim')">?</span></span></div>
+  <div class="bl-item"><span class="bl-num">7.</span><span class="bl-text">On <span class="bl-blank" onclick="revealBlank(this,'a le temps')">?</span> <span class="bl-note">— "we have time"</span></span></div>
+  <button class="bl-reveal-btn" onclick="revealAll(this.parentElement)">Reveal All →</button>
+</div>
+
+<!-- EX 2: ÊTRE -->
+<div class="bl-ex">
+  <div class="bl-ex-title">Exercise 2 — Complétez avec être</div>
+  <div class="bl-rule">être: je suis · tu es · il/elle est · nous sommes · vous êtes · ils/elles sont</div>
+  <div class="bl-item"><span class="bl-num">1.</span><span class="bl-text">Tu <span class="bl-blank" onclick="revealBlank(this,'es')">?</span> occupé(e). <span class="bl-note">— Are you busy?</span></span></div>
+  <div class="bl-item"><span class="bl-num">2.</span><span class="bl-text">Il <span class="bl-blank" onclick="revealBlank(this,'est')">?</span> brésilien. <span class="bl-note">— brésilienne for fem.</span></span></div>
+  <div class="bl-item"><span class="bl-num">3.</span><span class="bl-text">Ils <span class="bl-blank" onclick="revealBlank(this,'sont')">?</span> pauvres.</span></div>
+  <div class="bl-item"><span class="bl-num">4.</span><span class="bl-text">Nous <span class="bl-blank" onclick="revealBlank(this,'sommes')">?</span> mécontents. <span class="bl-note">— contents for fem.</span></span></div>
+  <div class="bl-item"><span class="bl-num">5.</span><span class="bl-text">Vous <span class="bl-blank" onclick="revealBlank(this,'êtes')">?</span> créatifs. <span class="bl-note">— créatives for fem.</span></span></div>
+  <button class="bl-reveal-btn" onclick="revealAll(this.parentElement)">Reveal All →</button>
+</div>
+
+<!-- EX 3: AVOIR OU ÊTRE -->
+<div class="bl-ex">
+  <div class="bl-ex-title">Exercise 3 — Avoir ou Être ?</div>
+  <div class="bl-rule">Key: être = identity/state. avoir = possession/age/sensation (faim, soif, chaud, froid). C'est = it is.</div>
+  <div class="bl-item"><span class="bl-num">1.</span><span class="bl-text">Elle <span class="bl-blank" onclick="revealBlank(this,'est')">?</span> célibataire, mais elle <span class="bl-blank" onclick="revealBlank(this,'a')">?</span> un petit ami.</span></div>
+  <div class="bl-item"><span class="bl-num">2.</span><span class="bl-text">Nous <span class="bl-blank" onclick="revealBlank(this,'sommes')">?</span> contents ; nous <span class="bl-blank" onclick="revealBlank(this,'avons')">?</span> un bon salaire.</span></div>
+  <div class="bl-item"><span class="bl-num">3.</span><span class="bl-text">J'<span class="bl-blank" onclick="revealBlank(this,'ai')">?</span> une réunion à 10h. C'<span class="bl-blank" onclick="revealBlank(this,'est')">?</span> important pour moi.</span></div>
+  <div class="bl-item"><span class="bl-num">4.</span><span class="bl-text">Vous <span class="bl-blank" onclick="revealBlank(this,'êtes')">?</span> américain ? Vous <span class="bl-blank" onclick="revealBlank(this,'avez')">?</span> un accent anglais !</span></div>
+  <div class="bl-item"><span class="bl-num">5.</span><span class="bl-text">Tu <span class="bl-blank" onclick="revealBlank(this,'as')">?</span> huit ans ! Tu <span class="bl-blank" onclick="revealBlank(this,'es')">?</span> un grand garçon !</span></div>
+  <div class="bl-item"><span class="bl-num">6.</span><span class="bl-text">Les spectateurs <span class="bl-blank" onclick="revealBlank(this,'sont')">?</span> contents. Ils <span class="bl-blank" onclick="revealBlank(this,'ont')">?</span> des billets gratuits.</span></div>
+  <button class="bl-reveal-btn" onclick="revealAll(this.parentElement)">Reveal All →</button>
+</div>
+
+<!-- EX 4: PLURIEL -->
+<div class="bl-ex">
+  <div class="bl-ex-title">Exercise 4 — Mettez au pluriel</div>
+  <div class="bl-rule">Singular → plural: je→nous, tu→vous, il/elle→ils/elles. Adjectives add -s in plural.</div>
+  <div class="bl-item"><span class="bl-num">1.</span><span class="bl-text">Il est sympathique. → <span class="bl-blank" onclick="revealBlank(this,'Ils sont sympathiques.')">?</span></span></div>
+  <div class="bl-item"><span class="bl-num">2.</span><span class="bl-text">Tu as quel âge ? → <span class="bl-blank" onclick="revealBlank(this,'Vous avez quel âge ?')">?</span></span></div>
+  <div class="bl-item"><span class="bl-num">3.</span><span class="bl-text">Je suis optimiste. → <span class="bl-blank" onclick="revealBlank(this,'Nous sommes optimistes.')">?</span></span></div>
+  <div class="bl-item"><span class="bl-num">4.</span><span class="bl-text">Elle a la carte de travail. → <span class="bl-blank" onclick="revealBlank(this,'Elles ont la carte de travail.')">?</span></span></div>
+  <div class="bl-item"><span class="bl-num">5.</span><span class="bl-text">J'ai des informations. → <span class="bl-blank" onclick="revealBlank(this,'Nous avons des informations.')">?</span> <span class="bl-note">— already plural noun, just change pronoun</span></span></div>
+  <button class="bl-reveal-btn" onclick="revealAll(this.parentElement)">Reveal All →</button>
+</div>
+
+<!-- EX 5: C'EST vs IL Y A -->
+<div class="bl-ex">
+  <div class="bl-ex-title">Exercise 5 — C'est ou Il y a ?</div>
+  <div class="bl-rule">C'est = "It is" — identifies/describes something specific. Il y a = "There is/are" — states that something exists.</div>
+  <div class="bl-item"><span class="bl-num">1.</span><span class="bl-text">Le musée Pompidou ? <span class="bl-blank" onclick="revealBlank(this,'C\'est')">?</span> un musée d'Art moderne.</span></div>
+  <div class="bl-item"><span class="bl-num">2.</span><span class="bl-text">Dans cette école <span class="bl-blank" onclick="revealBlank(this,'il y a')">?</span> 200 enfants.</span></div>
+  <div class="bl-item"><span class="bl-num">3.</span><span class="bl-text"><span class="bl-blank" onclick="revealBlank(this,'Il y a')">?</span> beaucoup de pistes cyclables. <span class="bl-blank" onclick="revealBlank(this,'C\'est')">?</span> bien pour les cyclistes.</span></div>
+  <div class="bl-item"><span class="bl-num">4.</span><span class="bl-text"><span class="bl-blank" onclick="revealBlank(this,'Il y a')">?</span> une petite rue : <span class="bl-blank" onclick="revealBlank(this,'il y a')">?</span> une boulangerie et une pharmacie.</span></div>
+  <div class="bl-item"><span class="bl-num">5.</span><span class="bl-text"><span class="bl-blank" onclick="revealBlank(this,'Il y a')">?</span> un film à 20h30. <span class="bl-blank" onclick="revealBlank(this,'C\'est')">?</span> une comédie.</span></div>
+  <button class="bl-reveal-btn" onclick="revealAll(this.parentElement)">Reveal All →</button>
+</div>
+
+<div class="tip-box">🎯 <strong style="color:var(--gold)">Study tip:</strong> Cover the answers and say each sentence aloud before tapping to reveal. The pattern will stick faster if you speak it.</div>
+</div>
+
 <script>
+// BILAN interactions
+function revealBlank(el, answer) {
+  el.textContent = answer;
+  el.classList.add('revealed');
+  el.onclick = null;
+}
+function revealAll(container) {
+  container.querySelectorAll('.bl-blank').forEach(function(b) {
+    if (b.textContent === '?') {
+      var fn = b.getAttribute('onclick');
+      if (fn) {
+        var match = fn.match(/revealBlank\(this,'(.+?)'\)/);
+        if (match) revealBlank(b, match[1].replace(/\\'/g,"'"));
+      }
+    }
+  });
+}
+
+// DRIVE MODE
 (function(){
 const DV_CATS=[
   {id:'greet',emoji:'👋',name:'Greetings',phrases:[
@@ -1576,35 +1755,29 @@ const DV_CATS=[
     {fr:"Je m'appelle Jack.",en:'My name is Jack.'},{fr:'Je suis américain.',en:'I am American.'},
     {fr:'Je viens des États-Unis.',en:'I come from the United States.'},{fr:'Je viens de San Diego.',en:'I come from San Diego.'},
     {fr:"J'habite à Menton.",en:'I live in Menton.'},{fr:'Je suis à la retraite.',en:'I am retired.'},
-    {fr:'Je suis avec ma femme.',en:'I am with my wife.'},{fr:'Je parle anglais.',en:'I speak English.'},
-    {fr:'Je parle un peu français.',en:'I speak a little French.'},{fr:'Je ne parle pas très bien français.',en:"I don't speak French very well."},
+    {fr:'Je suis avec ma femme.',en:'I am with my wife.'},{fr:'Je parle un peu français.',en:'I speak a little French.'},
   ]},
   {id:'questions',emoji:'❓',name:'Questions',phrases:[
     {fr:'Où est la gare ?',en:'Where is the train station?'},{fr:"Où est l'arrêt de bus ?",en:'Where is the bus stop?'},
-    {fr:'Où est le supermarché ?',en:'Where is the supermarket?'},{fr:'Où est la pharmacie ?',en:'Where is the pharmacy?'},
-    {fr:'Qui est votre ami ?',en:'Who is your friend?'},{fr:'Quand est le rendez-vous ?',en:'When is the appointment?'},
-    {fr:'Comment allez-vous ?',en:'How are you? (formal)'},{fr:'Comment vous appelez-vous ?',en:'What is your name? (formal)'},
-    {fr:"D'où venez-vous ?",en:'Where are you from?'},
+    {fr:'Où est la pharmacie ?',en:'Where is the pharmacy?'},{fr:'Comment allez-vous ?',en:'How are you? (formal)'},
+    {fr:'Comment vous appelez-vous ?',en:'What is your name?'},{fr:"D'où venez-vous ?",en:'Where are you from?'},
   ]},
   {id:'directions',emoji:'🧭',name:'Directions',phrases:[
     {fr:'À gauche',en:'To the left'},{fr:'À droite',en:'To the right'},{fr:'Tout droit',en:'Straight ahead'},
     {fr:'Tournez à gauche.',en:'Turn left.'},{fr:'Tournez à droite.',en:'Turn right.'},
     {fr:'Continuez tout droit.',en:'Continue straight ahead.'},{fr:"C'est à gauche.",en:"It's on the left."},
-    {fr:"C'est à droite.",en:"It's on the right."},{fr:'Où est le parc ?',en:'Where is the park?'},
   ]},
-  {id:'verbs',emoji:'⚡',name:'Key Verbs',phrases:[
-    {fr:'Je suis américain.',en:'I am American.'},{fr:'Je parle français.',en:'I speak French.'},
-    {fr:'Vous parlez anglais ?',en:'Do you speak English?'},{fr:"J'habite à Menton.",en:'I live in Menton.'},
-    {fr:"J'ai faim.",en:"I'm hungry."},{fr:"J'ai soif.",en:"I'm thirsty."},
-    {fr:"J'ai chaud.",en:"I'm hot."},{fr:"J'ai froid.",en:"I'm cold."},
-    {fr:'Je connais Menton.',en:'I know Menton.'},{fr:"Il y a une boulangerie.",en:'There is a bakery.'},
+  {id:'negation',emoji:'🚫',name:'Négation',phrases:[
+    {fr:'Je ne suis pas français.',en:'I am not French.'},{fr:"Ce n'est pas grave.",en:"It's not serious."},
+    {fr:"Il n'y a pas de problème.",en:'There is no problem.'},{fr:"Je n'ai pas le temps.",en:"I don't have time."},
+    {fr:"Je n'ai pas de voiture.",en:"I don't have a car."},{fr:"Ce n'est pas possible.",en:"That's not possible."},
+    {fr:'Nous ne sommes pas contents.',en:'We are not happy.'},{fr:"Je ne parle pas bien français.",en:"I don't speak French well."},
   ]},
   {id:'polite',emoji:'🎩',name:'Polite',phrases:[
     {fr:"S'il vous plaît",en:'Please (formal)'},{fr:'Merci beaucoup',en:'Thank you very much'},
-    {fr:'De rien',en:"You're welcome"},{fr:'Je vous en prie',en:"You're welcome (formal)"},
-    {fr:'Pardon',en:'Excuse me / Sorry'},{fr:'Excusez-moi',en:'Excuse me (formal)'},
-    {fr:'Je suis désolé.',en:"I'm sorry."},{fr:'Voilà !',en:'Here you go!'},
-    {fr:"D'accord.",en:'Okay / Agreed.'},{fr:'Bien sûr !',en:'Of course!'},
+    {fr:'De rien',en:"You're welcome"},{fr:'Pardon',en:'Excuse me / Sorry'},
+    {fr:'Excusez-moi',en:'Excuse me (formal)'},{fr:"D'accord.",en:'Okay / Agreed.'},
+    {fr:'Bien sûr !',en:'Of course!'},{fr:'Pas grave.',en:'No worries.'},
   ]},
 ];
 
@@ -1613,7 +1786,6 @@ let dvPhrases=[],dvIdx=0,dvPhase='idle',dvPaused=false;
 let dvTimer=null,dvCdVal=0,dvCdMax=6;
 const dvCirc=251;
 
-// build category grid
 const grid=document.getElementById('dv-cgrid');
 DV_CATS.forEach(cat=>{
   const b=document.createElement('button');
@@ -1641,123 +1813,27 @@ function dvSpeak(text,lang,cb){
     speechSynthesis.speak(u);
   },80);
 }
-
-function dvSetRing(val,max,color){
-  document.getElementById('dv-rf').style.strokeDashoffset=dvCirc*(1-Math.max(0,val/max));
-  document.getElementById('dv-rf').style.stroke=color;
-  document.getElementById('dv-rnum').textContent=val;
-  document.getElementById('dv-rwrap').style.display='block';
-}
+function dvSetRing(val,max,color){document.getElementById('dv-rf').style.strokeDashoffset=dvCirc*(1-Math.max(0,val/max));document.getElementById('dv-rf').style.stroke=color;document.getElementById('dv-rnum').textContent=val;document.getElementById('dv-rwrap').style.display='block';}
 function dvHideRing(){document.getElementById('dv-rwrap').style.display='none';}
 function dvPulseOn(on){document.getElementById('dv-pulse').classList.toggle('on',on);}
 function dvSetBadge(txt,cls){const el=document.getElementById('dv-badge');el.className='dv-badge '+cls;el.textContent=txt;}
-function dvUpdateHdr(){
-  document.getElementById('dv-pbar').style.width=(dvPhrases.length?dvIdx/dvPhrases.length*100:0)+'%';
-  document.getElementById('dv-cnt').textContent=(dvIdx+1)+'/'+dvPhrases.length;
-}
+function dvUpdateHdr(){document.getElementById('dv-pbar').style.width=(dvPhrases.length?dvIdx/dvPhrases.length*100:0)+'%';document.getElementById('dv-cnt').textContent=(dvIdx+1)+'/'+dvPhrases.length;}
 function dvStopAll(){clearInterval(dvTimer);clearTimeout(dvTimer);dvTimer=null;speechSynthesis&&speechSynthesis.cancel();dvPhase='idle';dvPaused=false;dvPulseOn(false);}
+function dvCountdown(secs,color,onDone){clearInterval(dvTimer);dvTimer=null;dvCdMax=secs;dvCdVal=secs;dvSetRing(dvCdVal,dvCdMax,color);dvTimer=setInterval(()=>{if(dvPaused)return;dvCdVal--;dvSetRing(dvCdVal,dvCdMax,color);if(dvCdVal<=0){clearInterval(dvTimer);dvTimer=null;onDone&&onDone();}},1000);}
 
-function dvCountdown(secs,color,onDone){
-  clearInterval(dvTimer);dvTimer=null;
-  dvCdMax=secs;dvCdVal=secs;dvSetRing(dvCdVal,dvCdMax,color);
-  dvTimer=setInterval(()=>{
-    if(dvPaused)return;
-    dvCdVal--;dvSetRing(dvCdVal,dvCdMax,color);
-    if(dvCdVal<=0){clearInterval(dvTimer);dvTimer=null;onDone&&onDone();}
-  },1000);
-}
+function dvListenSpeak(){if(dvIdx>=dvPhrases.length){dvDone();return;}dvPhase='speaking';const p=dvPhrases[dvIdx];dvUpdateHdr();dvSetBadge('LISTEN','bl');document.getElementById('dv-main').textContent=p.fr;document.getElementById('dv-eng').textContent=p.en;dvPulseOn(false);dvHideRing();dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused&&dvPhase==='speaking')dvListenRepeat();});}
+function dvListenRepeat(){dvPhase='repeating';dvSetBadge('YOUR TURN — REPEAT','bg');document.getElementById('dv-eng').textContent='';dvPulseOn(true);dvCountdown(dvSecs,'#3fb950',()=>{dvPulseOn(false);dvIdx++;dvListenSpeak();});}
+function dvQuizPrompt(){if(dvIdx>=dvPhrases.length){dvDone();return;}dvPhase='prompting';const p=dvPhrases[dvIdx];dvUpdateHdr();dvSetBadge('HOW DO YOU SAY...','bb');document.getElementById('dv-main').textContent=p.en;document.getElementById('dv-eng').textContent='';dvPulseOn(false);dvHideRing();dvSpeak(p.en,'en-US',()=>{if(!dvPaused&&dvPhase==='prompting')dvQuizThink();});}
+function dvQuizThink(){dvPhase='thinking';dvSetBadge('SAY IT IN FRENCH !','bb');dvPulseOn(true);dvCountdown(dvSecs,'#58a6ff',()=>{dvPulseOn(false);dvQuizReveal();});}
+function dvQuizReveal(){dvPhase='revealing';const p=dvPhrases[dvIdx];dvSetBadge('ANSWER','bg');document.getElementById('dv-main').textContent=p.fr;document.getElementById('dv-eng').textContent=p.en;dvHideRing();dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused&&dvPhase==='revealing')dvTimer=setTimeout(()=>{dvIdx++;dvQuizPrompt();},1200);});}
 
-// LISTEN mode
-function dvListenSpeak(){
-  if(dvIdx>=dvPhrases.length){dvDone();return;}
-  dvPhase='speaking';const p=dvPhrases[dvIdx];dvUpdateHdr();
-  dvSetBadge('LISTEN','bl');
-  document.getElementById('dv-main').textContent=p.fr;
-  document.getElementById('dv-eng').textContent=p.en;
-  dvPulseOn(false);dvHideRing();
-  dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused&&dvPhase==='speaking')dvListenRepeat();});
-}
-function dvListenRepeat(){
-  dvPhase='repeating';dvSetBadge('YOUR TURN — REPEAT','bg');
-  document.getElementById('dv-eng').textContent='';dvPulseOn(true);
-  dvCountdown(dvSecs,'#3fb950',()=>{dvPulseOn(false);dvIdx++;dvListenSpeak();});
-}
-
-// QUIZ mode
-function dvQuizPrompt(){
-  if(dvIdx>=dvPhrases.length){dvDone();return;}
-  dvPhase='prompting';const p=dvPhrases[dvIdx];dvUpdateHdr();
-  dvSetBadge('HOW DO YOU SAY...','bb');
-  document.getElementById('dv-main').textContent=p.en;
-  document.getElementById('dv-eng').textContent='';dvPulseOn(false);dvHideRing();
-  dvSpeak(p.en,'en-US',()=>{if(!dvPaused&&dvPhase==='prompting')dvQuizThink();});
-}
-function dvQuizThink(){
-  dvPhase='thinking';dvSetBadge('SAY IT IN FRENCH !','bb');dvPulseOn(true);
-  dvCountdown(dvSecs,'#58a6ff',()=>{dvPulseOn(false);dvQuizReveal();});
-}
-function dvQuizReveal(){
-  dvPhase='revealing';const p=dvPhrases[dvIdx];
-  dvSetBadge('ANSWER','bg');
-  document.getElementById('dv-main').textContent=p.fr;
-  document.getElementById('dv-eng').textContent=p.en;dvHideRing();
-  dvSpeak(p.fr,'fr-FR',()=>{
-    if(!dvPaused&&dvPhase==='revealing')dvTimer=setTimeout(()=>{dvIdx++;dvQuizPrompt();},1200);
-  });
-}
-
-// Controls — on window so inline onclick works
-window.dvReplay=function(){
-  clearInterval(dvTimer);clearTimeout(dvTimer);dvTimer=null;
-  speechSynthesis&&speechSynthesis.cancel();
-  if(dvIdx>=dvPhrases.length)return;
-  const p=dvPhrases[dvIdx];
-  if(dvMode==='listen'){
-    dvPhase='speaking';dvSetBadge('LISTEN','bl');
-    document.getElementById('dv-main').textContent=p.fr;
-    document.getElementById('dv-eng').textContent=p.en;
-    dvPulseOn(false);dvHideRing();
-    dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused)dvListenRepeat();});
-  } else {
-    dvPhase='prompting';dvSetBadge('HOW DO YOU SAY...','bb');
-    document.getElementById('dv-main').textContent=p.en;
-    document.getElementById('dv-eng').textContent='';
-    dvPulseOn(false);dvHideRing();
-    dvSpeak(p.en,'en-US',()=>{if(!dvPaused)dvQuizThink();});
-  }
-};
-window.dvPause=function(){
-  dvPaused=!dvPaused;
-  document.getElementById('dv-pausebtn').textContent=dvPaused?'▶ Resume':'⏸ Pause';
-  if(dvPaused){speechSynthesis&&speechSynthesis.cancel();}
-  else{
-    if(dvMode==='listen'){if(dvPhase==='speaking')dvListenSpeak();else if(dvPhase==='repeating')dvListenRepeat();}
-    else{if(dvPhase==='prompting')dvQuizPrompt();else if(dvPhase==='thinking')dvQuizThink();else if(dvPhase==='revealing')dvQuizReveal();}
-  }
-};
+window.dvReplay=function(){clearInterval(dvTimer);clearTimeout(dvTimer);dvTimer=null;speechSynthesis&&speechSynthesis.cancel();if(dvIdx>=dvPhrases.length)return;const p=dvPhrases[dvIdx];if(dvMode==='listen'){dvPhase='speaking';dvSetBadge('LISTEN','bl');document.getElementById('dv-main').textContent=p.fr;document.getElementById('dv-eng').textContent=p.en;dvPulseOn(false);dvHideRing();dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused)dvListenRepeat();});}else{dvPhase='prompting';dvSetBadge('HOW DO YOU SAY...','bb');document.getElementById('dv-main').textContent=p.en;document.getElementById('dv-eng').textContent='';dvPulseOn(false);dvHideRing();dvSpeak(p.en,'en-US',()=>{if(!dvPaused)dvQuizThink();});}};
+window.dvPause=function(){dvPaused=!dvPaused;document.getElementById('dv-pausebtn').textContent=dvPaused?'▶ Resume':'⏸ Pause';if(dvPaused){speechSynthesis&&speechSynthesis.cancel();}else{if(dvMode==='listen'){if(dvPhase==='speaking')dvListenSpeak();else if(dvPhase==='repeating')dvListenRepeat();}else{if(dvPhase==='prompting')dvQuizPrompt();else if(dvPhase==='thinking')dvQuizThink();else if(dvPhase==='revealing')dvQuizReveal();}}};
 window.dvSkip=function(){dvStopAll();dvIdx++;if(dvIdx>=dvPhrases.length){dvDone();return;}dvMode==='listen'?dvListenSpeak():dvQuizPrompt();};
-window.dvStart=function(){
-  const cat=DV_CATS.find(c=>c.id===dvCat);
-  dvPhrases=[...cat.phrases].sort(()=>Math.random()-0.5);
-  dvIdx=0;dvPaused=false;
-  document.getElementById('dv-pausebtn').textContent='⏸ Pause';
-  dvShow('dv-session');
-  setTimeout(()=>dvMode==='listen'?dvListenSpeak():dvQuizPrompt(),400);
-};
+window.dvStart=function(){const cat=DV_CATS.find(c=>c.id===dvCat);dvPhrases=[...cat.phrases].sort(()=>Math.random()-0.5);dvIdx=0;dvPaused=false;document.getElementById('dv-pausebtn').textContent='⏸ Pause';dvShow('dv-session');setTimeout(()=>dvMode==='listen'?dvListenSpeak():dvQuizPrompt(),400);};
 window.dvGoHome=function(){dvStopAll();dvShow('dv-home');};
-window.dvRepeatSet=function(){
-  dvPhrases=[...dvPhrases].sort(()=>Math.random()-0.5);
-  dvIdx=0;dvPaused=false;
-  document.getElementById('dv-pausebtn').textContent='⏸ Pause';
-  dvShow('dv-session');
-  setTimeout(()=>dvMode==='listen'?dvListenSpeak():dvQuizPrompt(),300);
-};
-function dvDone(){
-  dvStopAll();
-  document.getElementById('dv-done-sub').textContent=dvPhrases.length+' phrases · '+(dvMode==='quiz'?'Quiz mode':'Listen mode');
-  dvShow('dv-done');
-  setTimeout(()=>dvSpeak('Très bien ! Excellent travail !','fr-FR'),500);
-}
+window.dvRepeatSet=function(){dvPhrases=[...dvPhrases].sort(()=>Math.random()-0.5);dvIdx=0;dvPaused=false;document.getElementById('dv-pausebtn').textContent='⏸ Pause';dvShow('dv-session');setTimeout(()=>dvMode==='listen'?dvListenSpeak():dvQuizPrompt(),300);};
+function dvDone(){dvStopAll();document.getElementById('dv-done-sub').textContent=dvPhrases.length+' phrases · '+(dvMode==='quiz'?'Quiz mode':'Listen mode');dvShow('dv-done');setTimeout(()=>dvSpeak('Très bien ! Excellent travail !','fr-FR'),500);}
 if(window.speechSynthesis){speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();speechSynthesis.getVoices();}
 })();
 </script>
