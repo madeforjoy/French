@@ -1658,7 +1658,25 @@ svg.dv-ring{transform:rotate(-90deg);width:88px;height:88px;}
 .bl-chip:active{transform:scale(0.95);}
 .bl-chip.used{opacity:0.25;pointer-events:none;text-decoration:line-through;}
 
-/* Score / reset */
+/* Pronunciation popup */
+.bl-pronun{position:fixed;bottom:0;left:0;right:0;background:#1a2744;border-top:2px solid rgba(201,168,76,0.4);padding:16px 20px 28px;z-index:500;transform:translateY(100%);transition:transform 0.3s ease;border-radius:16px 16px 0 0;}
+.bl-pronun.show{transform:translateY(0);}
+.bl-pronun-fr{font-family:'Playfair Display',serif;font-size:1.5rem;color:#fff;margin-bottom:4px;}
+.bl-pronun-en{font-size:0.85rem;color:#c9a84c;font-style:italic;margin-bottom:12px;}
+.bl-pronun-status{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;min-height:18px;}
+.bl-pronun-status.listening{color:#3fb950;} .bl-pronun-status.ready{color:#c9a84c;} .bl-pronun-status.next{color:#7d8590;}
+.bl-pronun-bar{display:flex;gap:6px;align-items:center;justify-content:center;margin-bottom:14px;height:32px;}
+.bl-pronun-wave{width:4px;background:#c9a84c;border-radius:3px;height:8px;opacity:0.3;}
+.bl-pronun-wave.on{opacity:1;animation:blwp 0.5s ease-in-out infinite alternate;}
+.bl-pronun-wave:nth-child(1){animation-delay:0s}.bl-pronun-wave:nth-child(2){animation-delay:.08s}.bl-pronun-wave:nth-child(3){animation-delay:.16s}.bl-pronun-wave:nth-child(4){animation-delay:.06s}.bl-pronun-wave:nth-child(5){animation-delay:.12s}
+@keyframes blwp{from{transform:scaleY(0.3)}to{transform:scaleY(1)}}
+.bl-pronun-ring{position:relative;width:56px;height:56px;margin:0 auto 10px;}
+.bl-pronun-ring svg{transform:rotate(-90deg);width:56px;height:56px;}
+.bl-pronun-ring-bg{fill:none;stroke:rgba(255,255,255,0.1);stroke-width:4;}
+.bl-pronun-ring-fg{fill:none;stroke:#3fb950;stroke-width:4;stroke-linecap:round;stroke-dasharray:157;stroke-dashoffset:157;transition:stroke-dashoffset 0.1s linear;}
+.bl-pronun-ring-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:300;color:#e6edf3;}
+.bl-pronun-btn{width:100%;padding:12px;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);border-radius:10px;color:#c9a84c;font-family:'Source Sans 3',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;letter-spacing:0.05em;}
+.bl-pronun-btn:active{opacity:0.7;}
 .bl-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;}
 .bl-score{font-size:0.8rem;color:var(--muted);}
 .bl-score b{color:var(--gold);}
@@ -1743,7 +1761,22 @@ svg.dv-ring{transform:rotate(-90deg);width:88px;height:88px;}
   <div class="bl-complete" id="complete5">✓ Exercise 5 complete!</div>
 </div>
 
-<div class="tip-box" style="margin-bottom:32px">🎯 <strong style="color:var(--gold)">How it works:</strong> Tap a word chip from the bank, then tap the blank where it goes. Wrong answer? The chip returns to the bank — try again.</div>
+<div class="tip-box" style="margin-bottom:32px">🎯 <strong style="color:var(--gold)">How it works:</strong> Tap a word chip from the bank, then tap the blank where it goes. Get it right and you'll hear it spoken — then repeat it aloud before the timer runs out.</div>
+
+<!-- Pronunciation popup (slides up from bottom on correct answer) -->
+<div class="bl-pronun" id="blPronun">
+  <div class="bl-pronun-fr" id="blPronFr">—</div>
+  <div class="bl-pronun-en" id="blPronEn">—</div>
+  <div class="bl-pronun-status ready" id="blPronStatus">Listening for you...</div>
+  <div class="bl-pronun-bar" id="blPronBar">
+    <div class="bl-pronun-wave"></div><div class="bl-pronun-wave"></div><div class="bl-pronun-wave"></div><div class="bl-pronun-wave"></div><div class="bl-pronun-wave"></div>
+  </div>
+  <div class="bl-pronun-ring" id="blPronRing">
+    <svg><circle class="bl-pronun-ring-bg" cx="28" cy="28" r="25"/><circle class="bl-pronun-ring-fg" id="blPronRingFg" cx="28" cy="28" r="25"/></svg>
+    <div class="bl-pronun-ring-num" id="blPronRingNum">5</div>
+  </div>
+  <button class="bl-pronun-btn" onclick="blClosePronun()">Next →</button>
+</div>
 </div>
 
 <script>
@@ -1752,7 +1785,6 @@ svg.dv-ring{transform:rotate(-90deg);width:88px;height:88px;}
 // ══════════════════════════════════════════
 (function(){
 
-// Answers per exercise — these populate the word banks (shuffled)
 const BANKS = {
   1: ['ont trois enfants','avons rendez-vous','est au centre ville','avez mal à la tête','est ouvert','ai faim','a le temps'],
   2: ['es','est','sont','sommes','êtes'],
@@ -1761,27 +1793,61 @@ const BANKS = {
   5: ["C'est","il y a","Il y a","C'est","Il y a","C'est","Il y a","il y a","Il y a","C'est"],
 };
 
-// Track state per exercise
+// Full sentence context for each slot — for the pronunciation popup
+// Keyed by "exNum-slotIndex" (order they appear in DOM)
+const SLOT_CONTEXT = {
+  '1-0': {fr:'Anne et Jean ont trois enfants.', en:'Anne and Jean have three children.'},
+  '1-1': {fr:'Nous avons rendez-vous à 9 heures.', en:'We have an appointment at 9.'},
+  '1-2': {fr:"L'appartement est au centre ville.", en:'The apartment is in the city centre.'},
+  '1-3': {fr:'Vous avez mal à la tête.', en:'You have a headache.'},
+  '1-4': {fr:'Le restaurant est ouvert.', en:'The restaurant is open.'},
+  '1-5': {fr:"J'ai faim.", en:"I'm hungry."},
+  '1-6': {fr:'On a le temps.', en:'We have time.'},
+  '2-0': {fr:'Tu es occupé(e).', en:'You are busy.'},
+  '2-1': {fr:'Il est brésilien.', en:'He is Brazilian.'},
+  '2-2': {fr:'Ils sont pauvres.', en:'They are poor.'},
+  '2-3': {fr:'Nous sommes mécontents.', en:'We are unhappy.'},
+  '2-4': {fr:'Vous êtes créatifs.', en:'You are creative.'},
+  '3-0': {fr:'Elle est célibataire.', en:'She is single.'},
+  '3-1': {fr:'Elle a un petit ami.', en:'She has a boyfriend.'},
+  '3-2': {fr:'Nous sommes contents.', en:'We are happy.'},
+  '3-3': {fr:'Nous avons un bon salaire.', en:'We have a good salary.'},
+  '3-4': {fr:"J'ai une réunion.", en:'I have a meeting.'},
+  '3-5': {fr:"C'est important pour moi.", en:"It's important to me."},
+  '3-6': {fr:'Vous êtes américain.', en:'You are American.'},
+  '3-7': {fr:'Vous avez un accent anglais.', en:'You have an English accent.'},
+  '3-8': {fr:'Tu as huit ans.', en:'You are eight years old.'},
+  '3-9': {fr:'Tu es un grand garçon.', en:'You are a big boy.'},
+  '3-10': {fr:'Les spectateurs sont contents.', en:'The audience is happy.'},
+  '3-11': {fr:'Ils ont des billets gratuits.', en:'They have free tickets.'},
+  '4-0': {fr:'Ils sont sympathiques.', en:'They are nice.'},
+  '4-1': {fr:'Vous avez quel âge ?', en:'How old are you?'},
+  '4-2': {fr:'Nous sommes optimistes.', en:'We are optimistic.'},
+  '4-3': {fr:'Elles ont la carte de travail.', en:'They have the work permit.'},
+  '4-4': {fr:'Nous avons des informations.', en:'We have information.'},
+  '5-0': {fr:"C'est un musée d'Art moderne.", en:"It's a modern art museum."},
+  '5-1': {fr:'Il y a 200 enfants dans cette école.', en:'There are 200 children in this school.'},
+  '5-2': {fr:'Il y a beaucoup de pistes cyclables.', en:'There are many cycle paths.'},
+  '5-3': {fr:"C'est bien pour les cyclistes.", en:"It's good for cyclists."},
+  '5-4': {fr:'Il y a une petite rue.', en:'There is a small street.'},
+  '5-5': {fr:'Il y a une boulangerie et une pharmacie.', en:'There is a bakery and a pharmacy.'},
+  '5-6': {fr:'Il y a un film à 20h30.', en:'There is a film at 8:30pm.'},
+  '5-7': {fr:"C'est une comédie.", en:"It's a comedy."},
+};
+
 const state = {};
-let selectedChip = null; // {el, exNum, answer}
+let selectedChip = null;
+let pronunTimer = null;
 
 function initEx(exNum) {
   const bank = document.getElementById('bank'+exNum);
   if (!bank) return;
   bank.innerHTML = '';
-
-  // Get unique answers for the bank, shuffled
   const answers = [...BANKS[exNum]].sort(() => Math.random() - 0.5);
-  
-  // For ex3 and ex5 which have duplicate answers, deduplicate for display
-  // but track count
   const counts = {};
   answers.forEach(a => { counts[a] = (counts[a]||0)+1; });
-
   state[exNum] = { correct: 0, total: document.querySelectorAll('.bl-slot[data-ex="'+exNum+'"]').length };
   updateScore(exNum);
-
-  // Build chips — one per unique answer, with count badge if >1
   const seen = {};
   answers.forEach(ans => {
     if (seen[ans]) return;
@@ -1796,24 +1862,20 @@ function initEx(exNum) {
     chip.onclick = () => selectChip(chip);
     bank.appendChild(chip);
   });
-
-  // Reset all slots
+  // Number each slot for context lookup
+  let slotIdx = 0;
   document.querySelectorAll('.bl-slot[data-ex="'+exNum+'"]').forEach(slot => {
+    slot.dataset.slotIdx = slotIdx++;
     slot.textContent = '___';
     slot.classList.remove('correct','wrong','filled');
     slot.onclick = () => fillSlot(slot);
   });
-
   document.getElementById('complete'+exNum).style.display = 'none';
 }
 
 function selectChip(chip) {
-  // Deselect previous
   if (selectedChip) selectedChip.el.style.outline = '';
-  if (selectedChip && selectedChip.el === chip) {
-    selectedChip = null;
-    return;
-  }
+  if (selectedChip && selectedChip.el === chip) { selectedChip = null; return; }
   selectedChip = { el: chip, exNum: parseInt(chip.dataset.ex), answer: chip.dataset.answer };
   chip.style.outline = '2px solid #c9a84c';
   chip.style.outlineOffset = '2px';
@@ -1822,53 +1884,110 @@ function selectChip(chip) {
 function fillSlot(slot) {
   if (!selectedChip) return;
   if (slot.classList.contains('correct')) return;
-
   const exNum = parseInt(slot.dataset.ex);
-  if (exNum !== selectedChip.exNum) return; // wrong exercise
-
+  if (exNum !== selectedChip.exNum) return;
   const correct = slot.dataset.answer;
   const given = selectedChip.answer;
-
-  // Normalize for comparison (case-insensitive, trim)
   const norm = s => s.trim().toLowerCase().replace(/['']/g,"'");
 
   if (norm(given) === norm(correct)) {
-    // Correct!
+    // ✓ Correct
     slot.textContent = given;
     slot.classList.add('correct');
     slot.onclick = null;
 
-    // Update chip count
+    // Update chip
     const chip = selectedChip.el;
     let rem = parseInt(chip.dataset.remaining) - 1;
     chip.dataset.remaining = rem;
-    if (rem <= 0) {
-      chip.classList.add('used');
-    } else {
-      // Update label
-      const base = chip.dataset.answer;
-      chip.textContent = base + (rem > 1 ? ' ×'+rem : '');
-    }
+    if (rem <= 0) { chip.classList.add('used'); }
+    else { chip.textContent = chip.dataset.answer + (rem > 1 ? ' ×'+rem : ''); }
     chip.style.outline = '';
     selectedChip = null;
 
-    // Update score
     state[exNum].correct++;
     updateScore(exNum);
     checkComplete(exNum);
 
+    // Show pronunciation popup
+    const key = exNum + '-' + slot.dataset.slotIdx;
+    const ctx = SLOT_CONTEXT[key] || { fr: given, en: correct };
+    showPronun(ctx.fr, ctx.en);
+
   } else {
-    // Wrong — flash red, return chip to bank
+    // ✗ Wrong
     slot.textContent = given;
     slot.classList.add('wrong');
-    setTimeout(() => {
-      slot.textContent = '___';
-      slot.classList.remove('wrong');
-    }, 700);
+    setTimeout(() => { slot.textContent = '___'; slot.classList.remove('wrong'); }, 700);
     selectedChip.el.style.outline = '';
     selectedChip = null;
   }
 }
+
+// ── PRONUNCIATION POPUP ──
+function showPronun(fr, en) {
+  clearInterval(pronunTimer);
+  const popup = document.getElementById('blPronun');
+  document.getElementById('blPronFr').textContent = fr;
+  document.getElementById('blPronEn').textContent = en;
+
+  // Speak first
+  const status = document.getElementById('blPronStatus');
+  const waves = document.querySelectorAll('.bl-pronun-wave');
+  status.className = 'bl-pronun-status ready';
+  status.textContent = 'Listen...';
+  waves.forEach(w => w.classList.add('on'));
+
+  popup.classList.add('show');
+
+  // Speak the French
+  blSpeak(fr, () => {
+    // After speaking — give 5 seconds to repeat
+    waves.forEach(w => w.classList.remove('on'));
+    status.className = 'bl-pronun-status listening';
+    status.textContent = 'Now you say it — repeat aloud!';
+
+    let secs = 5;
+    const ringFg = document.getElementById('blPronRingFg');
+    const ringNum = document.getElementById('blPronRingNum');
+    const circ = 157;
+    ringFg.style.strokeDashoffset = 0;
+    ringNum.textContent = secs;
+
+    pronunTimer = setInterval(() => {
+      secs--;
+      ringFg.style.strokeDashoffset = circ * (1 - secs/5);
+      ringNum.textContent = secs;
+      if (secs <= 0) {
+        clearInterval(pronunTimer);
+        status.className = 'bl-pronun-status next';
+        status.textContent = 'Bien ! Tap Next to continue.';
+        ringFg.style.strokeDashoffset = circ;
+        ringNum.textContent = '✓';
+      }
+    }, 1000);
+  });
+}
+
+function blSpeak(text, cb) {
+  if (!window.speechSynthesis) { cb && cb(); return; }
+  speechSynthesis.cancel();
+  setTimeout(() => {
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'fr-FR'; u.rate = 0.82;
+    const v = speechSynthesis.getVoices().find(x => x.lang.startsWith('fr'));
+    if (v) u.voice = v;
+    u.onend = () => { cb && cb(); };
+    u.onerror = () => { cb && cb(); };
+    speechSynthesis.speak(u);
+  }, 80);
+}
+
+window.blClosePronun = function() {
+  clearInterval(pronunTimer);
+  speechSynthesis && speechSynthesis.cancel();
+  document.getElementById('blPronun').classList.remove('show');
+};
 
 function updateScore(exNum) {
   const s = state[exNum];
@@ -1887,114 +2006,16 @@ function checkComplete(exNum) {
 
 window.resetEx = function(exNum) {
   selectedChip = null;
+  blClosePronun();
   initEx(exNum);
 };
 
-// Init all on load
-document.addEventListener('DOMContentLoaded', function() {
-  [1,2,3,4,5].forEach(initEx);
-});
-// Also init immediately in case DOM already loaded
+document.addEventListener('DOMContentLoaded', () => { [1,2,3,4,5].forEach(initEx); });
 [1,2,3,4,5].forEach(initEx);
 
 })();
 </script>
 
-// DRIVE MODE
-(function(){
-const DV_CATS=[
-  {id:'greet',emoji:'👋',name:'Greetings',phrases:[
-    {fr:'Bonjour',en:'Hello'},{fr:'Bonsoir',en:'Good evening'},{fr:'Bonne nuit',en:'Good night'},
-    {fr:'Salut !',en:'Hi (informal)'},{fr:'Au revoir',en:'Goodbye'},{fr:'Ça va ?',en:'How are you?'},
-    {fr:'Ça va bien, merci.',en:"I'm well, thanks."},{fr:'Très bien, merci.',en:'Very well, thanks.'},
-    {fr:'Comment allez-vous ?',en:'How are you? (formal)'},{fr:'Bonne journée !',en:'Have a good day!'},
-    {fr:'Bonne soirée !',en:'Have a good evening!'},{fr:'Bon week-end !',en:'Have a good weekend!'},
-  ]},
-  {id:'intro',emoji:'🙋',name:'About Me',phrases:[
-    {fr:"Je m'appelle Jack.",en:'My name is Jack.'},{fr:'Je suis américain.',en:'I am American.'},
-    {fr:'Je viens des États-Unis.',en:'I come from the United States.'},{fr:'Je viens de San Diego.',en:'I come from San Diego.'},
-    {fr:"J'habite à Menton.",en:'I live in Menton.'},{fr:'Je suis à la retraite.',en:'I am retired.'},
-    {fr:'Je suis avec ma femme.',en:'I am with my wife.'},{fr:'Je parle un peu français.',en:'I speak a little French.'},
-  ]},
-  {id:'questions',emoji:'❓',name:'Questions',phrases:[
-    {fr:'Où est la gare ?',en:'Where is the train station?'},{fr:"Où est l'arrêt de bus ?",en:'Where is the bus stop?'},
-    {fr:'Où est la pharmacie ?',en:'Where is the pharmacy?'},{fr:'Comment allez-vous ?',en:'How are you? (formal)'},
-    {fr:'Comment vous appelez-vous ?',en:'What is your name?'},{fr:"D'où venez-vous ?",en:'Where are you from?'},
-  ]},
-  {id:'directions',emoji:'🧭',name:'Directions',phrases:[
-    {fr:'À gauche',en:'To the left'},{fr:'À droite',en:'To the right'},{fr:'Tout droit',en:'Straight ahead'},
-    {fr:'Tournez à gauche.',en:'Turn left.'},{fr:'Tournez à droite.',en:'Turn right.'},
-    {fr:'Continuez tout droit.',en:'Continue straight ahead.'},{fr:"C'est à gauche.",en:"It's on the left."},
-  ]},
-  {id:'negation',emoji:'🚫',name:'Négation',phrases:[
-    {fr:'Je ne suis pas français.',en:'I am not French.'},{fr:"Ce n'est pas grave.",en:"It's not serious."},
-    {fr:"Il n'y a pas de problème.",en:'There is no problem.'},{fr:"Je n'ai pas le temps.",en:"I don't have time."},
-    {fr:"Je n'ai pas de voiture.",en:"I don't have a car."},{fr:"Ce n'est pas possible.",en:"That's not possible."},
-    {fr:'Nous ne sommes pas contents.',en:'We are not happy.'},{fr:"Je ne parle pas bien français.",en:"I don't speak French well."},
-  ]},
-  {id:'polite',emoji:'🎩',name:'Polite',phrases:[
-    {fr:"S'il vous plaît",en:'Please (formal)'},{fr:'Merci beaucoup',en:'Thank you very much'},
-    {fr:'De rien',en:"You're welcome"},{fr:'Pardon',en:'Excuse me / Sorry'},
-    {fr:'Excusez-moi',en:'Excuse me (formal)'},{fr:"D'accord.",en:'Okay / Agreed.'},
-    {fr:'Bien sûr !',en:'Of course!'},{fr:'Pas grave.',en:'No worries.'},
-  ]},
-];
-
-let dvMode='listen',dvCat='greet',dvSecs=6;
-let dvPhrases=[],dvIdx=0,dvPhase='idle',dvPaused=false;
-let dvTimer=null,dvCdVal=0,dvCdMax=6;
-const dvCirc=251;
-
-const grid=document.getElementById('dv-cgrid');
-DV_CATS.forEach(cat=>{
-  const b=document.createElement('button');
-  b.className='dv-cbtn'+(cat.id==='greet'?' dv-sel':'');
-  b.innerHTML=`<span class="dv-ce">${cat.emoji}</span><span class="dv-cn">${cat.name}</span><span class="dv-cc">${cat.phrases.length} phrases</span>`;
-  b.onclick=()=>{dvCat=cat.id;document.querySelectorAll('.dv-cbtn').forEach(x=>x.classList.remove('dv-sel'));b.classList.add('dv-sel');};
-  grid.appendChild(b);
-});
-
-function dvShow(id){['dv-home','dv-session','dv-done'].forEach(s=>document.getElementById(s).classList.toggle('dv-hidden',s!==id));}
-window.dvSelectMode=function(m,btn){dvMode=m;document.querySelectorAll('.dv-mbtn').forEach(b=>b.classList.remove('dv-sel'));btn.classList.add('dv-sel');document.getElementById('dv-slbl').textContent=m==='quiz'?'Think time':'Repeat time';};
-window.dvSlider=function(el){dvSecs=parseInt(el.value);document.getElementById('dv-sval').textContent=dvSecs+' sec';};
-
-function dvSpeak(text,lang,cb){
-  if(!window.speechSynthesis){cb&&cb();return;}
-  speechSynthesis.cancel();
-  setTimeout(()=>{
-    const u=new SpeechSynthesisUtterance(text);
-    u.lang=lang||'fr-FR';u.rate=lang==='en-US'?0.95:0.82;
-    const vv=speechSynthesis.getVoices();
-    const v=vv.find(x=>x.lang.startsWith(lang==='en-US'?'en':'fr'));
-    if(v)u.voice=v;
-    u.onend=()=>{if(!dvPaused)cb&&cb();};
-    u.onerror=()=>{if(!dvPaused)cb&&cb();};
-    speechSynthesis.speak(u);
-  },80);
-}
-function dvSetRing(val,max,color){document.getElementById('dv-rf').style.strokeDashoffset=dvCirc*(1-Math.max(0,val/max));document.getElementById('dv-rf').style.stroke=color;document.getElementById('dv-rnum').textContent=val;document.getElementById('dv-rwrap').style.display='block';}
-function dvHideRing(){document.getElementById('dv-rwrap').style.display='none';}
-function dvPulseOn(on){document.getElementById('dv-pulse').classList.toggle('on',on);}
-function dvSetBadge(txt,cls){const el=document.getElementById('dv-badge');el.className='dv-badge '+cls;el.textContent=txt;}
-function dvUpdateHdr(){document.getElementById('dv-pbar').style.width=(dvPhrases.length?dvIdx/dvPhrases.length*100:0)+'%';document.getElementById('dv-cnt').textContent=(dvIdx+1)+'/'+dvPhrases.length;}
-function dvStopAll(){clearInterval(dvTimer);clearTimeout(dvTimer);dvTimer=null;speechSynthesis&&speechSynthesis.cancel();dvPhase='idle';dvPaused=false;dvPulseOn(false);}
-function dvCountdown(secs,color,onDone){clearInterval(dvTimer);dvTimer=null;dvCdMax=secs;dvCdVal=secs;dvSetRing(dvCdVal,dvCdMax,color);dvTimer=setInterval(()=>{if(dvPaused)return;dvCdVal--;dvSetRing(dvCdVal,dvCdMax,color);if(dvCdVal<=0){clearInterval(dvTimer);dvTimer=null;onDone&&onDone();}},1000);}
-
-function dvListenSpeak(){if(dvIdx>=dvPhrases.length){dvDone();return;}dvPhase='speaking';const p=dvPhrases[dvIdx];dvUpdateHdr();dvSetBadge('LISTEN','bl');document.getElementById('dv-main').textContent=p.fr;document.getElementById('dv-eng').textContent=p.en;dvPulseOn(false);dvHideRing();dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused&&dvPhase==='speaking')dvListenRepeat();});}
-function dvListenRepeat(){dvPhase='repeating';dvSetBadge('YOUR TURN — REPEAT','bg');document.getElementById('dv-eng').textContent='';dvPulseOn(true);dvCountdown(dvSecs,'#3fb950',()=>{dvPulseOn(false);dvIdx++;dvListenSpeak();});}
-function dvQuizPrompt(){if(dvIdx>=dvPhrases.length){dvDone();return;}dvPhase='prompting';const p=dvPhrases[dvIdx];dvUpdateHdr();dvSetBadge('HOW DO YOU SAY...','bb');document.getElementById('dv-main').textContent=p.en;document.getElementById('dv-eng').textContent='';dvPulseOn(false);dvHideRing();dvSpeak(p.en,'en-US',()=>{if(!dvPaused&&dvPhase==='prompting')dvQuizThink();});}
-function dvQuizThink(){dvPhase='thinking';dvSetBadge('SAY IT IN FRENCH !','bb');dvPulseOn(true);dvCountdown(dvSecs,'#58a6ff',()=>{dvPulseOn(false);dvQuizReveal();});}
-function dvQuizReveal(){dvPhase='revealing';const p=dvPhrases[dvIdx];dvSetBadge('ANSWER','bg');document.getElementById('dv-main').textContent=p.fr;document.getElementById('dv-eng').textContent=p.en;dvHideRing();dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused&&dvPhase==='revealing')dvTimer=setTimeout(()=>{dvIdx++;dvQuizPrompt();},1200);});}
-
-window.dvReplay=function(){clearInterval(dvTimer);clearTimeout(dvTimer);dvTimer=null;speechSynthesis&&speechSynthesis.cancel();if(dvIdx>=dvPhrases.length)return;const p=dvPhrases[dvIdx];if(dvMode==='listen'){dvPhase='speaking';dvSetBadge('LISTEN','bl');document.getElementById('dv-main').textContent=p.fr;document.getElementById('dv-eng').textContent=p.en;dvPulseOn(false);dvHideRing();dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused)dvListenRepeat();});}else{dvPhase='prompting';dvSetBadge('HOW DO YOU SAY...','bb');document.getElementById('dv-main').textContent=p.en;document.getElementById('dv-eng').textContent='';dvPulseOn(false);dvHideRing();dvSpeak(p.en,'en-US',()=>{if(!dvPaused)dvQuizThink();});}};
-window.dvPause=function(){dvPaused=!dvPaused;document.getElementById('dv-pausebtn').textContent=dvPaused?'▶ Resume':'⏸ Pause';if(dvPaused){speechSynthesis&&speechSynthesis.cancel();}else{if(dvMode==='listen'){if(dvPhase==='speaking')dvListenSpeak();else if(dvPhase==='repeating')dvListenRepeat();}else{if(dvPhase==='prompting')dvQuizPrompt();else if(dvPhase==='thinking')dvQuizThink();else if(dvPhase==='revealing')dvQuizReveal();}}};
-window.dvSkip=function(){dvStopAll();dvIdx++;if(dvIdx>=dvPhrases.length){dvDone();return;}dvMode==='listen'?dvListenSpeak():dvQuizPrompt();};
-window.dvStart=function(){const cat=DV_CATS.find(c=>c.id===dvCat);dvPhrases=[...cat.phrases].sort(()=>Math.random()-0.5);dvIdx=0;dvPaused=false;document.getElementById('dv-pausebtn').textContent='⏸ Pause';dvShow('dv-session');setTimeout(()=>dvMode==='listen'?dvListenSpeak():dvQuizPrompt(),400);};
-window.dvGoHome=function(){dvStopAll();dvShow('dv-home');};
-window.dvRepeatSet=function(){dvPhrases=[...dvPhrases].sort(()=>Math.random()-0.5);dvIdx=0;dvPaused=false;document.getElementById('dv-pausebtn').textContent='⏸ Pause';dvShow('dv-session');setTimeout(()=>dvMode==='listen'?dvListenSpeak():dvQuizPrompt(),300);};
-function dvDone(){dvStopAll();document.getElementById('dv-done-sub').textContent=dvPhrases.length+' phrases · '+(dvMode==='quiz'?'Quiz mode':'Listen mode');dvShow('dv-done');setTimeout(()=>dvSpeak('Très bien ! Excellent travail !','fr-FR'),500);}
-if(window.speechSynthesis){speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();speechSynthesis.getVoices();}
-})();
 </script>
 
 </body>
