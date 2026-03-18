@@ -1632,6 +1632,200 @@ svg.dv-ring{transform:rotate(-90deg);width:88px;height:88px;}
 </div>
 </div>
 
+<script>
+// ══════════════════════════════════════════
+// DRIVE MODE JS
+// ══════════════════════════════════════════
+(function(){
+const DV_CATS=[
+  {id:'greet',emoji:'👋',name:'Greetings',phrases:[
+    {fr:'Bonjour',en:'Hello'},{fr:'Bonsoir',en:'Good evening'},{fr:'Bonne nuit',en:'Good night'},
+    {fr:'Salut !',en:'Hi (informal)'},{fr:'Au revoir',en:'Goodbye'},{fr:'Ça va ?',en:'How are you?'},
+    {fr:'Ça va bien, merci.',en:"I'm well, thanks."},{fr:'Très bien, merci.',en:'Very well, thanks.'},
+    {fr:'Comment allez-vous ?',en:'How are you? (formal)'},{fr:'Bonne journée !',en:'Have a good day!'},
+    {fr:'Bonne soirée !',en:'Have a good evening!'},{fr:'Bon week-end !',en:'Have a good weekend!'},
+  ]},
+  {id:'intro',emoji:'🙋',name:'About Me',phrases:[
+    {fr:"Je m'appelle Jack.",en:'My name is Jack.'},{fr:'Je suis américain.',en:'I am American.'},
+    {fr:'Je viens des États-Unis.',en:'I come from the United States.'},{fr:'Je viens de San Diego.',en:'I come from San Diego.'},
+    {fr:"J'habite à Menton.",en:'I live in Menton.'},{fr:'Je suis à la retraite.',en:'I am retired.'},
+    {fr:'Je suis avec ma femme.',en:'I am with my wife.'},{fr:'Je parle un peu français.',en:'I speak a little French.'},
+  ]},
+  {id:'questions',emoji:'❓',name:'Questions',phrases:[
+    {fr:'Où est la gare ?',en:'Where is the train station?'},{fr:"Où est l'arrêt de bus ?",en:'Where is the bus stop?'},
+    {fr:'Où est la pharmacie ?',en:'Where is the pharmacy?'},{fr:'Comment allez-vous ?',en:'How are you? (formal)'},
+    {fr:'Comment vous appelez-vous ?',en:'What is your name?'},{fr:"D'où venez-vous ?",en:'Where are you from?'},
+  ]},
+  {id:'directions',emoji:'🧭',name:'Directions',phrases:[
+    {fr:'À gauche',en:'To the left'},{fr:'À droite',en:'To the right'},{fr:'Tout droit',en:'Straight ahead'},
+    {fr:'Tournez à gauche.',en:'Turn left.'},{fr:'Tournez à droite.',en:'Turn right.'},
+    {fr:'Continuez tout droit.',en:'Continue straight ahead.'},{fr:"C'est à gauche.",en:"It's on the left."},
+    {fr:"C'est à droite.",en:"It's on the right."},{fr:'Où est le parc ?',en:'Where is the park?'},
+  ]},
+  {id:'negation',emoji:'🚫',name:'Négation',phrases:[
+    {fr:'Je ne suis pas français.',en:'I am not French.'},{fr:"Ce n'est pas grave.",en:"It's not serious."},
+    {fr:"Il n'y a pas de problème.",en:'There is no problem.'},{fr:"Je n'ai pas le temps.",en:"I don't have time."},
+    {fr:"Je n'ai pas de voiture.",en:"I don't have a car."},{fr:"Ce n'est pas possible.",en:"That's not possible."},
+    {fr:'Nous ne sommes pas contents.',en:'We are not happy.'},{fr:"Je ne parle pas bien français.",en:"I don't speak French well."},
+  ]},
+  {id:'polite',emoji:'🎩',name:'Polite',phrases:[
+    {fr:"S'il vous plaît",en:'Please (formal)'},{fr:'Merci beaucoup',en:'Thank you very much'},
+    {fr:'De rien',en:"You're welcome"},{fr:'Pardon',en:'Excuse me / Sorry'},
+    {fr:'Excusez-moi',en:'Excuse me (formal)'},{fr:"D'accord.",en:'Okay / Agreed.'},
+    {fr:'Bien sûr !',en:'Of course!'},{fr:'Pas grave.',en:'No worries.'},
+  ]},
+];
+
+let dvMode='listen',dvCat='greet',dvSecs=6;
+let dvPhrases=[],dvIdx=0,dvPhase='idle',dvPaused=false;
+let dvTimer=null,dvCdVal=0,dvCdMax=6;
+const dvCirc=251;
+
+// Build category grid
+const grid=document.getElementById('dv-cgrid');
+if(grid){
+  DV_CATS.forEach(cat=>{
+    const b=document.createElement('button');
+    b.className='dv-cbtn'+(cat.id==='greet'?' dv-sel':'');
+    b.innerHTML=`<span class="dv-ce">${cat.emoji}</span><span class="dv-cn">${cat.name}</span><span class="dv-cc">${cat.phrases.length} phrases</span>`;
+    b.onclick=()=>{dvCat=cat.id;document.querySelectorAll('.dv-cbtn').forEach(x=>x.classList.remove('dv-sel'));b.classList.add('dv-sel');};
+    grid.appendChild(b);
+  });
+}
+
+function dvShow(id){['dv-home','dv-session','dv-done'].forEach(s=>{const el=document.getElementById(s);if(el)el.classList.toggle('dv-hidden',s!==id);});}
+window.dvSelectMode=function(m,btn){dvMode=m;document.querySelectorAll('.dv-mbtn').forEach(b=>b.classList.remove('dv-sel'));btn.classList.add('dv-sel');const lbl=document.getElementById('dv-slbl');if(lbl)lbl.textContent=m==='quiz'?'Think time':'Repeat time';};
+window.dvSlider=function(el){dvSecs=parseInt(el.value);const v=document.getElementById('dv-sval');if(v)v.textContent=dvSecs+' sec';};
+
+function dvSpeak(text,lang,cb){
+  if(!window.speechSynthesis){cb&&cb();return;}
+  speechSynthesis.cancel();
+  setTimeout(()=>{
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang=lang||'fr-FR';u.rate=lang==='en-US'?0.95:0.82;
+    const vv=speechSynthesis.getVoices();
+    const v=vv.find(x=>x.lang.startsWith(lang==='en-US'?'en':'fr'));
+    if(v)u.voice=v;
+    u.onend=()=>{if(!dvPaused)cb&&cb();};
+    u.onerror=()=>{if(!dvPaused)cb&&cb();};
+    speechSynthesis.speak(u);
+  },80);
+}
+
+function dvSetRing(val,max,color){
+  const fg=document.getElementById('dv-rf');const num=document.getElementById('dv-rnum');const wrap=document.getElementById('dv-rwrap');
+  if(fg)fg.style.strokeDashoffset=dvCirc*(1-Math.max(0,val/max));
+  if(fg)fg.style.stroke=color;
+  if(num)num.textContent=val;
+  if(wrap)wrap.style.display='block';
+}
+function dvHideRing(){const w=document.getElementById('dv-rwrap');if(w)w.style.display='none';}
+function dvPulseOn(on){const p=document.getElementById('dv-pulse');if(p)p.classList.toggle('on',on);}
+function dvSetBadge(txt,cls){const el=document.getElementById('dv-badge');if(el){el.className='dv-badge '+cls;el.textContent=txt;}}
+function dvUpdateHdr(){
+  const pbar=document.getElementById('dv-pbar');const cnt=document.getElementById('dv-cnt');
+  if(pbar)pbar.style.width=(dvPhrases.length?dvIdx/dvPhrases.length*100:0)+'%';
+  if(cnt)cnt.textContent=(dvIdx+1)+'/'+dvPhrases.length;
+}
+function dvStopAll(){clearInterval(dvTimer);clearTimeout(dvTimer);dvTimer=null;speechSynthesis&&speechSynthesis.cancel();dvPhase='idle';dvPaused=false;dvPulseOn(false);}
+
+function dvCountdown(secs,color,onDone){
+  clearInterval(dvTimer);dvTimer=null;
+  dvCdMax=secs;dvCdVal=secs;dvSetRing(dvCdVal,dvCdMax,color);
+  dvTimer=setInterval(()=>{
+    if(dvPaused)return;
+    dvCdVal--;dvSetRing(dvCdVal,dvCdMax,color);
+    if(dvCdVal<=0){clearInterval(dvTimer);dvTimer=null;onDone&&onDone();}
+  },1000);
+}
+
+function dvSetText(fr,en){
+  const m=document.getElementById('dv-main');const e=document.getElementById('dv-eng');
+  if(m)m.textContent=fr;if(e)e.textContent=en;
+}
+
+function dvListenSpeak(){
+  if(dvIdx>=dvPhrases.length){dvDone();return;}
+  dvPhase='speaking';const p=dvPhrases[dvIdx];dvUpdateHdr();
+  dvSetBadge('LISTEN','bl');dvSetText(p.fr,p.en);dvPulseOn(false);dvHideRing();
+  dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused&&dvPhase==='speaking')dvListenRepeat();});
+}
+function dvListenRepeat(){
+  dvPhase='repeating';dvSetBadge('YOUR TURN — REPEAT','bg');
+  const e=document.getElementById('dv-eng');if(e)e.textContent='';
+  dvPulseOn(true);
+  dvCountdown(dvSecs,'#3fb950',()=>{dvPulseOn(false);dvIdx++;dvListenSpeak();});
+}
+function dvQuizPrompt(){
+  if(dvIdx>=dvPhrases.length){dvDone();return;}
+  dvPhase='prompting';const p=dvPhrases[dvIdx];dvUpdateHdr();
+  dvSetBadge('HOW DO YOU SAY...','bb');dvSetText(p.en,'');dvPulseOn(false);dvHideRing();
+  dvSpeak(p.en,'en-US',()=>{if(!dvPaused&&dvPhase==='prompting')dvQuizThink();});
+}
+function dvQuizThink(){
+  dvPhase='thinking';dvSetBadge('SAY IT IN FRENCH !','bb');dvPulseOn(true);
+  dvCountdown(dvSecs,'#58a6ff',()=>{dvPulseOn(false);dvQuizReveal();});
+}
+function dvQuizReveal(){
+  dvPhase='revealing';const p=dvPhrases[dvIdx];
+  dvSetBadge('ANSWER','bg');dvSetText(p.fr,p.en);dvHideRing();
+  dvSpeak(p.fr,'fr-FR',()=>{
+    if(!dvPaused&&dvPhase==='revealing')dvTimer=setTimeout(()=>{dvIdx++;dvQuizPrompt();},1200);
+  });
+}
+
+window.dvReplay=function(){
+  clearInterval(dvTimer);clearTimeout(dvTimer);dvTimer=null;
+  speechSynthesis&&speechSynthesis.cancel();
+  if(dvIdx>=dvPhrases.length)return;
+  const p=dvPhrases[dvIdx];
+  if(dvMode==='listen'){
+    dvPhase='speaking';dvSetBadge('LISTEN','bl');dvSetText(p.fr,p.en);dvPulseOn(false);dvHideRing();
+    dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused)dvListenRepeat();});
+  } else {
+    dvPhase='prompting';dvSetBadge('HOW DO YOU SAY...','bb');dvSetText(p.en,'');dvPulseOn(false);dvHideRing();
+    dvSpeak(p.en,'en-US',()=>{if(!dvPaused)dvQuizThink();});
+  }
+};
+window.dvPause=function(){
+  dvPaused=!dvPaused;
+  const btn=document.getElementById('dv-pausebtn');if(btn)btn.textContent=dvPaused?'▶ Resume':'⏸ Pause';
+  if(dvPaused){speechSynthesis&&speechSynthesis.cancel();}
+  else{
+    if(dvMode==='listen'){if(dvPhase==='speaking')dvListenSpeak();else if(dvPhase==='repeating')dvListenRepeat();}
+    else{if(dvPhase==='prompting')dvQuizPrompt();else if(dvPhase==='thinking')dvQuizThink();else if(dvPhase==='revealing')dvQuizReveal();}
+  }
+};
+window.dvSkip=function(){dvStopAll();dvIdx++;if(dvIdx>=dvPhrases.length){dvDone();return;}dvMode==='listen'?dvListenSpeak():dvQuizPrompt();};
+window.dvStart=function(){
+  const cat=DV_CATS.find(c=>c.id===dvCat);
+  if(!cat)return;
+  dvPhrases=[...cat.phrases].sort(()=>Math.random()-0.5);
+  dvIdx=0;dvPaused=false;
+  const btn=document.getElementById('dv-pausebtn');if(btn)btn.textContent='⏸ Pause';
+  dvShow('dv-session');
+  setTimeout(()=>dvMode==='listen'?dvListenSpeak():dvQuizPrompt(),400);
+};
+window.dvGoHome=function(){dvStopAll();dvShow('dv-home');};
+window.dvRepeatSet=function(){
+  dvPhrases=[...dvPhrases].sort(()=>Math.random()-0.5);
+  dvIdx=0;dvPaused=false;
+  const btn=document.getElementById('dv-pausebtn');if(btn)btn.textContent='⏸ Pause';
+  dvShow('dv-session');
+  setTimeout(()=>dvMode==='listen'?dvListenSpeak():dvQuizPrompt(),300);
+};
+function dvDone(){
+  dvStopAll();
+  const sub=document.getElementById('dv-done-sub');
+  if(sub)sub.textContent=dvPhrases.length+' phrases · '+(dvMode==='quiz'?'Quiz mode':'Listen mode');
+  dvShow('dv-done');
+  setTimeout(()=>dvSpeak('Très bien ! Excellent travail !','fr-FR'),500);
+}
+
+if(window.speechSynthesis){speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();speechSynthesis.getVoices();}
+})();
+</script>
+
 <!-- BILAN 1 PAGE -->
 <div class="page" id="page-bilan">
 <style>
