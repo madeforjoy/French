@@ -123,32 +123,39 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
 <div class="page active" id="page-home">
   <div style="text-align:center;padding:18px 0 8px">
     <div style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--gold);margin-bottom:5px">Bonjour, Jack!</div>
-    <div style="font-size:0.82rem;color:var(--muted);line-height:1.6">Your personal French app — built from your class notes.<br>Aim for 10–15 minutes daily.</div>
+    <div style="font-size:0.82rem;color:var(--muted);line-height:1.6">2 weeks to Menton. Organized for your move-in.<br>Focus on neighbors &amp; shops first.</div>
   </div>
-  <div class="tip-box" style="margin-top:14px">💡 <strong style="color:var(--gold)">How to use:</strong> Browse <strong>Phrases</strong> to review vocabulary, then go to <strong>Drill</strong> to practice speaking. The app will say each phrase twice, then you repeat it — and get feedback on how you did.</div>
-  <div class="section-title">Your Units</div>
-  <div class="unit-card" onclick="showPage('phrases');setUnit('greetings')"><div class="unit-icon">👋</div><div class="unit-info"><div class="unit-name">Greetings & Farewells</div><div class="unit-desc">Bonjour, au revoir, ça va — the essentials</div><div class="unit-count">13 phrases</div></div><div class="unit-arrow">›</div></div>
-  <div class="unit-card" onclick="showPage('phrases');setUnit('introductions')"><div class="unit-icon">🤝</div><div class="unit-info"><div class="unit-name">Introducing Yourself</div><div class="unit-desc">Who you are, where you're from, where you live</div><div class="unit-count">11 phrases</div></div><div class="unit-arrow">›</div></div>
-  <div class="unit-card" onclick="showPage('phrases');setUnit('directions')"><div class="unit-icon">🗺️</div><div class="unit-info"><div class="unit-name">Directions & Places</div><div class="unit-desc">Gare, pharmacie, à gauche, tout droit</div><div class="unit-count">10 phrases</div></div><div class="unit-arrow">›</div></div>
-  <div class="unit-card" onclick="showPage('phrases');setUnit('cafe')"><div class="unit-icon">☕</div><div class="unit-info"><div class="unit-name">Café & Boulangerie</div><div class="unit-desc">Ordering coffee, bread, croissants</div><div class="unit-count">10 phrases</div></div><div class="unit-arrow">›</div></div>
-  <div class="unit-card" onclick="showPage('phrases');setUnit('polite')"><div class="unit-icon">🎩</div><div class="unit-info"><div class="unit-name">Polite Responses</div><div class="unit-desc">Merci, avec plaisir, pas grave</div><div class="unit-count">10 phrases</div></div><div class="unit-arrow">›</div></div>
+  <div class="tip-box" style="margin-top:14px">💡 <strong style="color:var(--gold)">Move-in priority:</strong> Start with <strong>Neighbors</strong> and <strong>Shops</strong>. Use <strong>Drive Mode → Quiz Me</strong> on your commute to build muscle memory fast.</div>
+  <div class="section-title">Week 1 — First Conversations</div>
+  <div class="unit-card" onclick="showPage('phrases');setUnit('greetings')"><div class="unit-icon">👋</div><div class="unit-info"><div class="unit-name">Greetings & Farewells</div><div class="unit-desc">Bonjour madame, au revoir, ça va — use these 50x a day</div><div class="unit-count">13 phrases</div></div><div class="unit-arrow">›</div></div>
+  <div class="unit-card" onclick="showPage('phrases');setUnit('neighbors')"><div class="unit-icon">🤝</div><div class="unit-info"><div class="unit-name">Meeting Neighbors</div><div class="unit-desc">Je viens d'arriver, je suis avec ma femme Donna...</div><div class="unit-count">14 phrases · Manali 3/21</div></div><div class="unit-arrow">›</div></div>
+  <div class="unit-card" onclick="showPage('phrases');setUnit('introductions')"><div class="unit-icon">🙋</div><div class="unit-info"><div class="unit-name">Introducing Yourself</div><div class="unit-desc">Who you are, where you're from, retired in Menton</div><div class="unit-count">11 phrases</div></div><div class="unit-arrow">›</div></div>
+  <div class="unit-card" onclick="showPage('phrases');setUnit('logement')"><div class="unit-icon">🏠</div><div class="unit-info"><div class="unit-name">Le Logement — Housing</div><div class="unit-desc">Étage, ascenseur, salon, à/au/de explained in every phrase</div><div class="unit-count">18 phrases · Manali 3/21</div></div><div class="unit-arrow">›</div></div>
+  <div class="section-title">Week 1 — Shops & Market</div>
+  <div class="unit-card" onclick="showPage('phrases');setUnit('cafe')"><div class="unit-icon">🥖</div><div class="unit-info"><div class="unit-name">Boulangerie & Café</div><div class="unit-desc">Une baguette s'il vous plaît — your daily bread run</div><div class="unit-count">10 phrases</div></div><div class="unit-arrow">›</div></div>
+  <div class="unit-card" onclick="showPage('phrases');setUnit('polite')"><div class="unit-icon">🎩</div><div class="unit-info"><div class="unit-name">Polite Responses</div><div class="unit-desc">Avec plaisir, pas grave, de rien — the glue phrases</div><div class="unit-count">10 phrases</div></div><div class="unit-arrow">›</div></div>
+  <div class="unit-card" onclick="showPage('phrases');setUnit('directions')"><div class="unit-icon">🗺️</div><div class="unit-info"><div class="unit-name">Directions & Places</div><div class="unit-desc">Où est... à gauche, à droite, tout droit</div><div class="unit-count">10 phrases</div></div><div class="unit-arrow">›</div></div>
+  <div class="section-title">Practice</div>
+  <div class="unit-card" onclick="showPage('drive')" style="background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(201,168,76,0.04));border:1px solid rgba(201,168,76,0.3)"><div class="unit-icon">🚗</div><div class="unit-info"><div class="unit-name" style="color:var(--gold)">Driving Mode</div><div class="unit-desc">Quiz Me — hear English, say French. Hands-free.</div><div class="unit-count">All categories · no tapping required</div></div><div class="unit-arrow">›</div></div>
+  <div class="unit-card" onclick="showPage('drill');document.getElementById('drillUnit').value='qa'"><div class="unit-icon">💬</div><div class="unit-info"><div class="unit-name">Q&amp;A Practice</div><div class="unit-desc">Real questions you'll be asked — think &amp; answer</div><div class="unit-count">37 pairs</div></div><div class="unit-arrow">›</div></div>
+  <div class="unit-card" onclick="showPage('bilan')" style="background:linear-gradient(135deg,rgba(46,125,79,0.12),rgba(46,125,79,0.04));border:1px solid rgba(46,125,79,0.3)"><div class="unit-icon">📝</div><div class="unit-info"><div class="unit-name" style="color:#7eeaa8">Bilan 1 — Être &amp; Avoir</div><div class="unit-desc">Interactive exercises — tap to fill the blanks</div><div class="unit-count">5 exercises · group class 3/18</div></div><div class="unit-arrow">›</div></div>
+  <div class="section-title">More Units</div>
   <div class="unit-card" onclick="showPage('phrases');setUnit('lifestyle')"><div class="unit-icon">🌅</div><div class="unit-info"><div class="unit-name">Lifestyle & Living</div><div class="unit-desc">J'aime, je déteste, le style de vie</div><div class="unit-count">9 phrases</div></div><div class="unit-arrow">›</div></div>
-  <div class="unit-card" onclick="showPage('drill');document.getElementById('drillUnit').value='qa'"><div class="unit-icon">💬</div><div class="unit-info"><div class="unit-name">Q&amp;A Practice</div><div class="unit-desc">Real conversations — questions you'll be asked in Menton</div><div class="unit-count">15 pairs · Go straight to Drill</div></div><div class="unit-arrow">›</div></div>
   <div class="unit-card" onclick="showPage('phrases');setUnit('negation')"><div class="unit-icon">🚫</div><div class="unit-info"><div class="unit-name">La Négation</div><div class="unit-desc">Ne...pas, ne...pas de — group class 3/11 &amp; 3/18</div><div class="unit-count">15 phrases</div></div><div class="unit-arrow">›</div></div>
   <div class="unit-card" onclick="showPage('phrases');setUnit('passe')"><div class="unit-icon">⏪</div><div class="unit-info"><div class="unit-name">Passé Composé</div><div class="unit-desc">J'ai parlé, j'ai mangé — group class 3/18</div><div class="unit-count">10 phrases</div></div><div class="unit-arrow">›</div></div>
-  <div class="unit-card" onclick="showPage('drive')" style="background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(201,168,76,0.04));border:1px solid rgba(201,168,76,0.3)"><div class="unit-icon">🚗</div><div class="unit-info"><div class="unit-name" style="color:var(--gold)">Driving Mode</div><div class="unit-desc">Hands-free French — listen &amp; repeat or quiz mode</div><div class="unit-count">All categories · no tapping required</div></div><div class="unit-arrow">›</div></div>
-  <div class="unit-card" onclick="showPage('bilan')" style="background:linear-gradient(135deg,rgba(46,125,79,0.12),rgba(46,125,79,0.04));border:1px solid rgba(46,125,79,0.3)"><div class="unit-icon">📝</div><div class="unit-info"><div class="unit-name" style="color:#7eeaa8">Bilan 1 — Homework</div><div class="unit-desc">Être, avoir, négation, c'est vs il y a — 3/18 class</div><div class="unit-count">5 exercises · interactive</div></div><div class="unit-arrow">›</div></div>
-  <div class="tip-box" style="margin-top:6px">Always say <strong style="color:var(--gold)">madame</strong> or <strong style="color:var(--gold)">monsieur</strong> after Bonjour with strangers. Use <strong style="color:var(--gold)">vous</strong> — not tu — with anyone you don't know well.</div>
+  <div class="tip-box" style="margin-top:6px">Always say <strong style="color:var(--gold)">madame</strong> or <strong style="color:var(--gold)">monsieur</strong> after Bonjour. Use <strong style="color:var(--gold)">vous</strong> — not tu — with anyone you don't know well. <strong style="color:var(--gold)">À</strong> before cities · <strong style="color:var(--gold)">au</strong> before masc. rooms · <strong style="color:var(--gold)">de la</strong> before fem. places.</div>
 </div>
 
 <!-- PHRASES -->
 <div class="page" id="page-phrases">
   <div class="unit-pills" id="unitPills">
     <button class="unit-pill active" onclick="setUnit('greetings')">Greetings</button>
+    <button class="unit-pill" onclick="setUnit('neighbors')">🤝 Neighbors</button>
     <button class="unit-pill" onclick="setUnit('introductions')">Introductions</button>
-    <button class="unit-pill" onclick="setUnit('directions')">Directions</button>
+    <button class="unit-pill" onclick="setUnit('logement')">🏠 Logement</button>
     <button class="unit-pill" onclick="setUnit('cafe')">Café</button>
     <button class="unit-pill" onclick="setUnit('polite')">Polite</button>
+    <button class="unit-pill" onclick="setUnit('directions')">Directions</button>
     <button class="unit-pill" onclick="setUnit('lifestyle')">Lifestyle</button>
     <button class="unit-pill" onclick="setUnit('daily')">Daily Life</button>
     <button class="unit-pill" onclick="setUnit('negation')">🚫 Négation</button>
@@ -162,10 +169,12 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
   <select class="drill-select" id="drillUnit" onchange="resetDrill()">
     <option value="all">All Units</option>
     <option value="greetings">Greetings & Farewells</option>
+    <option value="neighbors">🤝 Meeting Neighbors</option>
     <option value="introductions">Introducing Yourself</option>
-    <option value="directions">Directions & Places</option>
+    <option value="logement">🏠 Le Logement</option>
     <option value="cafe">Café & Boulangerie</option>
     <option value="polite">Polite Responses</option>
+    <option value="directions">Directions & Places</option>
     <option value="lifestyle">Lifestyle & Living</option>
     <option value="daily">Daily Life</option>
     <option value="negation">🚫 La Négation</option>
@@ -400,6 +409,42 @@ const units={
     {fr:"Vous avez des citrons.",en:"You have lemons."},
     {fr:"Ils ont des chevaux.",en:"They have horses.",note:"Ils ont — the s makes a z sound before ont."},
     {fr:"J'ai un chien.",en:"I have a dog.",note:"Un animal → des animaux in plural."},
+  ]},
+  logement:{name:"Le Logement — Housing",tip:"From Manali 3/21 — essential for describing your apartment and talking with neighbors. Note: à before cities, au before masculine rooms, de before describing.",phrases:[
+    {fr:"J'habite à Menton.",en:"I live in Menton.",note:"À before city names — always. J'habite = je habite (h is silent)."},
+    {fr:"Nous habitons au troisième étage.",en:"We live on the third floor.",note:"Au = à + le. Le troisième = the third. Au before masculine nouns."},
+    {fr:"C'est au sixième étage.",en:"It's on the sixth floor.",note:"C'est = it is. Au quel étage ? = What floor?"},
+    {fr:"Il y a un ascenseur.",en:"There is a lift.",note:"Il y a = there is/are. Un ascenseur = masculine."},
+    {fr:"Il n'y a pas d'ascenseur.",en:"There is no lift.",note:"Il n'y a pas de = there is no. De before vowel → d'."},
+    {fr:"L'appartement est grand.",en:"The apartment is large.",note:"Grand = masculine. Grande = feminine. L'appartement est masculin."},
+    {fr:"L'appartement est près de la mer.",en:"The apartment is near the sea.",note:"Près de = near. De la mer — la mer is feminine."},
+    {fr:"C'est une grande maison.",en:"It's a large house.",note:"Une maison = feminine, so grande (not grand)."},
+    {fr:"Il y a un salon.",en:"There is a living room.",note:"Le salon — masculine. Il y a = it has / there is."},
+    {fr:"Il y a une salle de bains.",en:"There is a bathroom.",note:"Une salle de bains — feminine. De = of/connecting word here."},
+    {fr:"Il y a une cuisine équipée.",en:"There is a fitted kitchen.",note:"Une cuisine — feminine. Équipée agrees: feminine adjective."},
+    {fr:"Il y a une chambre.",en:"There is a bedroom.",note:"Une chambre — feminine."},
+    {fr:"Il y a un jardin.",en:"There is a garden.",note:"Un jardin — masculine."},
+    {fr:"Il y a un balcon.",en:"There is a balcony.",note:"Un balcon — masculine."},
+    {fr:"Le rez-de-chaussée",en:"The ground floor",note:"Ground floor in France = rez-de-chaussée. First floor = premier étage."},
+    {fr:"C'est au quel étage ?",en:"What floor is it on?",note:"Au quel = on which. Essential question for buildings."},
+    {fr:"C'est sympa comme appartement.",en:"It's a nice apartment.",note:"Sympa = friendly/nice. C'est sympa = it's nice."},
+    {fr:"La maison est grande, jaune et près de la plage.",en:"The house is large, yellow and near the beach.",note:"Adjectives after the noun in French. La plage = feminine."},
+  ]},
+  neighbors:{name:"Meeting Neighbors",tip:"From Manali 3/21 — these are the real conversations you'll have in your building and on the street in Menton.",phrases:[
+    {fr:"Bonjour madame, je suis votre nouveau voisin.",en:"Hello madam, I am your new neighbor.",note:"Voisin = neighbor (masc). Voisine = feminine. Nouveau before masculine noun."},
+    {fr:"Je m'appelle Jack. Et vous ?",en:"My name is Jack. And you?",note:"Et vous ? = And you? — polite way to ask their name back."},
+    {fr:"Je viens d'arriver.",en:"I have just arrived.",note:"Venir de + infinitive = to have just done something. Very useful!"},
+    {fr:"Nous venons des États-Unis.",en:"We come from the United States.",note:"Des = de + les. Always des before États-Unis, never du."},
+    {fr:"Je suis avec ma femme Donna.",en:"I am with my wife Donna.",note:"Ma femme = my wife. French people will ask about her."},
+    {fr:"Nous sommes à la retraite.",en:"We are retired.",note:"Nous sommes = we are (être). À la retraite = retired."},
+    {fr:"Nous aimons beaucoup Menton.",en:"We love Menton very much.",note:"Beaucoup comes after the verb — never before. J'aime beaucoup."},
+    {fr:"C'est magnifique ici.",en:"It's magnificent here.",note:"Ici = here. C'est = it is (être, but with c' before vowel)."},
+    {fr:"Vous habitez ici depuis longtemps ?",en:"Have you lived here long?",note:"Depuis = since/for. Depuis longtemps = for a long time."},
+    {fr:"J'apprends le français.",en:"I am learning French.",note:"Apprendre = to learn. J'apprends = I am learning/I learn."},
+    {fr:"Je parle un peu français.",en:"I speak a little French.",note:"Un peu = a little. Sets kind expectations with neighbors."},
+    {fr:"Vous parlez anglais ?",en:"Do you speak English?",note:"Polite fallback. Don't forget the vous — neighbors are strangers."},
+    {fr:"Enchanté de faire votre connaissance.",en:"Pleased to meet you.",note:"Very impressive to locals. Connaissance = acquaintance/knowledge."},
+    {fr:"À bientôt, madame.",en:"See you soon, madam.",note:"Always end with madame or monsieur. À bientôt = see you soon."},
   ]}
 };
 
@@ -656,8 +701,21 @@ const qaPairs = [
   { q:"Qu'est-ce que vous faites ?",    qt:"What are you doing?",
     a:"Je vais déménager à Menton.",     at:"I am moving to Menton." },
 
-  // From group class 3/16
-  { q:"Quel est votre nom ?",            qt:"What is your last name?",
+  // Move-in conversations — neighbors & housing (Manali 3/21)
+  { q:"Vous êtes nouveau ici ?",          qt:"Are you new here?",
+    a:"Oui, je viens d'arriver.",          at:"Yes, I have just arrived." },
+  { q:"Vous habitez dans quel appartement ?", qt:"Which apartment do you live in?",
+    a:"Nous habitons au troisième étage.", at:"We live on the third floor." },
+  { q:"C'est au quel étage ?",            qt:"What floor is it on?",
+    a:"C'est au sixième étage.",           at:"It's on the sixth floor." },
+  { q:"Il y a un ascenseur ?",            qt:"Is there a lift?",
+    a:"Non, il n'y a pas d'ascenseur.",   at:"No, there is no lift." },
+  { q:"Votre appartement est grand ?",    qt:"Is your apartment large?",
+    a:"Oui, il est assez grand.",          at:"Yes, it's quite large." },
+  { q:"Vous êtes avec votre femme ?",     qt:"Are you with your wife?",
+    a:"Oui, je suis avec ma femme Donna.", at:"Yes, I am with my wife Donna." },
+  { q:"Vous apprenez le français ?",      qt:"Are you learning French?",
+    a:"Oui, j'apprends le français.",     at:"Yes, I am learning French." },
     a:"Mon nom est Abbott.",             at:"My last name is Abbott." },
   { q:"Quelle est votre date de naissance ?", qt:"What is your date of birth?",
     a:"Je suis né le vingt-cinq décembre 1956.", at:"I was born on December 25, 1956." },
@@ -1633,15 +1691,23 @@ svg.dv-ring{transform:rotate(-90deg);width:88px;height:88px;}
 </div>
 
 <script>
-// ══════════════════════════════════════════
-// DRIVE MODE JS
-// ══════════════════════════════════════════
 (function(){
-
 const DV_CATS=[
+  {id:'neighbors',emoji:'🤝',name:'Neighbors',phrases:[
+    {fr:"Bonjour madame, je suis votre nouveau voisin.",en:"Hello, I am your new neighbor."},
+    {fr:"Je viens d'arriver.",en:"I have just arrived."},
+    {fr:"Je m'appelle Jack.",en:"My name is Jack."},
+    {fr:"Je suis avec ma femme Donna.",en:"I am with my wife Donna."},
+    {fr:"Nous venons des États-Unis.",en:"We come from the United States."},
+    {fr:"Nous sommes à la retraite.",en:"We are retired."},
+    {fr:"Nous aimons beaucoup Menton.",en:"We love Menton very much."},
+    {fr:"J'apprends le français.",en:"I am learning French."},
+    {fr:"Enchanté de faire votre connaissance.",en:"Pleased to meet you."},
+    {fr:"À bientôt, madame.",en:"See you soon, madam."},
+  ]},
   {id:'greet',emoji:'👋',name:'Greetings',phrases:[
     {fr:'Bonjour',en:'Hello'},{fr:'Bonsoir',en:'Good evening'},{fr:'Bonne nuit',en:'Good night'},
-    {fr:'Salut !',en:'Hi (informal)'},{fr:'Au revoir',en:'Goodbye'},{fr:'Ça va ?',en:'How are you?'},
+    {fr:'Au revoir',en:'Goodbye'},{fr:'Ça va ?',en:'How are you?'},
     {fr:'Ça va bien, merci.',en:"I'm well, thanks."},{fr:'Très bien, merci.',en:'Very well, thanks.'},
     {fr:'Comment allez-vous ?',en:'How are you? (formal)'},{fr:'Bonne journée !',en:'Have a good day!'},
     {fr:'Bonne soirée !',en:'Have a good evening!'},{fr:'Bon week-end !',en:'Have a good weekend!'},
@@ -1650,18 +1716,35 @@ const DV_CATS=[
     {fr:"Je m'appelle Jack.",en:'My name is Jack.'},{fr:'Je suis américain.',en:'I am American.'},
     {fr:'Je viens des États-Unis.',en:'I come from the United States.'},{fr:'Je viens de San Diego.',en:'I come from San Diego.'},
     {fr:"J'habite à Menton.",en:'I live in Menton.'},{fr:'Je suis à la retraite.',en:'I am retired.'},
-    {fr:'Je suis avec ma femme.',en:'I am with my wife.'},{fr:'Je parle un peu français.',en:'I speak a little French.'},
+    {fr:'Je suis avec ma femme Donna.',en:'I am with my wife Donna.'},{fr:'Je parle un peu français.',en:'I speak a little French.'},
   ]},
-  {id:'questions',emoji:'❓',name:'Questions',phrases:[
-    {fr:'Où est la gare ?',en:'Where is the train station?'},{fr:"Où est l'arrêt de bus ?",en:'Where is the bus stop?'},
-    {fr:'Où est la pharmacie ?',en:'Where is the pharmacy?'},{fr:'Comment allez-vous ?',en:'How are you? (formal)'},
-    {fr:'Comment vous appelez-vous ?',en:'What is your name?'},{fr:"D'où venez-vous ?",en:'Where are you from?'},
+  {id:'logement',emoji:'🏠',name:'Logement',phrases:[
+    {fr:"Nous habitons au troisième étage.",en:"We live on the third floor."},
+    {fr:"C'est au quel étage ?",en:"What floor is it on?"},
+    {fr:"Il y a un ascenseur.",en:"There is a lift."},
+    {fr:"Il n'y a pas d'ascenseur.",en:"There is no lift."},
+    {fr:"L'appartement est grand.",en:"The apartment is large."},
+    {fr:"Il y a un salon et une cuisine.",en:"There is a living room and a kitchen."},
+    {fr:"Il y a une salle de bains.",en:"There is a bathroom."},
+    {fr:"Il y a un balcon.",en:"There is a balcony."},
+    {fr:"C'est sympa comme appartement.",en:"It's a nice apartment."},
+    {fr:"La maison est près de la mer.",en:"The house is near the sea."},
+  ]},
+  {id:'cafe',emoji:'🥖',name:'Boulangerie',phrases:[
+    {fr:"Bonjour madame. Une baguette, s'il vous plaît.",en:"Hello madam. A baguette, please."},
+    {fr:"Je voudrais un café.",en:"I'd like a coffee."},
+    {fr:"Je voudrais un croissant.",en:"I'd like a croissant."},
+    {fr:"L'addition, s'il vous plaît.",en:"The bill, please."},
+    {fr:"C'est combien ?",en:"How much is it?"},
+    {fr:"Merci beaucoup.",en:"Thank you very much."},
+    {fr:"Bon appétit.",en:"Enjoy your meal."},
   ]},
   {id:'directions',emoji:'🧭',name:'Directions',phrases:[
     {fr:'À gauche',en:'To the left'},{fr:'À droite',en:'To the right'},{fr:'Tout droit',en:'Straight ahead'},
     {fr:'Tournez à gauche.',en:'Turn left.'},{fr:'Tournez à droite.',en:'Turn right.'},
     {fr:'Continuez tout droit.',en:'Continue straight ahead.'},{fr:"C'est à gauche.",en:"It's on the left."},
-    {fr:"C'est à droite.",en:"It's on the right."},{fr:'Où est le parc ?',en:'Where is the park?'},
+    {fr:"C'est à droite.",en:"It's on the right."},{fr:'Où est la pharmacie ?',en:'Where is the pharmacy?'},
+    {fr:'Où est la gare ?',en:'Where is the train station?'},
   ]},
   {id:'negation',emoji:'🚫',name:'Négation',phrases:[
     {fr:'Je ne suis pas français.',en:'I am not French.'},{fr:"Ce n'est pas grave.",en:"It's not serious."},
@@ -1679,50 +1762,33 @@ const DV_CATS=[
     {fr:"Anne et Jean ont trois enfants.",en:'Anne and Jean have three children.'},
     {fr:"Nous avons rendez-vous à 9 heures.",en:'We have an appointment at 9.'},
     {fr:"L'appartement est au centre ville.",en:'The apartment is in the city centre.'},
-    {fr:"Vous avez mal à la tête.",en:'You have a headache.'},
-    {fr:"Le restaurant est ouvert.",en:'The restaurant is open.'},
-    {fr:"J'ai faim.",en:"I'm hungry."},
-    {fr:"On a le temps.",en:'We have time.'},
-    {fr:"Tu es occupé.",en:'You are busy.'},
-    {fr:"Il est brésilien.",en:'He is Brazilian.'},
-    {fr:"Nous sommes mécontents.",en:'We are unhappy.'},
-    {fr:"Elle est célibataire.",en:'She is single.'},
-    {fr:"J'ai une réunion à 10 heures.",en:'I have a meeting at 10.'},
+    {fr:"J'ai faim.",en:"I'm hungry."},{fr:"On a le temps.",en:'We have time.'},
+    {fr:"Il est brésilien.",en:'He is Brazilian.'},{fr:"Nous sommes mécontents.",en:'We are unhappy.'},
     {fr:"C'est important pour moi.",en:"It's important to me."},
     {fr:"Vous êtes américain.",en:'You are American.'},
-    {fr:"Tu as huit ans.",en:'You are eight years old.'},
-    {fr:"Les spectateurs sont contents.",en:'The audience is happy.'},
-    {fr:"Ils ont des billets gratuits.",en:'They have free tickets.'},
     {fr:"Ils sont sympathiques.",en:'They are nice.'},
     {fr:"Nous sommes optimistes.",en:'We are optimistic.'},
-    {fr:"C'est un musée d'Art moderne.",en:"It's a modern art museum."},
-    {fr:"Il y a beaucoup de pistes cyclables.",en:'There are many cycle paths.'},
-    {fr:"C'est bien pour les cyclistes.",en:"It's good for cyclists."},
     {fr:"Il y a une boulangerie et une pharmacie.",en:'There is a bakery and a pharmacy.'},
     {fr:"C'est une comédie.",en:"It's a comedy."},
   ]},
 ];
 
-const DV_ALL_ID = 'all';
-let dvMode='listen', dvCat='greet', dvSecs=6;
-let dvPhrases=[], dvIdx=0, dvPhase='idle', dvPaused=false;
-let dvTimer=null, dvCdVal=0, dvCdMax=6;
+const DV_ALL_ID='all';
+let dvMode='listen',dvCat='neighbors',dvSecs=6;
+let dvPhrases=[],dvIdx=0,dvPhase='idle',dvPaused=false;
+let dvTimer=null,dvCdVal=0,dvCdMax=6;
 const dvCirc=251;
 
-// ── Build category grid ──
 const grid=document.getElementById('dv-cgrid');
 if(grid){
-  // All Categories button — full width
   const allBtn=document.createElement('button');
-  allBtn.className='dv-cbtn';
-  allBtn.style.gridColumn='1/-1';
-  allBtn.innerHTML=`<span class="dv-ce">🔀</span><span class="dv-cn" style="display:inline;margin-left:6px">All Categories — Continuous</span><span class="dv-cc" style="display:block;margin-top:2px">Every phrase, all units, back to back</span>`;
+  allBtn.className='dv-cbtn';allBtn.style.gridColumn='1/-1';
+  allBtn.innerHTML='<span class="dv-ce">🔀</span><span class="dv-cn" style="display:inline;margin-left:6px">All Categories — Continuous</span><span class="dv-cc" style="display:block;margin-top:2px">Every phrase, all units, back to back</span>';
   allBtn.onclick=()=>{dvCat=DV_ALL_ID;document.querySelectorAll('.dv-cbtn').forEach(x=>x.classList.remove('dv-sel'));allBtn.classList.add('dv-sel');};
   grid.appendChild(allBtn);
-
   DV_CATS.forEach(cat=>{
     const b=document.createElement('button');
-    b.className='dv-cbtn'+(cat.id==='greet'?' dv-sel':'');
+    b.className='dv-cbtn'+(cat.id==='neighbors'?' dv-sel':'');
     b.innerHTML=`<span class="dv-ce">${cat.emoji}</span><span class="dv-cn">${cat.name}</span><span class="dv-cc">${cat.phrases.length} phrases</span>`;
     b.onclick=()=>{dvCat=cat.id;document.querySelectorAll('.dv-cbtn').forEach(x=>x.classList.remove('dv-sel'));b.classList.add('dv-sel');};
     grid.appendChild(b);
@@ -1730,180 +1796,58 @@ if(grid){
 }
 
 function dvShow(id){['dv-home','dv-session','dv-done'].forEach(s=>{const el=document.getElementById(s);if(el)el.classList.toggle('dv-hidden',s!==id);});}
-
-window.dvSelectMode=function(m,btn){
-  dvMode=m;
-  document.querySelectorAll('.dv-mbtn').forEach(b=>b.classList.remove('dv-sel'));
-  btn.classList.add('dv-sel');
-  const lbl=document.getElementById('dv-slbl');
-  if(lbl)lbl.textContent=m==='quiz'?'Think time':'Repeat time';
-};
-
-window.dvSlider=function(el){
-  dvSecs=parseInt(el.value);
-  const v=document.getElementById('dv-sval');
-  if(v)v.textContent=dvSecs+' sec';
-};
+window.dvSelectMode=function(m,btn){dvMode=m;document.querySelectorAll('.dv-mbtn').forEach(b=>b.classList.remove('dv-sel'));btn.classList.add('dv-sel');const lbl=document.getElementById('dv-slbl');if(lbl)lbl.textContent=m==='quiz'?'Think time':'Repeat time';};
+window.dvSlider=function(el){dvSecs=parseInt(el.value);const v=document.getElementById('dv-sval');if(v)v.textContent=dvSecs+' sec';};
 
 function dvSpeak(text,lang,cb){
   if(!window.speechSynthesis){cb&&cb();return;}
   speechSynthesis.cancel();
   setTimeout(()=>{
     const u=new SpeechSynthesisUtterance(text);
-    u.lang=lang||'fr-FR';
-    u.rate=lang==='en-US'?0.95:0.88;
+    u.lang=lang||'fr-FR';u.rate=lang==='en-US'?0.95:0.88;
     const vv=speechSynthesis.getVoices();
-    // Prefer Audrey (France French premium), then any fr-FR, then any fr
-    const v=vv.find(x=>x.name.includes('Audrey'))||vv.find(x=>x.lang==='fr-FR')||vv.find(x=>x.lang.startsWith('fr'));
-    if(v)u.voice=v;
-    u.onend=()=>{if(!dvPaused)cb&&cb();};
-    u.onerror=()=>{if(!dvPaused)cb&&cb();};
+    const v=vv.find(x=>x.name.includes('Audrey'))
+      ||vv.find(x=>x.name.includes('Amélie')||x.name.includes('Amelie'))
+      ||vv.find(x=>x.lang==='fr-FR'&&!x.name.includes('Thomas')&&!x.name.includes('Robert'))
+      ||vv.find(x=>x.lang.startsWith('fr')&&!x.name.includes('Thomas')&&!x.name.includes('Robert'))
+      ||vv.find(x=>x.lang.startsWith('fr'));
+    if(v&&lang.startsWith('fr'))u.voice=v;
+    else if(!lang.startsWith('fr')){const ev=vv.find(x=>x.lang.startsWith('en'));if(ev)u.voice=ev;}
+    u.onend=()=>{if(!dvPaused)cb&&cb();};u.onerror=()=>{if(!dvPaused)cb&&cb();};
     speechSynthesis.speak(u);
   },80);
 }
-
-function dvSetRing(val,max,color){
-  const fg=document.getElementById('dv-rf');
-  const num=document.getElementById('dv-rnum');
-  const wrap=document.getElementById('dv-rwrap');
-  if(fg){fg.style.strokeDashoffset=dvCirc*(1-Math.max(0,val/max));fg.style.stroke=color;}
-  if(num)num.textContent=val;
-  if(wrap)wrap.style.display='block';
-}
+function dvSetRing(val,max,color){const fg=document.getElementById('dv-rf');const num=document.getElementById('dv-rnum');const wrap=document.getElementById('dv-rwrap');if(fg){fg.style.strokeDashoffset=dvCirc*(1-Math.max(0,val/max));fg.style.stroke=color;}if(num)num.textContent=val;if(wrap)wrap.style.display='block';}
 function dvHideRing(){const w=document.getElementById('dv-rwrap');if(w)w.style.display='none';}
 function dvPulseOn(on){const p=document.getElementById('dv-pulse');if(p)p.classList.toggle('on',on);}
 function dvSetBadge(txt,cls){const el=document.getElementById('dv-badge');if(el){el.className='dv-badge '+cls;el.textContent=txt;}}
-function dvSetText(fr,en){
-  const m=document.getElementById('dv-main');const e=document.getElementById('dv-eng');
-  if(m)m.textContent=fr;if(e)e.textContent=en;
-}
-function dvUpdateHdr(){
-  const pbar=document.getElementById('dv-pbar');const cnt=document.getElementById('dv-cnt');
-  if(pbar)pbar.style.width=(dvPhrases.length?dvIdx/dvPhrases.length*100:0)+'%';
-  if(cnt)cnt.textContent=(dvIdx+1)+'/'+dvPhrases.length;
-}
-function dvStopAll(){
-  clearInterval(dvTimer);clearTimeout(dvTimer);dvTimer=null;
-  speechSynthesis&&speechSynthesis.cancel();
-  dvPhase='idle';dvPaused=false;dvPulseOn(false);
-}
+function dvSetText(fr,en){const m=document.getElementById('dv-main');const e=document.getElementById('dv-eng');if(m)m.textContent=fr;if(e)e.textContent=en;}
+function dvUpdateHdr(){const pbar=document.getElementById('dv-pbar');const cnt=document.getElementById('dv-cnt');if(pbar)pbar.style.width=(dvPhrases.length?dvIdx/dvPhrases.length*100:0)+'%';if(cnt)cnt.textContent=(dvIdx+1)+'/'+dvPhrases.length;}
+function dvStopAll(){clearInterval(dvTimer);clearTimeout(dvTimer);dvTimer=null;speechSynthesis&&speechSynthesis.cancel();dvPhase='idle';dvPaused=false;dvPulseOn(false);}
+function dvCountdown(secs,color,onDone){clearInterval(dvTimer);dvTimer=null;dvCdMax=secs;dvCdVal=secs;dvSetRing(dvCdVal,dvCdMax,color);dvTimer=setInterval(()=>{if(dvPaused)return;dvCdVal--;dvSetRing(dvCdVal,dvCdMax,color);if(dvCdVal<=0){clearInterval(dvTimer);dvTimer=null;onDone&&onDone();}},1000);}
 
-function dvCountdown(secs,color,onDone){
-  clearInterval(dvTimer);dvTimer=null;
-  dvCdMax=secs;dvCdVal=secs;dvSetRing(dvCdVal,dvCdMax,color);
-  dvTimer=setInterval(()=>{
-    if(dvPaused)return;
-    dvCdVal--;dvSetRing(dvCdVal,dvCdMax,color);
-    if(dvCdVal<=0){clearInterval(dvTimer);dvTimer=null;onDone&&onDone();}
-  },1000);
-}
+function dvListenSpeak(){if(dvIdx>=dvPhrases.length){dvDone();return;}dvPhase='speaking';const p=dvPhrases[dvIdx];dvUpdateHdr();dvSetBadge('LISTEN','bl');dvSetText(p.fr,p.en);dvPulseOn(false);dvHideRing();dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused&&dvPhase==='speaking')dvListenRepeat();});}
+function dvListenRepeat(){dvPhase='repeating';dvSetBadge('YOUR TURN — REPEAT','bg');const e=document.getElementById('dv-eng');if(e)e.textContent='';dvPulseOn(true);dvCountdown(dvSecs,'#3fb950',()=>{dvPulseOn(false);dvIdx++;dvListenSpeak();});}
+function dvQuizPrompt(){if(dvIdx>=dvPhrases.length){dvDone();return;}dvPhase='prompting';const p=dvPhrases[dvIdx];dvUpdateHdr();dvSetBadge('HOW DO YOU SAY...','bb');dvSetText(p.en,'');dvPulseOn(false);dvHideRing();dvSpeak(p.en,'en-US',()=>{if(!dvPaused&&dvPhase==='prompting')dvQuizThink();});}
+function dvQuizThink(){dvPhase='thinking';dvSetBadge('SAY IT IN FRENCH !','bb');dvPulseOn(true);dvCountdown(dvSecs,'#58a6ff',()=>{dvPulseOn(false);dvQuizReveal();});}
+function dvQuizReveal(){dvPhase='revealing';const p=dvPhrases[dvIdx];dvSetBadge('ANSWER','bg');dvSetText(p.fr,p.en);dvHideRing();dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused&&dvPhase==='revealing')dvTimer=setTimeout(()=>{dvIdx++;dvQuizPrompt();},1200);});}
 
-// LISTEN mode
-function dvListenSpeak(){
-  if(dvIdx>=dvPhrases.length){dvDone();return;}
-  dvPhase='speaking';const p=dvPhrases[dvIdx];dvUpdateHdr();
-  dvSetBadge('LISTEN','bl');dvSetText(p.fr,p.en);dvPulseOn(false);dvHideRing();
-  dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused&&dvPhase==='speaking')dvListenRepeat();});
-}
-function dvListenRepeat(){
-  dvPhase='repeating';dvSetBadge('YOUR TURN — REPEAT','bg');
-  const e=document.getElementById('dv-eng');if(e)e.textContent='';
-  dvPulseOn(true);
-  dvCountdown(dvSecs,'#3fb950',()=>{dvPulseOn(false);dvIdx++;dvListenSpeak();});
-}
-
-// QUIZ mode
-function dvQuizPrompt(){
-  if(dvIdx>=dvPhrases.length){dvDone();return;}
-  dvPhase='prompting';const p=dvPhrases[dvIdx];dvUpdateHdr();
-  dvSetBadge('HOW DO YOU SAY...','bb');dvSetText(p.en,'');dvPulseOn(false);dvHideRing();
-  dvSpeak(p.en,'en-US',()=>{if(!dvPaused&&dvPhase==='prompting')dvQuizThink();});
-}
-function dvQuizThink(){
-  dvPhase='thinking';dvSetBadge('SAY IT IN FRENCH !','bb');dvPulseOn(true);
-  dvCountdown(dvSecs,'#58a6ff',()=>{dvPulseOn(false);dvQuizReveal();});
-}
-function dvQuizReveal(){
-  dvPhase='revealing';const p=dvPhrases[dvIdx];
-  dvSetBadge('ANSWER','bg');dvSetText(p.fr,p.en);dvHideRing();
-  dvSpeak(p.fr,'fr-FR',()=>{
-    if(!dvPaused&&dvPhase==='revealing')
-      dvTimer=setTimeout(()=>{dvIdx++;dvQuizPrompt();},1200);
-  });
-}
-
-// Controls
-window.dvReplay=function(){
-  clearInterval(dvTimer);clearTimeout(dvTimer);dvTimer=null;
-  speechSynthesis&&speechSynthesis.cancel();
-  if(dvIdx>=dvPhrases.length)return;
-  const p=dvPhrases[dvIdx];
-  if(dvMode==='listen'){
-    dvPhase='speaking';dvSetBadge('LISTEN','bl');dvSetText(p.fr,p.en);dvPulseOn(false);dvHideRing();
-    dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused)dvListenRepeat();});
-  } else {
-    dvPhase='prompting';dvSetBadge('HOW DO YOU SAY...','bb');dvSetText(p.en,'');dvPulseOn(false);dvHideRing();
-    dvSpeak(p.en,'en-US',()=>{if(!dvPaused)dvQuizThink();});
-  }
-};
-
-window.dvPause=function(){
-  dvPaused=!dvPaused;
-  const btn=document.getElementById('dv-pausebtn');if(btn)btn.textContent=dvPaused?'▶ Resume':'⏸ Pause';
-  if(dvPaused){speechSynthesis&&speechSynthesis.cancel();}
-  else{
-    if(dvMode==='listen'){if(dvPhase==='speaking')dvListenSpeak();else if(dvPhase==='repeating')dvListenRepeat();}
-    else{if(dvPhase==='prompting')dvQuizPrompt();else if(dvPhase==='thinking')dvQuizThink();else if(dvPhase==='revealing')dvQuizReveal();}
-  }
-};
-
-window.dvSkip=function(){
-  dvStopAll();dvIdx++;
-  if(dvIdx>=dvPhrases.length){dvDone();return;}
-  dvMode==='listen'?dvListenSpeak():dvQuizPrompt();
-};
-
+window.dvReplay=function(){clearInterval(dvTimer);clearTimeout(dvTimer);dvTimer=null;speechSynthesis&&speechSynthesis.cancel();if(dvIdx>=dvPhrases.length)return;const p=dvPhrases[dvIdx];if(dvMode==='listen'){dvPhase='speaking';dvSetBadge('LISTEN','bl');dvSetText(p.fr,p.en);dvPulseOn(false);dvHideRing();dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused)dvListenRepeat();});}else{dvPhase='prompting';dvSetBadge('HOW DO YOU SAY...','bb');dvSetText(p.en,'');dvPulseOn(false);dvHideRing();dvSpeak(p.en,'en-US',()=>{if(!dvPaused)dvQuizThink();});}};
+window.dvPause=function(){dvPaused=!dvPaused;const btn=document.getElementById('dv-pausebtn');if(btn)btn.textContent=dvPaused?'▶ Resume':'⏸ Pause';if(dvPaused){speechSynthesis&&speechSynthesis.cancel();}else{if(dvMode==='listen'){if(dvPhase==='speaking')dvListenSpeak();else if(dvPhase==='repeating')dvListenRepeat();}else{if(dvPhase==='prompting')dvQuizPrompt();else if(dvPhase==='thinking')dvQuizThink();else if(dvPhase==='revealing')dvQuizReveal();}}};
+window.dvSkip=function(){dvStopAll();dvIdx++;if(dvIdx>=dvPhrases.length){dvDone();return;}dvMode==='listen'?dvListenSpeak():dvQuizPrompt();};
 window.dvStart=function(){
   let phrases=[];
-  if(dvCat===DV_ALL_ID){
-    // Continuous — all categories, shuffled within each
-    DV_CATS.forEach(cat=>{
-      phrases=phrases.concat([...cat.phrases].sort(()=>Math.random()-0.5));
-    });
-  } else {
-    const cat=DV_CATS.find(c=>c.id===dvCat);
-    if(!cat)return;
-    phrases=[...cat.phrases].sort(()=>Math.random()-0.5);
-  }
-  dvPhrases=phrases;
-  dvIdx=0;dvPaused=false;
+  if(dvCat===DV_ALL_ID){DV_CATS.forEach(cat=>{phrases=phrases.concat([...cat.phrases].sort(()=>Math.random()-0.5));});}
+  else{const cat=DV_CATS.find(c=>c.id===dvCat);if(!cat)return;phrases=[...cat.phrases].sort(()=>Math.random()-0.5);}
+  dvPhrases=phrases;dvIdx=0;dvPaused=false;
   const btn=document.getElementById('dv-pausebtn');if(btn)btn.textContent='⏸ Pause';
   dvShow('dv-session');
   setTimeout(()=>dvMode==='listen'?dvListenSpeak():dvQuizPrompt(),400);
 };
-
 window.dvGoHome=function(){dvStopAll();dvShow('dv-home');};
-
-window.dvRepeatSet=function(){
-  dvPhrases=[...dvPhrases].sort(()=>Math.random()-0.5);
-  dvIdx=0;dvPaused=false;
-  const btn=document.getElementById('dv-pausebtn');if(btn)btn.textContent='⏸ Pause';
-  dvShow('dv-session');
-  setTimeout(()=>dvMode==='listen'?dvListenSpeak():dvQuizPrompt(),300);
-};
-
-function dvDone(){
-  dvStopAll();
-  const sub=document.getElementById('dv-done-sub');
-  if(sub)sub.textContent=dvPhrases.length+' phrases · '+(dvMode==='quiz'?'Quiz':'Listen');
-  dvShow('dv-done');
-  setTimeout(()=>dvSpeak('Très bien ! Excellent travail !','fr-FR'),500);
-}
-
-if(window.speechSynthesis){
-  speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();
-  speechSynthesis.getVoices();
-}
+window.dvRepeatSet=function(){dvPhrases=[...dvPhrases].sort(()=>Math.random()-0.5);dvIdx=0;dvPaused=false;const btn=document.getElementById('dv-pausebtn');if(btn)btn.textContent='⏸ Pause';dvShow('dv-session');setTimeout(()=>dvMode==='listen'?dvListenSpeak():dvQuizPrompt(),300);};
+function dvDone(){dvStopAll();const sub=document.getElementById('dv-done-sub');if(sub)sub.textContent=dvPhrases.length+' phrases · '+(dvMode==='quiz'?'Quiz':'Listen');dvShow('dv-done');setTimeout(()=>dvSpeak('Très bien ! Excellent travail !','fr-FR'),500);}
+if(window.speechSynthesis){speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();speechSynthesis.getVoices();}
 })();
 </script>
 
