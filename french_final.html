@@ -1059,11 +1059,9 @@ async function runItem(item){
         var fb=await getAIFeedback(item.fr,item.en||'',said);
         showSpinner(false);
         var parts=fb.split('|||');
-        var first=(parts[0]||'').toLowerCase();
-        var type='ok';
-        if(first.indexOf('excellent')>=0||first.indexOf('good')>=0) type='good';
-        else if(first.indexOf('try')>=0||first.indexOf('again')>=0) type='retry';
-        showFeedback('<div style="font-size:1rem;font-weight:700;margin-bottom:3px">'+parts[0]+'</div>'+(parts.slice(1).join('<br>')),type);
+        var type=parts[0]||'ok';
+        var body=parts.slice(1).join('\n');
+        showFeedback('<div style="white-space:pre-line">'+body+'</div>',type);
         if(type !== 'good') gel('tryAgainBtn').style.display='inline-block';
       } else {
         showFeedback('Tap the mic and try again, or press Next.','ok');
@@ -1123,11 +1121,9 @@ function tryAgainItem(){
         getAIFeedback(item.fr,item.en||'',said).then(function(fb){
           showSpinner(false);
           var parts=fb.split('|||');
-          var first=(parts[0]||'').toLowerCase();
-          var type='ok';
-          if(first.indexOf('excellent')>=0||first.indexOf('good')>=0) type='good';
-          else if(first.indexOf('try')>=0||first.indexOf('again')>=0) type='retry';
-          showFeedback('<div style="font-size:1rem;font-weight:700;margin-bottom:3px">'+parts[0]+'</div>'+(parts.slice(1).join('<br>')),type);
+          var type=parts[0]||'ok';
+          var body=parts.slice(1).join('\n');
+          showFeedback('<div style="white-space:pre-line">'+body+'</div>',type);
           gel('nextBtn').style.display='inline-block';
           gel('replayBtn').style.display='inline-block';
           pill('READY — tap Next →');
@@ -1307,28 +1303,51 @@ function waitForMic(){
 // ══════════════════════════════════════════
 // AI FEEDBACK
 // ══════════════════════════════════════════
-function getAIFeedback(phrase, meaning, said){
+function localFeedbackFallback(phrase, said){
   var normalize = function(s){ return s.toLowerCase().replace(/[?.!,]/g,'').replace(/\s+/g,' ').trim(); };
   var target = normalize(phrase);
   var heard = normalize(said);
   var SEP = '|||';
-
   if(heard === target || heard.indexOf(target) >= 0 || target.indexOf(heard) >= 0){
-    return Promise.resolve('Excellent'+SEP+'Perfect — exactly right!'+SEP+'Keep going!');
+    return 'ok|||Perfect — exactly right! Keep going!';
   }
   var tw = target.split(' ');
   var hw = heard.split(' ');
   var matches = tw.filter(function(w){ return w.length>2 && hw.some(function(h){ return h.indexOf(w)>=0 || w.indexOf(h)>=0; }); });
   var score = tw.length ? matches.length/tw.length : 0;
-
   if(score >= 0.75){
-    return Promise.resolve('Good'+SEP+'You got most of it — '+matches.join(', ')+' came through.'+SEP+'Say the full phrase: '+phrase);
+    return 'ok|||You got most of it. Say the full phrase: '+phrase;
   } else if(score >= 0.4){
-    var ng = tw.filter(function(w){ return w.length>2 && !hw.some(function(h){ return h.indexOf(w)>=0 || w.indexOf(h)>=0; }); });
-    return Promise.resolve('Almost'+SEP+'You got: '+matches.join(', ')+SEP+'Work on: '+ng.slice(0,3).join(', ')+' — phrase: '+phrase);
+    return 'ok|||You got some of it. Repeat: '+phrase;
   } else {
-    return Promise.resolve('Try Again'+SEP+'I heard: '+said+SEP+'Listen again and repeat: '+phrase);
+    return 'retry|||I heard: "'+said+'" — Listen again and repeat: '+phrase;
   }
+}
+
+function getAIFeedback(phrase, meaning, said){
+  var SEP = '|||';
+  return fetch('https://french-woad.vercel.app/api/feedback', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ target: phrase, attempt: said, context: meaning })
+  })
+  .then(function(r){
+    if(!r.ok) throw new Error('API '+r.status);
+    return r.json();
+  })
+  .then(function(data){
+    var text = (data.feedback || '').trim();
+    if(!text) throw new Error('empty');
+    // Detect good vs retry from content
+    var type = 'ok';
+    if(text.indexOf('Perfect')>=0 || text.indexOf('\u2713')>=0) type = 'good';
+    else if(text.toLowerCase().indexOf('try again')>=0) type = 'retry';
+    return type + SEP + text;
+  })
+  .catch(function(err){
+    console.warn('Feedback API failed, local fallback:', err);
+    return localFeedbackFallback(phrase, said);
+  });
 }
 
 // ══════════════════════════════════════════
