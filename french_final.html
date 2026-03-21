@@ -16,7 +16,7 @@ body{background:var(--navy);color:var(--cream);font-family:'Source Sans 3',sans-
 .tab-bar::-webkit-scrollbar{display:none;}
 .tab-bar-wrap{position:relative;}
 .tab-bar-wrap::after{content:'';position:absolute;right:0;top:0;bottom:0;width:20px;background:linear-gradient(to right,transparent,rgba(13,20,40,0.7));pointer-events:none;}
-.tab-btn{font-size:0.62rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;padding:11px 10px;border:none;background:transparent;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;font-family:'Source Sans 3',sans-serif;}
+.tab-btn{font-size:0.65rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;white-space:nowrap;padding:11px 9px;border:none;background:transparent;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;font-family:'Source Sans 3',sans-serif;}
 .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
 .page{display:none;padding:16px 14px 80px;max-width:600px;margin:0 auto;}
 .page.active{display:block;}
@@ -111,14 +111,14 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
 </div>
 
 <div class="tab-bar-wrap"><div class="tab-bar" id="tabBar">
-  <button class="tab-btn active" onclick="showPage('home')">🏠 Home</button>
-  <button class="tab-btn" onclick="showPage('vocabulary')">🔤 Vocab</button>
-  <button class="tab-btn" onclick="showPage('verbs')">📖 Verbs</button>
-  <button class="tab-btn" onclick="showPage('phrases')">💬 Phrases</button>
-  <button class="tab-btn" onclick="showPage('drill')">🎤 Drill</button>
-  <button class="tab-btn" onclick="showPage('qa');qaInit()">💬 Q&amp;A</button>
-  <button class="tab-btn" onclick="showPage('drive')">🚗 Drive</button>
-  <button class="tab-btn" onclick="showPage('bilan')">📝 Bilan</button>
+  <button class="tab-btn active" onclick="showPage('home')">Home</button>
+  <button class="tab-btn" onclick="showPage('vocabulary')">Vocab</button>
+  <button class="tab-btn" onclick="showPage('verbs')">Verbs</button>
+  <button class="tab-btn" onclick="showPage('phrases')">Phrases</button>
+  <button class="tab-btn" onclick="showPage('drill')">Drill</button>
+  <button class="tab-btn" onclick="showPage('qa');qaInit()">Q&amp;A</button>
+  <button class="tab-btn" onclick="showPage('drive')">Drive</button>
+  <button class="tab-btn" onclick="showPage('bilan')">Bilan</button>
 </div></div>
 
 <!-- HOME -->
@@ -1925,7 +1925,7 @@ if(window.speechSynthesis){speechSynthesis.onvoiceschanged=()=>speechSynthesis.g
 .bl-complete{text-align:center;padding:10px;font-size:0.85rem;color:#7eeaa8;font-weight:600;display:none;}
 </style>
 
-<div class="bl-title">📝 Bilan 1 — Homework</div>
+<div class="bl-title">Bilan 1 — Homework</div>
 <div class="bl-sub">Group class 3/18. Tap a word from the bank, then tap the blank where it belongs.</div>
 
 <!-- EX 1 -->
