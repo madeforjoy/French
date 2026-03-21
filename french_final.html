@@ -1637,6 +1637,7 @@ svg.dv-ring{transform:rotate(-90deg);width:88px;height:88px;}
 // DRIVE MODE JS
 // ══════════════════════════════════════════
 (function(){
+
 const DV_CATS=[
   {id:'greet',emoji:'👋',name:'Greetings',phrases:[
     {fr:'Bonjour',en:'Hello'},{fr:'Bonsoir',en:'Good evening'},{fr:'Bonne nuit',en:'Good night'},
@@ -1674,16 +1675,51 @@ const DV_CATS=[
     {fr:'Excusez-moi',en:'Excuse me (formal)'},{fr:"D'accord.",en:'Okay / Agreed.'},
     {fr:'Bien sûr !',en:'Of course!'},{fr:'Pas grave.',en:'No worries.'},
   ]},
+  {id:'bilan',emoji:'📝',name:'Bilan 1',phrases:[
+    {fr:"Anne et Jean ont trois enfants.",en:'Anne and Jean have three children.'},
+    {fr:"Nous avons rendez-vous à 9 heures.",en:'We have an appointment at 9.'},
+    {fr:"L'appartement est au centre ville.",en:'The apartment is in the city centre.'},
+    {fr:"Vous avez mal à la tête.",en:'You have a headache.'},
+    {fr:"Le restaurant est ouvert.",en:'The restaurant is open.'},
+    {fr:"J'ai faim.",en:"I'm hungry."},
+    {fr:"On a le temps.",en:'We have time.'},
+    {fr:"Tu es occupé.",en:'You are busy.'},
+    {fr:"Il est brésilien.",en:'He is Brazilian.'},
+    {fr:"Nous sommes mécontents.",en:'We are unhappy.'},
+    {fr:"Elle est célibataire.",en:'She is single.'},
+    {fr:"J'ai une réunion à 10 heures.",en:'I have a meeting at 10.'},
+    {fr:"C'est important pour moi.",en:"It's important to me."},
+    {fr:"Vous êtes américain.",en:'You are American.'},
+    {fr:"Tu as huit ans.",en:'You are eight years old.'},
+    {fr:"Les spectateurs sont contents.",en:'The audience is happy.'},
+    {fr:"Ils ont des billets gratuits.",en:'They have free tickets.'},
+    {fr:"Ils sont sympathiques.",en:'They are nice.'},
+    {fr:"Nous sommes optimistes.",en:'We are optimistic.'},
+    {fr:"C'est un musée d'Art moderne.",en:"It's a modern art museum."},
+    {fr:"Il y a beaucoup de pistes cyclables.",en:'There are many cycle paths.'},
+    {fr:"C'est bien pour les cyclistes.",en:"It's good for cyclists."},
+    {fr:"Il y a une boulangerie et une pharmacie.",en:'There is a bakery and a pharmacy.'},
+    {fr:"C'est une comédie.",en:"It's a comedy."},
+  ]},
 ];
 
-let dvMode='listen',dvCat='greet',dvSecs=6;
-let dvPhrases=[],dvIdx=0,dvPhase='idle',dvPaused=false;
-let dvTimer=null,dvCdVal=0,dvCdMax=6;
+const DV_ALL_ID = 'all';
+let dvMode='listen', dvCat='greet', dvSecs=6;
+let dvPhrases=[], dvIdx=0, dvPhase='idle', dvPaused=false;
+let dvTimer=null, dvCdVal=0, dvCdMax=6;
 const dvCirc=251;
 
-// Build category grid
+// ── Build category grid ──
 const grid=document.getElementById('dv-cgrid');
 if(grid){
+  // All Categories button — full width
+  const allBtn=document.createElement('button');
+  allBtn.className='dv-cbtn';
+  allBtn.style.gridColumn='1/-1';
+  allBtn.innerHTML=`<span class="dv-ce">🔀</span><span class="dv-cn" style="display:inline;margin-left:6px">All Categories — Continuous</span><span class="dv-cc" style="display:block;margin-top:2px">Every phrase, all units, back to back</span>`;
+  allBtn.onclick=()=>{dvCat=DV_ALL_ID;document.querySelectorAll('.dv-cbtn').forEach(x=>x.classList.remove('dv-sel'));allBtn.classList.add('dv-sel');};
+  grid.appendChild(allBtn);
+
   DV_CATS.forEach(cat=>{
     const b=document.createElement('button');
     b.className='dv-cbtn'+(cat.id==='greet'?' dv-sel':'');
@@ -1694,17 +1730,31 @@ if(grid){
 }
 
 function dvShow(id){['dv-home','dv-session','dv-done'].forEach(s=>{const el=document.getElementById(s);if(el)el.classList.toggle('dv-hidden',s!==id);});}
-window.dvSelectMode=function(m,btn){dvMode=m;document.querySelectorAll('.dv-mbtn').forEach(b=>b.classList.remove('dv-sel'));btn.classList.add('dv-sel');const lbl=document.getElementById('dv-slbl');if(lbl)lbl.textContent=m==='quiz'?'Think time':'Repeat time';};
-window.dvSlider=function(el){dvSecs=parseInt(el.value);const v=document.getElementById('dv-sval');if(v)v.textContent=dvSecs+' sec';};
+
+window.dvSelectMode=function(m,btn){
+  dvMode=m;
+  document.querySelectorAll('.dv-mbtn').forEach(b=>b.classList.remove('dv-sel'));
+  btn.classList.add('dv-sel');
+  const lbl=document.getElementById('dv-slbl');
+  if(lbl)lbl.textContent=m==='quiz'?'Think time':'Repeat time';
+};
+
+window.dvSlider=function(el){
+  dvSecs=parseInt(el.value);
+  const v=document.getElementById('dv-sval');
+  if(v)v.textContent=dvSecs+' sec';
+};
 
 function dvSpeak(text,lang,cb){
   if(!window.speechSynthesis){cb&&cb();return;}
   speechSynthesis.cancel();
   setTimeout(()=>{
     const u=new SpeechSynthesisUtterance(text);
-    u.lang=lang||'fr-FR';u.rate=lang==='en-US'?0.95:0.82;
+    u.lang=lang||'fr-FR';
+    u.rate=lang==='en-US'?0.95:0.88;
     const vv=speechSynthesis.getVoices();
-    const v=vv.find(x=>x.lang.startsWith(lang==='en-US'?'en':'fr'));
+    // Prefer Audrey (France French premium), then any fr-FR, then any fr
+    const v=vv.find(x=>x.name.includes('Audrey'))||vv.find(x=>x.lang==='fr-FR')||vv.find(x=>x.lang.startsWith('fr'));
     if(v)u.voice=v;
     u.onend=()=>{if(!dvPaused)cb&&cb();};
     u.onerror=()=>{if(!dvPaused)cb&&cb();};
@@ -1713,21 +1763,30 @@ function dvSpeak(text,lang,cb){
 }
 
 function dvSetRing(val,max,color){
-  const fg=document.getElementById('dv-rf');const num=document.getElementById('dv-rnum');const wrap=document.getElementById('dv-rwrap');
-  if(fg)fg.style.strokeDashoffset=dvCirc*(1-Math.max(0,val/max));
-  if(fg)fg.style.stroke=color;
+  const fg=document.getElementById('dv-rf');
+  const num=document.getElementById('dv-rnum');
+  const wrap=document.getElementById('dv-rwrap');
+  if(fg){fg.style.strokeDashoffset=dvCirc*(1-Math.max(0,val/max));fg.style.stroke=color;}
   if(num)num.textContent=val;
   if(wrap)wrap.style.display='block';
 }
 function dvHideRing(){const w=document.getElementById('dv-rwrap');if(w)w.style.display='none';}
 function dvPulseOn(on){const p=document.getElementById('dv-pulse');if(p)p.classList.toggle('on',on);}
 function dvSetBadge(txt,cls){const el=document.getElementById('dv-badge');if(el){el.className='dv-badge '+cls;el.textContent=txt;}}
+function dvSetText(fr,en){
+  const m=document.getElementById('dv-main');const e=document.getElementById('dv-eng');
+  if(m)m.textContent=fr;if(e)e.textContent=en;
+}
 function dvUpdateHdr(){
   const pbar=document.getElementById('dv-pbar');const cnt=document.getElementById('dv-cnt');
   if(pbar)pbar.style.width=(dvPhrases.length?dvIdx/dvPhrases.length*100:0)+'%';
   if(cnt)cnt.textContent=(dvIdx+1)+'/'+dvPhrases.length;
 }
-function dvStopAll(){clearInterval(dvTimer);clearTimeout(dvTimer);dvTimer=null;speechSynthesis&&speechSynthesis.cancel();dvPhase='idle';dvPaused=false;dvPulseOn(false);}
+function dvStopAll(){
+  clearInterval(dvTimer);clearTimeout(dvTimer);dvTimer=null;
+  speechSynthesis&&speechSynthesis.cancel();
+  dvPhase='idle';dvPaused=false;dvPulseOn(false);
+}
 
 function dvCountdown(secs,color,onDone){
   clearInterval(dvTimer);dvTimer=null;
@@ -1739,11 +1798,7 @@ function dvCountdown(secs,color,onDone){
   },1000);
 }
 
-function dvSetText(fr,en){
-  const m=document.getElementById('dv-main');const e=document.getElementById('dv-eng');
-  if(m)m.textContent=fr;if(e)e.textContent=en;
-}
-
+// LISTEN mode
 function dvListenSpeak(){
   if(dvIdx>=dvPhrases.length){dvDone();return;}
   dvPhase='speaking';const p=dvPhrases[dvIdx];dvUpdateHdr();
@@ -1756,6 +1811,8 @@ function dvListenRepeat(){
   dvPulseOn(true);
   dvCountdown(dvSecs,'#3fb950',()=>{dvPulseOn(false);dvIdx++;dvListenSpeak();});
 }
+
+// QUIZ mode
 function dvQuizPrompt(){
   if(dvIdx>=dvPhrases.length){dvDone();return;}
   dvPhase='prompting';const p=dvPhrases[dvIdx];dvUpdateHdr();
@@ -1770,10 +1827,12 @@ function dvQuizReveal(){
   dvPhase='revealing';const p=dvPhrases[dvIdx];
   dvSetBadge('ANSWER','bg');dvSetText(p.fr,p.en);dvHideRing();
   dvSpeak(p.fr,'fr-FR',()=>{
-    if(!dvPaused&&dvPhase==='revealing')dvTimer=setTimeout(()=>{dvIdx++;dvQuizPrompt();},1200);
+    if(!dvPaused&&dvPhase==='revealing')
+      dvTimer=setTimeout(()=>{dvIdx++;dvQuizPrompt();},1200);
   });
 }
 
+// Controls
 window.dvReplay=function(){
   clearInterval(dvTimer);clearTimeout(dvTimer);dvTimer=null;
   speechSynthesis&&speechSynthesis.cancel();
@@ -1787,6 +1846,7 @@ window.dvReplay=function(){
     dvSpeak(p.en,'en-US',()=>{if(!dvPaused)dvQuizThink();});
   }
 };
+
 window.dvPause=function(){
   dvPaused=!dvPaused;
   const btn=document.getElementById('dv-pausebtn');if(btn)btn.textContent=dvPaused?'▶ Resume':'⏸ Pause';
@@ -1796,17 +1856,34 @@ window.dvPause=function(){
     else{if(dvPhase==='prompting')dvQuizPrompt();else if(dvPhase==='thinking')dvQuizThink();else if(dvPhase==='revealing')dvQuizReveal();}
   }
 };
-window.dvSkip=function(){dvStopAll();dvIdx++;if(dvIdx>=dvPhrases.length){dvDone();return;}dvMode==='listen'?dvListenSpeak():dvQuizPrompt();};
+
+window.dvSkip=function(){
+  dvStopAll();dvIdx++;
+  if(dvIdx>=dvPhrases.length){dvDone();return;}
+  dvMode==='listen'?dvListenSpeak():dvQuizPrompt();
+};
+
 window.dvStart=function(){
-  const cat=DV_CATS.find(c=>c.id===dvCat);
-  if(!cat)return;
-  dvPhrases=[...cat.phrases].sort(()=>Math.random()-0.5);
+  let phrases=[];
+  if(dvCat===DV_ALL_ID){
+    // Continuous — all categories, shuffled within each
+    DV_CATS.forEach(cat=>{
+      phrases=phrases.concat([...cat.phrases].sort(()=>Math.random()-0.5));
+    });
+  } else {
+    const cat=DV_CATS.find(c=>c.id===dvCat);
+    if(!cat)return;
+    phrases=[...cat.phrases].sort(()=>Math.random()-0.5);
+  }
+  dvPhrases=phrases;
   dvIdx=0;dvPaused=false;
   const btn=document.getElementById('dv-pausebtn');if(btn)btn.textContent='⏸ Pause';
   dvShow('dv-session');
   setTimeout(()=>dvMode==='listen'?dvListenSpeak():dvQuizPrompt(),400);
 };
+
 window.dvGoHome=function(){dvStopAll();dvShow('dv-home');};
+
 window.dvRepeatSet=function(){
   dvPhrases=[...dvPhrases].sort(()=>Math.random()-0.5);
   dvIdx=0;dvPaused=false;
@@ -1814,15 +1891,19 @@ window.dvRepeatSet=function(){
   dvShow('dv-session');
   setTimeout(()=>dvMode==='listen'?dvListenSpeak():dvQuizPrompt(),300);
 };
+
 function dvDone(){
   dvStopAll();
   const sub=document.getElementById('dv-done-sub');
-  if(sub)sub.textContent=dvPhrases.length+' phrases · '+(dvMode==='quiz'?'Quiz mode':'Listen mode');
+  if(sub)sub.textContent=dvPhrases.length+' phrases · '+(dvMode==='quiz'?'Quiz':'Listen');
   dvShow('dv-done');
   setTimeout(()=>dvSpeak('Très bien ! Excellent travail !','fr-FR'),500);
 }
 
-if(window.speechSynthesis){speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();speechSynthesis.getVoices();}
+if(window.speechSynthesis){
+  speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();
+  speechSynthesis.getVoices();
+}
 })();
 </script>
 
