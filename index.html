@@ -297,7 +297,59 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
     <div class="lesson-content" id="lesson-1-content"></div>
   </div>
 
-  <div class="tip-box" style="margin-top:8px">💡 More lessons coming as you get closer to April 10. Lesson 2 — Les Commerces is next.</div>
+  <!-- LESSON 2 -->
+  <div class="lesson-card" id="lesson-card-2">
+    <div class="lesson-title">Lesson 2 — Les Commerces</div>
+    <div class="lesson-sub">Boulangerie, marché, pharmacie · 12 phrases · vous throughout</div>
+    <div class="lesson-layers">
+      <button class="layer-btn" onclick="openLayer(2,1)">🔊 Layer 1 — Listen</button>
+      <button class="layer-btn" onclick="openLayer(2,2)">🔁 Layer 2 — Drill</button>
+      <button class="layer-btn" onclick="openLayer(2,3)">✍️ Layer 3 — Perform</button>
+      <button class="layer-btn" style="border-color:rgba(100,180,255,0.4)" onclick="launchDriveLesson('lesson2')">🚗 Drive Mode</button>
+    </div>
+    <div class="lesson-content" id="lesson-2-content"></div>
+  </div>
+
+  <!-- LESSON 3 -->
+  <div class="lesson-card" id="lesson-card-3">
+    <div class="lesson-title">Lesson 3 — Se Débrouiller</div>
+    <div class="lesson-sub">Directions, getting around, asking for help · 12 phrases</div>
+    <div class="lesson-layers">
+      <button class="layer-btn" onclick="openLayer(3,1)">🔊 Layer 1 — Listen</button>
+      <button class="layer-btn" onclick="openLayer(3,2)">🔁 Layer 2 — Drill</button>
+      <button class="layer-btn" onclick="openLayer(3,3)">✍️ Layer 3 — Perform</button>
+      <button class="layer-btn" style="border-color:rgba(100,180,255,0.4)" onclick="launchDriveLesson('lesson3')">🚗 Drive Mode</button>
+    </div>
+    <div class="lesson-content" id="lesson-3-content"></div>
+  </div>
+
+  <!-- LESSON 4 -->
+  <div class="lesson-card" id="lesson-card-4">
+    <div class="lesson-title">Lesson 4 — Chez Vous</div>
+    <div class="lesson-sub">Notaire, landlord, your apartment · 12 phrases · vous throughout</div>
+    <div class="lesson-layers">
+      <button class="layer-btn" onclick="openLayer(4,1)">🔊 Layer 1 — Listen</button>
+      <button class="layer-btn" onclick="openLayer(4,2)">🔁 Layer 2 — Drill</button>
+      <button class="layer-btn" onclick="openLayer(4,3)">✍️ Layer 3 — Perform</button>
+      <button class="layer-btn" style="border-color:rgba(100,180,255,0.4)" onclick="launchDriveLesson('lesson4')">🚗 Drive Mode</button>
+    </div>
+    <div class="lesson-content" id="lesson-4-content"></div>
+  </div>
+
+  <!-- LESSON 5 -->
+  <div class="lesson-card" id="lesson-card-5">
+    <div class="lesson-title">Lesson 5 — Café & Table</div>
+    <div class="lesson-sub">Ordering, paying, casual conversation · 12 phrases · mix of vous/tu</div>
+    <div class="lesson-layers">
+      <button class="layer-btn" onclick="openLayer(5,1)">🔊 Layer 1 — Listen</button>
+      <button class="layer-btn" onclick="openLayer(5,2)">🔁 Layer 2 — Drill</button>
+      <button class="layer-btn" onclick="openLayer(5,3)">✍️ Layer 3 — Perform</button>
+      <button class="layer-btn" style="border-color:rgba(100,180,255,0.4)" onclick="launchDriveLesson('lesson5')">🚗 Drive Mode</button>
+    </div>
+    <div class="lesson-content" id="lesson-5-content"></div>
+  </div>
+
+  <div class="tip-box" style="margin-top:8px">💡 Do Layer 1 while driving. Layer 3 when seated. Repeat each lesson across multiple days for best retention.</div>
 </div>
 
 <!-- Q&A -->
@@ -1443,6 +1495,147 @@ const LESSONS = {
       {prompt:"Elle dit : « Vous parlez très bien français ! »",hint:"Be modest — you're learning.",ideal:"Merci ! J'apprends le français. Je parle un peu."},
       {prompt:"Time to say goodbye.",hint:"Friendly farewell.",ideal:"Merci beaucoup. À bientôt, madame."},
     ]
+  },
+  2: {
+    title: "Les Commerces",
+    dialogue: [
+      {who:"Vous",fr:"Bonjour madame, une baguette s'il vous plaît.",en:"Hello madam, a baguette please."},
+      {who:"Boulangère",fr:"Voilà monsieur. Et avec ça ?",en:"Here you go. And with that?"},
+      {who:"Vous",fr:"Un croissant aussi, s'il vous plaît.",en:"A croissant too, please."},
+      {who:"Boulangère",fr:"Très bien. C'est tout ?",en:"Very good. Is that all?"},
+      {who:"Vous",fr:"Oui, c'est tout. C'est combien ?",en:"Yes, that's all. How much is it?"},
+      {who:"Boulangère",fr:"Deux euros cinquante, s'il vous plaît.",en:"Two euros fifty, please."},
+      {who:"Vous",fr:"Voilà. Merci beaucoup, madame.",en:"Here you go. Thank you very much, madam."},
+      {who:"Boulangère",fr:"Merci à vous. Bonne journée !",en:"Thank you. Have a good day!"},
+      {who:"Vous",fr:"Bonne journée !",en:"Have a good day!"},
+    ],
+    phrases: [
+      {fr:"Bonjour madame, une baguette s'il vous plaît.",en:"Hello madam, a baguette please."},
+      {fr:"Un croissant aussi, s'il vous plaît.",en:"A croissant too, please."},
+      {fr:"C'est combien ?",en:"How much is it?"},
+      {fr:"Je voudrais un café, s'il vous plaît.",en:"I'd like a coffee, please."},
+      {fr:"Vous avez de la monnaie ?",en:"Do you have change?"},
+      {fr:"C'est tout, merci.",en:"That's all, thank you."},
+      {fr:"Où est la pharmacie, s'il vous plaît ?",en:"Where is the pharmacy, please?"},
+      {fr:"Je cherche le marché.",en:"I'm looking for the market."},
+      {fr:"Vous ouvrez à quelle heure ?",en:"What time do you open?"},
+      {fr:"Vous fermez à quelle heure ?",en:"What time do you close?"},
+      {fr:"Avez-vous du pain complet ?",en:"Do you have wholegrain bread?"},
+      {fr:"Merci beaucoup, bonne journée !",en:"Thank you very much, have a good day!"},
+    ],
+    scenarios: [
+      {prompt:"Vous entrez dans la boulangerie. La boulangère dit : « Bonjour ! »",hint:"Greet her and ask for a baguette.",ideal:"Bonjour madame ! Une baguette s'il vous plaît."},
+      {prompt:"Elle dit : « Et avec ça ? »",hint:"Ask for a croissant too.",ideal:"Un croissant aussi, s'il vous plaît."},
+      {prompt:"Elle dit : « C'est tout ? »",hint:"Yes, that's all. Ask how much.",ideal:"Oui, c'est tout. C'est combien ?"},
+      {prompt:"Vous cherchez la pharmacie. Demandez à quelqu'un.",hint:"Ask politely where the pharmacy is.",ideal:"Excusez-moi, où est la pharmacie s'il vous plaît ?"},
+      {prompt:"Il est 14h. La boulangerie est fermée. Demandez l'heure d'ouverture.",hint:"Ask what time they open.",ideal:"Vous ouvrez à quelle heure ?"},
+    ]
+  },
+  3: {
+    title: "Se Débrouiller",
+    dialogue: [
+      {who:"Vous",fr:"Excusez-moi madame, je suis un peu perdu.",en:"Excuse me madam, I'm a bit lost."},
+      {who:"Passante",fr:"Oui, je vous en prie. Où voulez-vous aller ?",en:"Yes, of course. Where do you want to go?"},
+      {who:"Vous",fr:"Je cherche la gare, s'il vous plaît.",en:"I'm looking for the train station, please."},
+      {who:"Passante",fr:"La gare ? C'est tout droit, puis à gauche.",en:"The station? It's straight ahead, then left."},
+      {who:"Vous",fr:"Tout droit puis à gauche. D'accord, merci.",en:"Straight ahead then left. OK, thank you."},
+      {who:"Passante",fr:"C'est à cinq minutes à pied.",en:"It's five minutes on foot."},
+      {who:"Vous",fr:"Pardon, vous pouvez répéter plus lentement ?",en:"Sorry, can you repeat more slowly?"},
+      {who:"Passante",fr:"Bien sûr ! Tout droit... puis à gauche.",en:"Of course! Straight ahead... then left."},
+      {who:"Vous",fr:"Merci beaucoup, vous êtes très gentille.",en:"Thank you very much, you are very kind."},
+    ],
+    phrases: [
+      {fr:"Excusez-moi, je suis un peu perdu.",en:"Excuse me, I'm a bit lost."},
+      {fr:"Je cherche la gare.",en:"I'm looking for the train station."},
+      {fr:"Où est l'arrêt de bus ?",en:"Where is the bus stop?"},
+      {fr:"C'est loin d'ici ?",en:"Is it far from here?"},
+      {fr:"C'est à combien de minutes ?",en:"How many minutes away is it?"},
+      {fr:"Tout droit, puis à gauche.",en:"Straight ahead, then left."},
+      {fr:"Tournez à droite.",en:"Turn right."},
+      {fr:"Vous pouvez répéter plus lentement ?",en:"Can you repeat more slowly?"},
+      {fr:"Je ne comprends pas bien.",en:"I don't understand well."},
+      {fr:"Parlez-vous anglais ?",en:"Do you speak English?"},
+      {fr:"Merci, vous êtes très gentil.",en:"Thank you, you are very kind."},
+      {fr:"Je prends un taxi.",en:"I'm taking a taxi."},
+    ],
+    scenarios: [
+      {prompt:"Vous êtes perdu. Approchez quelqu'un dans la rue.",hint:"Excuse yourself and say you're a bit lost.",ideal:"Excusez-moi, je suis un peu perdu."},
+      {prompt:"La personne demande : « Où voulez-vous aller ? »",hint:"Tell them you're looking for the bus stop.",ideal:"Je cherche l'arrêt de bus, s'il vous plaît."},
+      {prompt:"Elle répond trop vite. Vous n'avez pas compris.",hint:"Ask her to repeat more slowly.",ideal:"Pardon, vous pouvez répéter plus lentement ?"},
+      {prompt:"Elle dit : « Tournez à droite puis tout droit. » Confirmez.",hint:"Repeat it back to confirm.",ideal:"À droite, puis tout droit. D'accord, merci beaucoup."},
+      {prompt:"Vous voulez prendre un taxi. Dites-le.",hint:"Say you're taking a taxi.",ideal:"Je vais prendre un taxi, s'il vous plaît."},
+    ]
+  },
+  4: {
+    title: "Chez Vous",
+    dialogue: [
+      {who:"Vous",fr:"Bonjour monsieur, je suis Jack Abbott.",en:"Hello sir, I am Jack Abbott."},
+      {who:"Notaire",fr:"Bonjour monsieur Abbott. Vous avez les documents ?",en:"Hello Mr Abbott. Do you have the documents?"},
+      {who:"Vous",fr:"Oui, voilà. Où est-ce que je signe ?",en:"Yes, here they are. Where do I sign?"},
+      {who:"Notaire",fr:"Ici, et ici. Vous avez une question ?",en:"Here, and here. Do you have a question?"},
+      {who:"Vous",fr:"Oui — les charges sont comprises ?",en:"Yes — are the charges included?"},
+      {who:"Notaire",fr:"Oui, les charges sont comprises.",en:"Yes, the charges are included."},
+      {who:"Vous",fr:"Et l'eau et l'électricité ?",en:"And the water and electricity?"},
+      {who:"Notaire",fr:"L'eau est comprise. L'électricité est séparée.",en:"Water is included. Electricity is separate."},
+      {who:"Vous",fr:"D'accord. Merci beaucoup monsieur.",en:"OK. Thank you very much sir."},
+    ],
+    phrases: [
+      {fr:"Où est-ce que je signe ?",en:"Where do I sign?"},
+      {fr:"Les charges sont comprises ?",en:"Are the charges included?"},
+      {fr:"L'eau est comprise ?",en:"Is water included?"},
+      {fr:"Il y a un problème avec le chauffage.",en:"There is a problem with the heating."},
+      {fr:"Est-ce qu'il y a un ascenseur ?",en:"Is there a lift?"},
+      {fr:"Nous habitons au troisième étage.",en:"We live on the third floor."},
+      {fr:"La clé ne fonctionne pas.",en:"The key doesn't work."},
+      {fr:"Pouvez-vous envoyer un plombier ?",en:"Can you send a plumber?"},
+      {fr:"C'est urgent.",en:"It's urgent."},
+      {fr:"Quand est-ce que vous pouvez venir ?",en:"When can you come?"},
+      {fr:"L'appartement est au nom de Jack Abbott.",en:"The apartment is in the name of Jack Abbott."},
+      {fr:"Merci, à bientôt.",en:"Thank you, see you soon."},
+    ],
+    scenarios: [
+      {prompt:"Vous êtes chez le notaire. Il dit : « Bonjour ! »",hint:"Greet him and give your name.",ideal:"Bonjour monsieur. Je suis Jack Abbott."},
+      {prompt:"Il montre les papiers. Vous voulez savoir où signer.",hint:"Ask where to sign.",ideal:"Où est-ce que je signe ?"},
+      {prompt:"Vous voulez savoir si les charges sont comprises.",hint:"Ask if charges are included.",ideal:"Les charges sont comprises ?"},
+      {prompt:"Il y a un problème avec le chauffage. Appelez le propriétaire.",hint:"Tell him there's a problem with the heating.",ideal:"Bonjour, il y a un problème avec le chauffage."},
+      {prompt:"La situation est urgente. Demandez quand il peut venir.",hint:"Say it's urgent and ask when he can come.",ideal:"C'est urgent. Quand est-ce que vous pouvez venir ?"},
+    ]
+  },
+  5: {
+    title: "Café & Table",
+    dialogue: [
+      {who:"Serveur",fr:"Bonjour monsieur, vous désirez ?",en:"Hello sir, what would you like?"},
+      {who:"Vous",fr:"Bonjour. Un café et un croissant, s'il vous plaît.",en:"Hello. A coffee and a croissant, please."},
+      {who:"Serveur",fr:"Tout de suite. Vous êtes en vacances ?",en:"Right away. Are you on holiday?"},
+      {who:"Vous",fr:"Non, j'habite ici maintenant. Je viens d'arriver.",en:"No, I live here now. I've just arrived."},
+      {who:"Serveur",fr:"Ah, vous êtes d'où ?",en:"Oh, where are you from?"},
+      {who:"Vous",fr:"Je suis américain, de San Diego.",en:"I'm American, from San Diego."},
+      {who:"Serveur",fr:"Bienvenue à Menton ! Vous aimez ?",en:"Welcome to Menton! Do you like it?"},
+      {who:"Vous",fr:"J'adore ! C'est magnifique ici.",en:"I love it! It's magnificent here."},
+      {who:"Serveur",fr:"Voilà votre café. Bon appétit !",en:"Here's your coffee. Enjoy!"},
+      {who:"Vous",fr:"Merci. L'addition s'il vous plaît, quand vous avez le temps.",en:"Thank you. The bill please, when you have a moment."},
+    ],
+    phrases: [
+      {fr:"Un café s'il vous plaît.",en:"A coffee please."},
+      {fr:"Je voudrais un thé au lait.",en:"I'd like a tea with milk."},
+      {fr:"La carte, s'il vous plaît.",en:"The menu, please."},
+      {fr:"Qu'est-ce que vous recommandez ?",en:"What do you recommend?"},
+      {fr:"C'est quoi comme plat ?",en:"What kind of dish is it?"},
+      {fr:"Je suis allergique aux noix.",en:"I'm allergic to nuts."},
+      {fr:"C'était délicieux, merci.",en:"It was delicious, thank you."},
+      {fr:"L'addition s'il vous plaît.",en:"The bill please."},
+      {fr:"On peut payer par carte ?",en:"Can we pay by card?"},
+      {fr:"Je n'habite pas loin d'ici.",en:"I don't live far from here."},
+      {fr:"J'adore Menton.",en:"I love Menton."},
+      {fr:"À bientôt !",en:"See you soon!"},
+    ],
+    scenarios: [
+      {prompt:"Le serveur dit : « Bonjour, vous désirez ? »",hint:"Order a coffee and a croissant.",ideal:"Bonjour ! Un café et un croissant s'il vous plaît."},
+      {prompt:"Il demande : « Vous êtes en vacances ? »",hint:"No — you live here now.",ideal:"Non, j'habite ici maintenant. Je viens d'arriver."},
+      {prompt:"Il demande : « Vous êtes d'où ? »",hint:"Tell him you're American, from San Diego.",ideal:"Je suis américain, de San Diego."},
+      {prompt:"Vous voulez savoir ce qu'il recommande.",hint:"Ask what he recommends.",ideal:"Qu'est-ce que vous recommandez ?"},
+      {prompt:"Vous avez fini. Demandez l'addition poliment.",hint:"Ask for the bill when he has a moment.",ideal:"L'addition s'il vous plaît, quand vous avez le temps."},
+    ]
   }
 };
 
@@ -2073,6 +2266,48 @@ const DV_CATS=[
     {fr:'Excusez-moi',en:'Excuse me (formal)'},{fr:"D'accord.",en:'Okay / Agreed.'},
     {fr:'Bien sûr !',en:'Of course!'},{fr:'Pas grave.',en:'No worries.'},
   ]},
+  {id:'lesson2',emoji:'🛍️',name:'Lesson 2 — Commerces',phrases:[
+    {fr:"Bonjour madame, une baguette s'il vous plaît.",en:"Hello madam, a baguette please."},
+    {fr:"Un croissant aussi, s'il vous plaît.",en:"A croissant too, please."},
+    {fr:"C'est combien ?",en:"How much is it?"},
+    {fr:"Je voudrais un café, s'il vous plaît.",en:"I'd like a coffee, please."},
+    {fr:"C'est tout, merci.",en:"That's all, thank you."},
+    {fr:"Où est la pharmacie, s'il vous plaît ?",en:"Where is the pharmacy, please?"},
+    {fr:"Je cherche le marché.",en:"I'm looking for the market."},
+    {fr:"Vous ouvrez à quelle heure ?",en:"What time do you open?"},
+    {fr:"Merci beaucoup, bonne journée !",en:"Thank you very much, have a good day!"},
+  ]},
+  {id:'lesson3',emoji:'🧭',name:'Lesson 3 — Débrouiller',phrases:[
+    {fr:"Excusez-moi, je suis un peu perdu.",en:"Excuse me, I'm a bit lost."},
+    {fr:"Je cherche la gare.",en:"I'm looking for the train station."},
+    {fr:"Où est l'arrêt de bus ?",en:"Where is the bus stop?"},
+    {fr:"C'est loin d'ici ?",en:"Is it far from here?"},
+    {fr:"Tout droit, puis à gauche.",en:"Straight ahead, then left."},
+    {fr:"Tournez à droite.",en:"Turn right."},
+    {fr:"Vous pouvez répéter plus lentement ?",en:"Can you repeat more slowly?"},
+    {fr:"Je ne comprends pas bien.",en:"I don't understand well."},
+    {fr:"Merci, vous êtes très gentil.",en:"Thank you, you are very kind."},
+  ]},
+  {id:'lesson4',emoji:'🏠',name:'Lesson 4 — Chez Vous',phrases:[
+    {fr:"Où est-ce que je signe ?",en:"Where do I sign?"},
+    {fr:"Les charges sont comprises ?",en:"Are the charges included?"},
+    {fr:"Il y a un problème avec le chauffage.",en:"There is a problem with the heating."},
+    {fr:"La clé ne fonctionne pas.",en:"The key doesn't work."},
+    {fr:"Pouvez-vous envoyer un plombier ?",en:"Can you send a plumber?"},
+    {fr:"C'est urgent.",en:"It's urgent."},
+    {fr:"Quand est-ce que vous pouvez venir ?",en:"When can you come?"},
+    {fr:"Nous habitons au troisième étage.",en:"We live on the third floor."},
+  ]},
+  {id:'lesson5',emoji:'☕',name:'Lesson 5 — Café',phrases:[
+    {fr:"Un café s'il vous plaît.",en:"A coffee please."},
+    {fr:"La carte, s'il vous plaît.",en:"The menu, please."},
+    {fr:"Qu'est-ce que vous recommandez ?",en:"What do you recommend?"},
+    {fr:"C'était délicieux, merci.",en:"It was delicious, thank you."},
+    {fr:"L'addition s'il vous plaît.",en:"The bill please."},
+    {fr:"On peut payer par carte ?",en:"Can we pay by card?"},
+    {fr:"J'habite ici maintenant.",en:"I live here now."},
+    {fr:"J'adore Menton.",en:"I love Menton."},
+  ]},
   {id:'lesson1',emoji:'🏘️',name:'Lesson 1 — Voisins',phrases:[
     {fr:"Bonjour madame, je suis votre nouveau voisin.",en:"Hello, I am your new neighbor."},
     {fr:"Je m'appelle Jack, et voici ma femme Donna.",en:"My name is Jack, and this is my wife Donna."},
@@ -2161,7 +2396,7 @@ function dvListenRepeat(){dvPhase='repeating';dvSetBadge('YOUR TURN — REPEAT',
 function dvQuizPrompt(){if(dvIdx>=dvPhrases.length){dvDone();return;}dvPhase='prompting';const p=dvPhrases[dvIdx];dvUpdateHdr();dvSetBadge('HOW DO YOU SAY...','bb');dvSetText(p.en,'');dvPulseOn(false);dvHideRing();dvSpeak(p.en,'en-US',()=>{if(!dvPaused&&dvPhase==='prompting')dvQuizThink();});}
 function dvQuizThink(){dvPhase='thinking';dvSetBadge('SAY IT IN FRENCH !','bb');dvPulseOn(true);dvCountdown(dvSecs,'#58a6ff',()=>{dvPulseOn(false);dvQuizReveal();});}
 function dvQuizReveal(){dvPhase='revealing';const p=dvPhrases[dvIdx];dvSetBadge('ANSWER — REPEAT IT','bg');dvSetText(p.fr,p.en);dvHideRing();dvSpeak(p.fr,'fr-FR',()=>{if(dvPaused||dvPhase!=='revealing')return;dvPhase='repeating';dvSetBadge('SAY IT AGAIN !','bb');dvPulseOn(true);dvCountdown(dvSecs,'#58a6ff',()=>{dvPulseOn(false);dvQuizConfirm();});});}
-function dvQuizConfirm(){dvPhase='confirming';const p=dvPhrases[dvIdx];dvSetBadge('LISTEN ONCE MORE','bg');dvSetText(p.fr,p.en);dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused&&dvPhase==='confirming')dvTimer=setTimeout(()=>{dvIdx++;dvQuizPrompt();},900);});}
+function dvQuizConfirm(){dvPhase='confirming';const p=dvPhrases[dvIdx];dvSetBadge('LISTEN ONCE MORE','bg');dvSetText(p.fr,p.en);dvSpeak(p.fr,'fr-FR',()=>{if(dvPaused||dvPhase!=='confirming')return;dvPhase='finalrep';dvSetBadge('ONE LAST TIME — GO !','bb');dvPulseOn(true);dvCountdown(dvSecs,'#58a6ff',()=>{dvPulseOn(false);dvIdx++;dvQuizPrompt();});});}
 
 window.dvReplay=function(){clearInterval(dvTimer);clearTimeout(dvTimer);dvTimer=null;speechSynthesis&&speechSynthesis.cancel();if(dvIdx>=dvPhrases.length)return;const p=dvPhrases[dvIdx];if(dvMode==='listen'){dvPhase='speaking';dvSetBadge('LISTEN','bl');dvSetText(p.fr,p.en);dvPulseOn(false);dvHideRing();dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused)dvListenRepeat();});}else{dvPhase='prompting';dvSetBadge('HOW DO YOU SAY...','bb');dvSetText(p.en,'');dvPulseOn(false);dvHideRing();dvSpeak(p.en,'en-US',()=>{if(!dvPaused)dvQuizThink();});}};
 window.dvPause=function(){dvPaused=!dvPaused;const btn=document.getElementById('dv-pausebtn');if(btn)btn.textContent=dvPaused?'▶ Resume':'⏸ Pause';if(dvPaused){speechSynthesis&&speechSynthesis.cancel();}else{if(dvMode==='listen'){if(dvPhase==='speaking')dvListenSpeak();else if(dvPhase==='repeating')dvListenRepeat();}else{if(dvPhase==='prompting')dvQuizPrompt();else if(dvPhase==='thinking')dvQuizThink();else if(dvPhase==='revealing')dvQuizReveal();}}};
