@@ -74,6 +74,31 @@ body{background:var(--navy);color:var(--cream);font-family:'Source Sans 3',sans-
 /* you said */
 .you-said-box{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:8px 14px;font-size:0.92rem;color:var(--cream);font-style:italic;margin-bottom:10px;display:none;}
 
+/* lessons */
+.lesson-card{background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.25);border-radius:16px;padding:20px;margin-bottom:16px;cursor:pointer;transition:all 0.2s;}
+.lesson-card:hover{background:rgba(255,255,255,0.08);}
+.lesson-card.active{border-color:var(--gold);}
+.lesson-title{font-family:"Playfair Display",serif;font-size:1.3rem;color:var(--gold);margin-bottom:4px;}
+.lesson-sub{font-size:0.82rem;color:var(--muted);margin-bottom:12px;}
+.lesson-layers{display:flex;gap:8px;flex-wrap:wrap;}
+.layer-btn{padding:8px 14px;border-radius:20px;border:1px solid rgba(201,168,76,0.4);background:transparent;color:var(--cream);font-size:0.78rem;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.layer-btn:hover,.layer-btn.active{background:var(--gold);color:var(--navy);}
+.lesson-content{margin-top:16px;display:none;}
+.lesson-content.open{display:block;}
+.dialogue-box{background:rgba(0,0,0,0.3);border-radius:12px;padding:16px;margin-bottom:16px;}
+.dialogue-line{margin-bottom:10px;line-height:1.5;}
+.dialogue-fr{font-size:1rem;color:var(--white);}
+.dialogue-en{font-size:0.82rem;color:var(--muted);font-style:italic;}
+.dialogue-who{font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:2px;}
+.ls-phrase{background:rgba(255,255,255,0.04);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;}
+.ls-phrase-fr{font-size:1rem;color:var(--white);flex:1;}
+.ls-phrase-en{font-size:0.82rem;color:var(--muted);font-style:italic;}
+.ls-hear{background:var(--gold);color:var(--navy);border:none;border-radius:20px;padding:5px 12px;font-size:0.75rem;font-weight:700;cursor:pointer;}
+.scenario-box{background:rgba(46,125,79,0.08);border:1px solid rgba(46,125,79,0.3);border-radius:12px;padding:16px;margin-bottom:12px;}
+.scenario-prompt{font-size:1.1rem;color:var(--white);margin-bottom:4px;}
+.scenario-hint{font-size:0.8rem;color:var(--muted);margin-bottom:12px;}
+.scenario-input{width:100%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:10px 12px;color:var(--cream);font-size:0.95rem;font-family:"Source Sans 3",sans-serif;margin-bottom:10px;box-sizing:border-box;}
+.scenario-input:focus{outline:none;border-color:var(--gold);}
 /* feedback */
 .feedback{border-radius:10px;padding:12px 16px;text-align:left;margin-bottom:12px;font-size:0.88rem;line-height:1.55;display:none;}
 .feedback.good{background:rgba(46,125,79,0.2);border:1px solid rgba(46,125,79,0.5);color:#7eeaa8;}
@@ -117,6 +142,7 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
   <button class="tab-btn" onclick="showPage('qa');qaInit()">Q&amp;A</button>
   <button class="tab-btn" onclick="showPage('drive')">Drive</button>
   <button class="tab-btn" onclick="showPage('bilan')">Bilan</button>
+  <button class="tab-btn" onclick="showPage('lessons');lessonsInit()">Lessons</button>
 </div>
 
 <!-- HOME -->
@@ -250,6 +276,28 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
   <div class="section-title" style="margin-top:6px">Key Verbs</div>
   <div class="section-sub">The forms you'll actually use. Tap ▶ to hear.</div>
   <div id="verbList"></div>
+</div>
+
+
+<!-- LESSONS -->
+<div class="page" id="page-lessons">
+  <div class="section-title">📚 Menton Week 1 — Lessons</div>
+  <div class="section-sub">3 layers per lesson. Do Layer 1 while driving. Layer 3 when you have time to type.</div>
+
+  <!-- LESSON 1 -->
+  <div class="lesson-card" id="lesson-card-1">
+    <div class="lesson-title">Lesson 1 — Les Voisins</div>
+    <div class="lesson-sub">Meeting your neighbors in Menton · 13 phrases · vous throughout</div>
+    <div class="lesson-layers">
+      <button class="layer-btn" onclick="openLayer(1,1)">🔊 Layer 1 — Listen</button>
+      <button class="layer-btn" onclick="openLayer(1,2)">🔁 Layer 2 — Drill</button>
+      <button class="layer-btn" onclick="openLayer(1,3)">✍️ Layer 3 — Perform</button>
+      <button class="layer-btn" style="border-color:rgba(100,180,255,0.4)" onclick="launchDriveLesson('lesson1')">🚗 Drive Mode</button>
+    </div>
+    <div class="lesson-content" id="lesson-1-content"></div>
+  </div>
+
+  <div class="tip-box" style="margin-top:8px">💡 More lessons coming as you get closer to April 10. Lesson 2 — Les Commerces is next.</div>
 </div>
 
 <!-- Q&A -->
@@ -1348,6 +1396,163 @@ function getAIFeedback(phrase, meaning, said){
   });
 }
 
+
+
+// ══════════════════════════════════════════
+// LESSONS
+// ══════════════════════════════════════════
+const LESSONS = {
+  1: {
+    title: "Les Voisins",
+    dialogue: [
+      {who:"Vous",fr:"Bonjour madame, excusez-moi de vous déranger.",en:"Hello madam, sorry to bother you."},
+      {who:"Voisine",fr:"Bonjour monsieur ! Pas du tout.",en:"Hello sir! Not at all."},
+      {who:"Vous",fr:"Je m'appelle Jack, et voici ma femme Donna.",en:"My name is Jack, and this is my wife Donna."},
+      {who:"Voisine",fr:"Enchantée ! Je m'appelle Marie.",en:"Pleased to meet you! My name is Marie."},
+      {who:"Vous",fr:"Nous venons d'arriver. Nous sommes vos nouveaux voisins.",en:"We have just arrived. We are your new neighbors."},
+      {who:"Voisine",fr:"Ah, vous venez d'où ?",en:"Oh, where are you from?"},
+      {who:"Vous",fr:"Des États-Unis — de San Diego. Nous sommes à la retraite.",en:"From the United States — from San Diego. We are retired."},
+      {who:"Voisine",fr:"Comme c'est bien ! Vous aimez Menton ?",en:"How nice! Do you like Menton?"},
+      {who:"Vous",fr:"Oui, nous aimons beaucoup Menton. C'est magnifique.",en:"Yes, we love Menton very much. It's magnificent."},
+      {who:"Voisine",fr:"Et vous parlez français !",en:"And you speak French!"},
+      {who:"Vous",fr:"J'apprends le français. Je parle un peu.",en:"I am learning French. I speak a little."},
+      {who:"Voisine",fr:"Très bien ! Bonne installation !",en:"Very good! Enjoy settling in!"},
+      {who:"Vous",fr:"Merci beaucoup. À bientôt, madame.",en:"Thank you very much. See you soon, madam."},
+    ],
+    phrases: [
+      {fr:"Bonjour madame, excusez-moi de vous déranger.",en:"Hello madam, sorry to bother you."},
+      {fr:"Je m'appelle Jack, et voici ma femme Donna.",en:"My name is Jack, and this is my wife Donna."},
+      {fr:"Nous venons d'arriver.",en:"We have just arrived."},
+      {fr:"Nous sommes vos nouveaux voisins.",en:"We are your new neighbors."},
+      {fr:"Nous venons des États-Unis, de San Diego.",en:"We come from the United States, from San Diego."},
+      {fr:"Nous sommes à la retraite.",en:"We are retired."},
+      {fr:"Nous avons acheté un appartement ici.",en:"We bought an apartment here."},
+      {fr:"Nous aimons beaucoup Menton.",en:"We love Menton very much."},
+      {fr:"J'apprends le français.",en:"I am learning French."},
+      {fr:"Je parle un peu français.",en:"I speak a little French."},
+      {fr:"Vous parlez anglais ?",en:"Do you speak English?"},
+      {fr:"Enchanté de faire votre connaissance.",en:"Pleased to meet you."},
+      {fr:"À bientôt, madame.",en:"See you soon, madam."},
+    ],
+    scenarios: [
+      {prompt:"Votre voisine dit : « Bonjour ! »",hint:"Greet her and introduce yourself and Donna.",ideal:"Bonjour madame ! Je m'appelle Jack, et voici ma femme Donna."},
+      {prompt:"Elle demande : « Vous venez d'où ? »",hint:"Tell her where you're from.",ideal:"Nous venons des États-Unis, de San Diego."},
+      {prompt:"Elle demande : « Vous êtes en vacances ? »",hint:"No — you live here now. You bought an apartment.",ideal:"Non, nous sommes à la retraite. Nous avons acheté un appartement ici."},
+      {prompt:"Elle dit : « Vous parlez très bien français ! »",hint:"Be modest — you're learning.",ideal:"Merci ! J'apprends le français. Je parle un peu."},
+      {prompt:"Time to say goodbye.",hint:"Friendly farewell.",ideal:"Merci beaucoup. À bientôt, madame."},
+    ]
+  }
+};
+
+let currentLesson = null;
+let currentLayer = null;
+let scenarioIdx = 0;
+
+function lessonsInit(){
+  // nothing needed on load
+}
+
+function openLayer(lessonNum, layer){
+  const lesson = LESSONS[lessonNum];
+  if(!lesson) return;
+  currentLesson = lessonNum;
+  currentLayer = layer;
+
+  const content = document.getElementById('lesson-'+lessonNum+'-content');
+  if(!content) return;
+  content.classList.add('open');
+
+  // Highlight active layer button
+  const card = document.getElementById('lesson-card-'+lessonNum);
+  card.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
+  card.querySelectorAll('.layer-btn')[layer-1].classList.add('active');
+
+  if(layer === 1) renderLayer1(lessonNum, lesson, content);
+  else if(layer === 2) renderLayer2(lessonNum, lesson, content);
+  else if(layer === 3) renderLayer3(lessonNum, lesson, content);
+}
+
+function renderLayer1(num, lesson, el){
+  el.innerHTML = '';
+  var sub = document.createElement('div');
+  sub.className = 'section-sub';
+  sub.style.marginBottom = '12px';
+  sub.textContent = '🔊 Listen to the full conversation. Tap any line to hear it.';
+  el.appendChild(sub);
+  var box = document.createElement('div');
+  box.className = 'dialogue-box';
+  lesson.dialogue.forEach(function(line){
+    var wrap = document.createElement('div');
+    wrap.className = 'dialogue-line';
+    var who = document.createElement('div');
+    who.className = 'dialogue-who';
+    who.textContent = line.who;
+    var fr = document.createElement('div');
+    fr.className = 'dialogue-fr';
+    fr.style.cursor = 'pointer';
+    fr.textContent = line.fr;
+    fr.onclick = function(){ tts(line.fr, 'fr-FR'); };
+    var en = document.createElement('div');
+    en.className = 'dialogue-en';
+    en.textContent = line.en;
+    wrap.appendChild(who); wrap.appendChild(fr); wrap.appendChild(en);
+    box.appendChild(wrap);
+  });
+  el.appendChild(box);
+  var btn = document.createElement('button');
+  btn.className = 'btn-gold';
+  btn.style.cssText = 'width:100%;margin-top:4px';
+  btn.textContent = '▶ Play Full Conversation';
+  btn.onclick = function(){ playFullDialogue(num); };
+  el.appendChild(btn);
+}
+
+function renderLayer2(num, lesson, el){
+  el.innerHTML = '';
+  var sub = document.createElement('div');
+  sub.className = 'section-sub';
+  sub.style.marginBottom = '12px';
+  sub.textContent = '🔁 Hear each phrase, then say it aloud. Tap ▶ to hear again.';
+  el.appendChild(sub);
+  lesson.phrases.forEach(function(p){
+    var row = document.createElement('div');
+    row.className = 'ls-phrase';
+    var btn = document.createElement('button');
+    btn.className = 'ls-hear';
+    btn.textContent = '▶ Hear';
+    btn.onclick = function(){ tts(p.fr, 'fr-FR'); };
+    var info = document.createElement('div');
+    var frDiv = document.createElement('div');
+    frDiv.className = 'ls-phrase-fr';
+    frDiv.textContent = p.fr;
+    var enDiv = document.createElement('div');
+    enDiv.className = 'ls-phrase-en';
+    enDiv.textContent = p.en;
+    info.appendChild(frDiv); info.appendChild(enDiv);
+    row.appendChild(btn); row.appendChild(info);
+    el.appendChild(row);
+  });
+  var allBtn = document.createElement('button');
+  allBtn.className = 'btn-gold';
+  allBtn.style.cssText = 'width:100%;margin-top:8px';
+  allBtn.textContent = '▶ Play All In Order';
+  allBtn.onclick = function(){ drillAllPhrases(num); };
+  el.appendChild(allBtn);
+}
+
+function renderLayer3(num, lesson, el){
+  scenarioIdx = 0;
+  showScenario(num, lesson, el);
+}
+
+async function playFullDialogue(num){
+  const lesson = LESSONS[num];
+  for(let i=0; i<lesson.dialogue.length; i++){
+    await speak(lesson.dialogue[i].fr, 'fr-FR', 0.85);
+    await new Promise(r=>setTimeout(r,400));
+  }
+}
+
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
@@ -1774,6 +1979,21 @@ const DV_CATS=[
     {fr:'De rien',en:"You're welcome"},{fr:'Pardon',en:'Excuse me / Sorry'},
     {fr:'Excusez-moi',en:'Excuse me (formal)'},{fr:"D'accord.",en:'Okay / Agreed.'},
     {fr:'Bien sûr !',en:'Of course!'},{fr:'Pas grave.',en:'No worries.'},
+  ]},
+  {id:'lesson1',emoji:'🏘️',name:'Lesson 1 — Voisins',phrases:[
+    {fr:"Bonjour madame, je suis votre nouveau voisin.",en:"Hello, I am your new neighbor."},
+    {fr:"Je m'appelle Jack, et voici ma femme Donna.",en:"My name is Jack, and this is my wife Donna."},
+    {fr:"Nous venons d'arriver.",en:"We have just arrived."},
+    {fr:"Nous venons des États-Unis, de San Diego.",en:"We come from the United States, from San Diego."},
+    {fr:"Nous sommes à la retraite.",en:"We are retired."},
+    {fr:"Nous avons acheté un appartement ici.",en:"We bought an apartment here."},
+    {fr:"Nous aimons beaucoup Menton.",en:"We love Menton very much."},
+    {fr:"J'apprends le français.",en:"I am learning French."},
+    {fr:"Je parle un peu français.",en:"I speak a little French."},
+    {fr:"Vous parlez anglais ?",en:"Do you speak English?"},
+    {fr:"Enchantée de faire votre connaissance.",en:"Pleased to meet you."},
+    {fr:"C'est sympa ici.",en:"It's nice here."},
+    {fr:"À bientôt, madame.",en:"See you soon, madam."},
   ]},
   {id:'bilan',emoji:'📝',name:'Bilan 1',phrases:[
     {fr:"Anne et Jean ont trois enfants.",en:'Anne and Jean have three children.'},
