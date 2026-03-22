@@ -328,8 +328,10 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
       <button class="btn-gold" id="qaRevealBtn" onclick="qaReveal()">Show Answer</button>
       <button class="btn-ghost" onclick="qaSkip()">Skip →</button>
     </div>
+    <div id="qaFeedbackBox" style="display:none;border-radius:10px;padding:12px 16px;margin-bottom:12px;font-size:0.88rem;line-height:1.55;white-space:pre-line"></div>
     <div class="btn-row" id="qaNextButtons" style="display:none;margin-top:8px">
       <button class="btn-dim" onclick="qaRepeat()">↺ Try Again</button>
+      <button style="background:var(--gold);color:var(--navy);border:none;border-radius:20px;padding:8px 16px;font-weight:700;font-size:0.82rem;cursor:pointer" onclick="qaMicCheck()">🎤 Try Speaking</button>
       <button class="btn-green" onclick="qaNext()">Next →</button>
     </div>
   </div>
@@ -1507,38 +1509,6 @@ function renderLayer1(num, lesson, el){
   el.appendChild(btn);
 }
 
-function renderLayer2(num, lesson, el){
-  el.innerHTML = '';
-  var sub = document.createElement('div');
-  sub.className = 'section-sub';
-  sub.style.marginBottom = '12px';
-  sub.textContent = '🔁 Hear each phrase, then say it aloud. Tap ▶ to hear again.';
-  el.appendChild(sub);
-  lesson.phrases.forEach(function(p){
-    var row = document.createElement('div');
-    row.className = 'ls-phrase';
-    var btn = document.createElement('button');
-    btn.className = 'ls-hear';
-    btn.textContent = '▶ Hear';
-    btn.onclick = function(){ tts(p.fr, 'fr-FR'); };
-    var info = document.createElement('div');
-    var frDiv = document.createElement('div');
-    frDiv.className = 'ls-phrase-fr';
-    frDiv.textContent = p.fr;
-    var enDiv = document.createElement('div');
-    enDiv.className = 'ls-phrase-en';
-    enDiv.textContent = p.en;
-    info.appendChild(frDiv); info.appendChild(enDiv);
-    row.appendChild(btn); row.appendChild(info);
-    el.appendChild(row);
-  });
-  var allBtn = document.createElement('button');
-  allBtn.className = 'btn-gold';
-  allBtn.style.cssText = 'width:100%;margin-top:8px';
-  allBtn.textContent = '▶ Play All In Order';
-  allBtn.onclick = function(){ drillAllPhrases(num); };
-  el.appendChild(allBtn);
-}
 
 function renderLayer3(num, lesson, el){
   scenarioIdx = 0;
@@ -1592,6 +1562,129 @@ function renderVocab(){
     c.appendChild(enDiv);
     list.appendChild(c);
   });
+}
+
+
+// ── Q&A mic feedback ──
+function qaMicCheck(){
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){ alert('Use Chrome or Safari for voice.'); return; }
+  var fbEl = document.getElementById('qaFeedbackBox');
+  fbEl.style.display = 'block';
+  fbEl.style.background = 'rgba(255,255,255,0.05)';
+  fbEl.style.border = '1px solid rgba(255,255,255,0.15)';
+  fbEl.style.color = 'var(--muted)';
+  fbEl.textContent = '🎤 Listening...';
+  window.speechSynthesis.cancel();
+  var rec = new SR();
+  rec.lang = 'fr-FR';
+  rec.interimResults = false;
+  rec.maxAlternatives = 1;
+  rec.onresult = function(e){
+    var said = e.results[0][0].transcript;
+    var currentPair = qaShuffled[qaIdx];
+    if(!currentPair) return;
+    var ideal = currentPair.a;
+    fbEl.textContent = 'Checking...';
+    fetch('https://french-woad.vercel.app/api/feedback',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({target: ideal, attempt: said, context: currentPair.at||''})
+    }).then(function(r){ return r.json(); })
+    .then(function(data){
+      var text = (data.feedback||'').trim();
+      var isGood = text.indexOf('Perfect')>=0||text.indexOf('✓')>=0;
+      fbEl.style.background = isGood ? 'rgba(46,125,79,0.2)' : 'rgba(201,168,76,0.1)';
+      fbEl.style.border = isGood ? '1px solid rgba(46,125,79,0.5)' : '1px solid rgba(201,168,76,0.35)';
+      fbEl.style.color = isGood ? '#7eeaa8' : '#f0d080';
+      fbEl.textContent = '“'+said+'”\n\n'+text;
+    }).catch(function(){
+      fbEl.textContent = 'I heard: “'+said+'”';
+    });
+  };
+  rec.onerror = function(e){
+    fbEl.textContent = 'Could not hear you — try again.';
+  };
+  rec.start();
+  setTimeout(function(){ try{ rec.stop(); }catch(e){} }, 6000);
+}
+
+// ── Layer 2 with Try It mic button ──
+function renderLayer2(num, lesson, el){
+  el.innerHTML = '';
+  var sub = document.createElement('div');
+  sub.className = 'section-sub';
+  sub.style.marginBottom = '12px';
+  sub.textContent = '🔁 Hear each phrase, then say it aloud. Tap Try It to get feedback.';
+  el.appendChild(sub);
+  lesson.phrases.forEach(function(p){
+    var row = document.createElement('div');
+    row.className = 'ls-phrase';
+    row.style.flexWrap = 'wrap';
+    var btnRow = document.createElement('div');
+    btnRow.style.cssText = 'display:flex;gap:6px;margin-bottom:6px;width:100%';
+    var hearBtn = document.createElement('button');
+    hearBtn.className = 'ls-hear';
+    hearBtn.textContent = '▶ Hear';
+    hearBtn.onclick = function(){ tts(p.fr, 'fr-FR'); };
+    var tryBtn = document.createElement('button');
+    tryBtn.className = 'ls-hear';
+    tryBtn.style.background = 'transparent';
+    tryBtn.style.border = '1px solid rgba(201,168,76,0.5)';
+    tryBtn.style.color = 'var(--gold)';
+    tryBtn.textContent = '🎤 Try It';
+    var fbDiv = document.createElement('div');
+    fbDiv.style.cssText = 'width:100%;font-size:0.8rem;padding:6px 0;display:none;white-space:pre-line';
+    tryBtn.onclick = function(){
+      var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if(!SR){ alert('Use Chrome or Safari.'); return; }
+      window.speechSynthesis.cancel();
+      fbDiv.style.display = 'block';
+      fbDiv.style.color = 'var(--muted)';
+      fbDiv.textContent = '🎤 Listening...';
+      var rec = new SR();
+      rec.lang = 'fr-FR';
+      rec.interimResults = false;
+      rec.onresult = function(e){
+        var said = e.results[0][0].transcript;
+        fbDiv.textContent = 'Checking...';
+        fetch('https://french-woad.vercel.app/api/feedback',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({target: p.fr, attempt: said, context: p.en})
+        }).then(function(r){ return r.json(); })
+        .then(function(data){
+          var text = (data.feedback||'').trim();
+          var isGood = text.indexOf('Perfect')>=0||text.indexOf('✓')>=0;
+          fbDiv.style.color = isGood ? '#7eeaa8' : '#f0d080';
+          fbDiv.textContent = '“'+said+'”\n'+text;
+        }).catch(function(){
+          fbDiv.textContent = 'Network error — try again.';
+        });
+      };
+      rec.onerror = function(){ fbDiv.textContent = 'Could not hear — tap again.'; };
+      rec.start();
+      setTimeout(function(){ try{ rec.stop(); }catch(e){} }, 5000);
+    };
+    var info = document.createElement('div');
+    info.style.width = '100%';
+    var frDiv = document.createElement('div');
+    frDiv.className = 'ls-phrase-fr';
+    frDiv.textContent = p.fr;
+    var enDiv = document.createElement('div');
+    enDiv.className = 'ls-phrase-en';
+    enDiv.textContent = p.en;
+    info.appendChild(frDiv); info.appendChild(enDiv);
+    btnRow.appendChild(hearBtn); btnRow.appendChild(tryBtn);
+    row.appendChild(btnRow); row.appendChild(info); row.appendChild(fbDiv);
+    el.appendChild(row);
+  });
+  var allBtn = document.createElement('button');
+  allBtn.className = 'btn-gold';
+  allBtn.style.cssText = 'width:100%;margin-top:8px';
+  allBtn.textContent = '▶ Play All In Order';
+  allBtn.onclick = function(){ drillAllPhrases(num); };
+  el.appendChild(allBtn);
 }
 
 // ══════════════════════════════════════════
@@ -2067,7 +2160,8 @@ function dvListenSpeak(){if(dvIdx>=dvPhrases.length){dvDone();return;}dvPhase='s
 function dvListenRepeat(){dvPhase='repeating';dvSetBadge('YOUR TURN — REPEAT','bg');const e=document.getElementById('dv-eng');if(e)e.textContent='';dvPulseOn(true);dvCountdown(dvSecs,'#3fb950',()=>{dvPulseOn(false);dvIdx++;dvListenSpeak();});}
 function dvQuizPrompt(){if(dvIdx>=dvPhrases.length){dvDone();return;}dvPhase='prompting';const p=dvPhrases[dvIdx];dvUpdateHdr();dvSetBadge('HOW DO YOU SAY...','bb');dvSetText(p.en,'');dvPulseOn(false);dvHideRing();dvSpeak(p.en,'en-US',()=>{if(!dvPaused&&dvPhase==='prompting')dvQuizThink();});}
 function dvQuizThink(){dvPhase='thinking';dvSetBadge('SAY IT IN FRENCH !','bb');dvPulseOn(true);dvCountdown(dvSecs,'#58a6ff',()=>{dvPulseOn(false);dvQuizReveal();});}
-function dvQuizReveal(){dvPhase='revealing';const p=dvPhrases[dvIdx];dvSetBadge('ANSWER','bg');dvSetText(p.fr,p.en);dvHideRing();dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused&&dvPhase==='revealing')dvTimer=setTimeout(()=>{dvIdx++;dvQuizPrompt();},1200);});}
+function dvQuizReveal(){dvPhase='revealing';const p=dvPhrases[dvIdx];dvSetBadge('ANSWER — REPEAT IT','bg');dvSetText(p.fr,p.en);dvHideRing();dvSpeak(p.fr,'fr-FR',()=>{if(dvPaused||dvPhase!=='revealing')return;dvPhase='repeating';dvSetBadge('SAY IT AGAIN !','bb');dvPulseOn(true);dvCountdown(dvSecs,'#58a6ff',()=>{dvPulseOn(false);dvQuizConfirm();});});}
+function dvQuizConfirm(){dvPhase='confirming';const p=dvPhrases[dvIdx];dvSetBadge('LISTEN ONCE MORE','bg');dvSetText(p.fr,p.en);dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused&&dvPhase==='confirming')dvTimer=setTimeout(()=>{dvIdx++;dvQuizPrompt();},900);});}
 
 window.dvReplay=function(){clearInterval(dvTimer);clearTimeout(dvTimer);dvTimer=null;speechSynthesis&&speechSynthesis.cancel();if(dvIdx>=dvPhrases.length)return;const p=dvPhrases[dvIdx];if(dvMode==='listen'){dvPhase='speaking';dvSetBadge('LISTEN','bl');dvSetText(p.fr,p.en);dvPulseOn(false);dvHideRing();dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused)dvListenRepeat();});}else{dvPhase='prompting';dvSetBadge('HOW DO YOU SAY...','bb');dvSetText(p.en,'');dvPulseOn(false);dvHideRing();dvSpeak(p.en,'en-US',()=>{if(!dvPaused)dvQuizThink();});}};
 window.dvPause=function(){dvPaused=!dvPaused;const btn=document.getElementById('dv-pausebtn');if(btn)btn.textContent=dvPaused?'▶ Resume':'⏸ Pause';if(dvPaused){speechSynthesis&&speechSynthesis.cancel();}else{if(dvMode==='listen'){if(dvPhase==='speaking')dvListenSpeak();else if(dvPhase==='repeating')dvListenRepeat();}else{if(dvPhase==='prompting')dvQuizPrompt();else if(dvPhase==='thinking')dvQuizThink();else if(dvPhase==='revealing')dvQuizReveal();}}};
