@@ -135,21 +135,21 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
 
 <div class="tab-bar">
   <button class="tab-btn active" onclick="showPage('home')">Home</button>
-  <button class="tab-btn" onclick="showPage('vocabulary')">Vocab</button>
-  <button class="tab-btn" onclick="showPage('verbs')">Verbs</button>
-  <button class="tab-btn" onclick="showPage('phrases')">Phrases</button>
+  <button class="tab-btn" onclick="showPage('drive')">Drive</button>
+  <button class="tab-btn" onclick="showPage('lessons');lessonsInit()">Lessons</button>
   <button class="tab-btn" onclick="showPage('drill')">Drill</button>
   <button class="tab-btn" onclick="showPage('qa');qaInit()">Q&amp;A</button>
-  <button class="tab-btn" onclick="showPage('drive')">Drive</button>
+  <button class="tab-btn" onclick="showPage('phrases')">Phrases</button>
+  <button class="tab-btn" onclick="showPage('vocabulary')">Vocab</button>
+  <button class="tab-btn" onclick="showPage('verbs')">Verbs</button>
   <button class="tab-btn" onclick="showPage('bilan')">Bilan</button>
-  <button class="tab-btn" onclick="showPage('lessons');lessonsInit()">Lessons</button>
 </div>
 
 <!-- HOME -->
 <div class="page active" id="page-home">
   <div style="text-align:center;padding:18px 0 8px">
     <div style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--gold);margin-bottom:5px">Bonjour, Jack!</div>
-    <div style="font-size:0.82rem;color:var(--muted);line-height:1.6">2 weeks to Menton. Organized for your move-in.<br>Focus on neighbors &amp; shops first.</div>
+    <div style="font-size:0.82rem;color:var(--muted);line-height:1.6">Closing April 10 — Menton apartment ready. <br>Use Drive daily. Do one Lesson per day.</div>
   </div>
   <div class="tip-box" style="margin-top:14px">💡 <strong style="color:var(--gold)">Move-in priority:</strong> Start with <strong>Neighbors</strong> and <strong>Shops</strong>. Use <strong>Drive Mode → Quiz Me</strong> on your commute to build muscle memory fast.</div>
   <div class="section-title">Week 1 — First Conversations</div>
@@ -2201,6 +2201,91 @@ svg.dv-ring{transform:rotate(-90deg);width:88px;height:88px;}
 <script>
 (function(){
 const DV_CATS=[
+  // ── VOCAB CATEGORIES ──
+  {id:'vocab_numbers',emoji:'🔢',name:'Numbers',phrases:[
+    {fr:'zéro',en:'0 — zero'},{fr:'un',en:'1 — one'},{fr:'deux',en:'2 — two'},
+    {fr:'trois',en:'3 — three'},{fr:'quatre',en:'4 — four'},{fr:'cinq',en:'5 — five'},
+    {fr:'six',en:'6 — six'},{fr:'sept',en:'7 — seven'},{fr:'huit',en:'8 — eight'},
+    {fr:'neuf',en:'9 — nine'},{fr:'dix',en:'10 — ten'},{fr:'vingt',en:'20 — twenty'},
+    {fr:'trente',en:'30 — thirty'},{fr:'quarante',en:'40 — forty'},{fr:'cinquante',en:'50 — fifty'},
+    {fr:'soixante',en:'60 — sixty'},{fr:'cent',en:'100 — one hundred'},{fr:'mille',en:'1000 — one thousand'},
+  ]},
+  {id:'vocab_days',emoji:'📅',name:'Days & Months',phrases:[
+    {fr:'lundi',en:'Monday'},{fr:'mardi',en:'Tuesday'},{fr:'mercredi',en:'Wednesday'},
+    {fr:'jeudi',en:'Thursday'},{fr:'vendredi',en:'Friday'},{fr:'samedi',en:'Saturday'},{fr:'dimanche',en:'Sunday'},
+    {fr:'janvier',en:'January'},{fr:'février',en:'February'},{fr:'mars',en:'March'},
+    {fr:'avril',en:'April'},{fr:'mai',en:'May'},{fr:'juin',en:'June'},
+    {fr:'juillet',en:'July'},{fr:'août',en:'August'},{fr:'septembre',en:'September'},
+    {fr:'octobre',en:'October'},{fr:'novembre',en:'November'},{fr:'décembre',en:'December'},
+  ]},
+  {id:'vocab_food',emoji:'🥖',name:'Food & Market',phrases:[
+    {fr:'le pain',en:'bread'},{fr:'la baguette',en:'baguette'},{fr:'le croissant',en:'croissant'},
+    {fr:'le fromage',en:'cheese'},{fr:'le beurre',en:'butter'},{fr:'le lait',en:'milk'},
+    {fr:'les œufs',en:'eggs'},{fr:'la viande',en:'meat'},{fr:'le poisson',en:'fish'},
+    {fr:'les légumes',en:'vegetables'},{fr:'les fruits',en:'fruit'},{fr:'le vin',en:'wine'},
+    {fr:"l'eau",en:'water'},{fr:'le café',en:'coffee'},{fr:'le thé',en:'tea'},
+  ]},
+  {id:'vocab_family',emoji:'👨‍👩‍👧',name:'Family & People',phrases:[
+    {fr:'la femme',en:'wife / woman'},{fr:'le mari',en:'husband'},{fr:'la fille',en:'daughter / girl'},
+    {fr:'le fils',en:'son'},{fr:'la famille',en:'family'},{fr:"l'ami",en:'friend (m)'},
+    {fr:"l'amie",en:'friend (f)'},{fr:'le voisin',en:'neighbor (m)'},{fr:'la voisine',en:'neighbor (f)'},
+    {fr:'le médecin',en:'doctor'},{fr:'le propriétaire',en:'landlord'},{fr:'le notaire',en:'notary'},
+  ]},
+  // ── VERBS ──
+  {id:'verbs_etre',emoji:'🟡',name:'Être — To Be',phrases:[
+    {fr:'Je suis',en:'I am'},{fr:'Tu es',en:'You are (informal)'},
+    {fr:'Vous êtes',en:'You are (formal)'},{fr:'Il est',en:'He is'},{fr:'Elle est',en:'She is'},
+    {fr:'Nous sommes',en:'We are'},{fr:'Ils sont',en:'They are'},
+    {fr:'Je suis américain.',en:'I am American.'},{fr:'Nous sommes à la retraite.',en:'We are retired.'},
+    {fr:"C'est magnifique.",en:"It's magnificent."},
+  ]},
+  {id:'verbs_avoir',emoji:'🔵',name:'Avoir — To Have',phrases:[
+    {fr:"J'ai",en:'I have'},{fr:'Tu as',en:'You have (informal)'},
+    {fr:'Vous avez',en:'You have (formal)'},{fr:'Il a',en:'He has'},
+    {fr:'Nous avons',en:'We have'},{fr:'Ils ont',en:'They have'},
+    {fr:"J'ai faim.",en:"I'm hungry."},{fr:"J'ai soif.",en:"I'm thirsty."},
+    {fr:'Nous avons acheté un appartement.',en:'We bought an apartment.'},{fr:'Il y a un balcon.',en:'There is a balcony.'},
+  ]},
+  {id:'verbs_key',emoji:'⚡',name:'Key Verbs',phrases:[
+    {fr:"J'habite à Menton.",en:'I live in Menton.'},{fr:'Vous habitez où ?',en:'Where do you live?'},
+    {fr:'Je parle un peu français.',en:'I speak a little French.'},{fr:'Vous parlez anglais ?',en:'Do you speak English?'},
+    {fr:'Je viens des États-Unis.',en:'I come from the United States.'},{fr:"D'où venez-vous ?",en:'Where do you come from?'},
+    {fr:"Je m'appelle Jack.",en:'My name is Jack.'},{fr:'Comment vous appelez-vous ?',en:'What is your name?'},
+    {fr:'Je vais bien.',en:"I'm doing well."},{fr:'Nous allons à la boulangerie.',en:"We're going to the bakery."},
+    {fr:'Je cherche la pharmacie.',en:"I'm looking for the pharmacy."},{fr:'Je voudrais un café.',en:"I'd like a coffee."},
+  ]},
+  // ── Q&A ──
+  {id:'qa_drive',emoji:'💬',name:'Q&A — Real Questions',phrases:[
+    {fr:'Comment vous appelez-vous ?',en:"What is your name? → Je m'appelle Jack."},
+    {fr:"D'où venez-vous ?",en:'Where do you come from? → Je viens des États-Unis.'},
+    {fr:'Où habitez-vous ?',en:"Where do you live? → J'habite à Menton."},
+    {fr:'Quelle est votre nationalité ?',en:'What is your nationality? → Je suis américain.'},
+    {fr:'Quelle langue parlez-vous ?',en:'What language do you speak? → Je parle anglais et un peu français.'},
+    {fr:'Vous êtes en vacances ?',en:"Are you on holiday? → Non, j'habite ici maintenant."},
+    {fr:'Vous aimez Menton ?',en:"Do you like Menton? → Oui, j'adore Menton."},
+    {fr:'Vous êtes marié ?',en:'Are you married? → Oui, je suis marié.'},
+    {fr:'Vous avez des enfants ?',en:"Do you have children? → Non, nous n'avons pas d'enfants."},
+    {fr:'Vous travaillez ?',en:'Do you work? → Non, je suis à la retraite.'},
+    {fr:'Vous apprenez le français ?',en:"Are you learning French? → Oui, j'apprends le français."},
+    {fr:'Vous habitez depuis longtemps ?',en:"Have you lived here long? → Non, je viens d'arriver."},
+  ]},
+  // ── PHRASES ──
+  {id:'phrases_daily',emoji:'🌅',name:'Daily Life',phrases:[
+    {fr:'À quelle heure ?',en:'At what time?'},{fr:'Maintenant',en:'Now'},
+    {fr:"Aujourd'hui",en:'Today'},{fr:'Demain',en:'Tomorrow'},{fr:'Ce soir',en:'This evening'},
+    {fr:'Il fait beau.',en:'The weather is nice.'},{fr:'Il fait chaud.',en:"It's hot."},
+    {fr:'Je suis fatigué.',en:"I'm tired."},{fr:'Je suis en retard.',en:"I'm late."},
+    {fr:'Pas de problème.',en:'No problem.'},{fr:"C'est bon.",en:"That's fine / That's good."},
+    {fr:'On y va !',en:"Let's go!"},{fr:'Tout va bien.',en:"Everything's fine."},
+  ]},
+  {id:'phrases_polite',emoji:'🎩',name:'Polite & Social',phrases:[
+    {fr:"S'il vous plaît.",en:'Please.'},{fr:'Merci beaucoup.',en:'Thank you very much.'},
+    {fr:'De rien.',en:"You're welcome."},{fr:'Avec plaisir.',en:'With pleasure.'},
+    {fr:'Pardon.',en:'Sorry / Excuse me.'},{fr:'Excusez-moi.',en:'Excuse me (formal).'},
+    {fr:'Je suis désolé.',en:"I'm sorry."},{fr:'Pas grave.',en:'No worries.'},
+    {fr:"D'accord.",en:'OK / Agreed.'},{fr:'Bien sûr.',en:'Of course.'},
+    {fr:'Peut-être.',en:'Maybe.'},{fr:"C'est gentil.",en:"That's kind."},
+  ]},
   {id:'neighbors',emoji:'🤝',name:'Neighbors',phrases:[
     {fr:"Bonjour madame, je suis votre nouveau voisin.",en:"Hello, I am your new neighbor."},
     {fr:"Je viens d'arriver.",en:"I have just arrived."},
