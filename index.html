@@ -142,14 +142,24 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
   <button class="tab-btn" onclick="showPage('phrases')">Phrases</button>
   <button class="tab-btn" onclick="showPage('vocabulary')">Vocab</button>
   <button class="tab-btn" onclick="showPage('verbs')">Verbs</button>
-  <button class="tab-btn" onclick="showPage('bilan')">Bilan</button>
+  <button class="tab-btn" onclick="showPage('bilan')">Bilan 1</button>
+  <button class="tab-btn" onclick="showPage('bilan2')">Bilan 2</button>
 </div>
 
 <!-- HOME -->
 <div class="page active" id="page-home">
   <div style="text-align:center;padding:18px 0 8px">
     <div style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--gold);margin-bottom:5px">Bonjour, Jack!</div>
-    <div style="font-size:0.82rem;color:var(--muted);line-height:1.6">Closing April 10 — Menton apartment ready. <br>Use Drive daily. Do one Lesson per day.</div>
+    <div style="font-size:0.82rem;color:var(--muted);line-height:1.6">Closing April 10 — Menton apartment ready.<br>Use Drive daily. Do one Lesson per day.</div>
+  </div>
+  <div id="countdownBox" style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:12px;padding:12px 16px;margin-bottom:14px;text-align:center">
+    <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Days until Menton</div>
+    <div id="countdownNum" style="font-family:'Playfair Display',serif;font-size:2.5rem;color:var(--gold);line-height:1"></div>
+    <div id="countdownSub" style="font-size:0.75rem;color:var(--muted);margin-top:4px"></div>
+  </div>
+  <div id="progressBox" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px 16px;margin-bottom:14px">
+    <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Lessons Progress</div>
+    <div id="lessonProgress" style="display:flex;gap:6px;flex-wrap:wrap"></div>
   </div>
   <div class="tip-box" style="margin-top:14px">💡 <strong style="color:var(--gold)">Move-in priority:</strong> Start with <strong>Neighbors</strong> and <strong>Shops</strong>. Use <strong>Drive Mode → Quiz Me</strong> on your commute to build muscle memory fast.</div>
   <div class="section-title">Week 1 — First Conversations</div>
@@ -186,6 +196,8 @@ button:active{transform:scale(0.97)}button:disabled{opacity:0.3;cursor:not-allow
     <button class="unit-pill" onclick="setUnit('daily')">Daily Life</button>
     <button class="unit-pill" onclick="setUnit('negation')">🚫 Négation</button>
     <button class="unit-pill" onclick="setUnit('passe')">⏪ Passé</button>
+    <button class="unit-pill" onclick="setUnit('survival')" style="background:rgba(201,168,76,0.2);border-color:var(--gold);color:var(--gold)">⭐ Survival</button>
+    <button class="unit-pill" onclick="setUnit('jackvie')" style="background:rgba(201,168,76,0.2);border-color:var(--gold);color:var(--gold)">🏡 Jack's Life</button>
   </div>
   <div id="phraseList"></div>
 </div>
@@ -531,6 +543,44 @@ const units={
     {fr:"C'est au quel étage ?",en:"What floor is it on?",note:"Au quel = on which. Essential question for buildings."},
     {fr:"C'est sympa comme appartement.",en:"It's a nice apartment.",note:"Sympa = friendly/nice. C'est sympa = it's nice."},
     {fr:"La maison est grande, jaune et près de la plage.",en:"The house is large, yellow and near the beach.",note:"Adjectives after the noun in French. La plage = feminine."},
+  ]},
+  survival:{name:"Jack's Survival Phrases",tip:"The phrases you'll actually use on day one. Short, easy to say, they make French people smile.",phrases:[
+    {fr:"Enchanté.",en:"Pleased to meet you.",note:"Just this — no need for the full formal version every time."},
+    {fr:"Je parle un peu français.",en:"I speak a little French.",note:"Say this early — sets kind expectations."},
+    {fr:"Parlez-moi comme si j'avais cinq ans.",en:"Speak to me like I'm five years old.",note:"Charming and effective — French people love this."},
+    {fr:"Parlez plus lentement, s'il vous plaît.",en:"Speak more slowly, please.",note:"Essential — use it without embarrassment."},
+    {fr:"Pouvez-vous répéter ?",en:"Can you repeat that?",note:"Short and polite — use constantly."},
+    {fr:"Je ne comprends pas.",en:"I don't understand.",note:"Better to say this than to nod and pretend."},
+    {fr:"Un cappuccino bien chaud, s'il vous plaît.",en:"A very hot cappuccino, please.",note:"French coffee is often lukewarm — this fixes it."},
+    {fr:"À emporter, s'il vous plaît.",en:"To go, please.",note:"Essential for your morning coffee run."},
+    {fr:"Une baguette, s'il vous plaît.",en:"A baguette, please.",note:"Your daily bread. Always say Bonjour first."},
+    {fr:"L'addition, s'il vous plaît.",en:"The bill, please."},
+    {fr:"Où sont les toilettes ?",en:"Where are the bathrooms?"},
+    {fr:"C'est délicieux.",en:"It's delicious."},
+    {fr:"Je suis désolé, je ne parle pas bien français.",en:"I'm sorry, I don't speak French well."},
+    {fr:"Merci, vous êtes très gentil.",en:"Thank you, you are very kind."},
+  ]},
+  jackvie:{name:"Jack's Life in Menton",tip:"Real conversations about your apartment, your dog, your life. These will come up every day.",phrases:[
+    {fr:"Nous habitons à Garavan.",en:"We live in Garavan.",note:"Garavan is the quartier just before the Italian border."},
+    {fr:"C'est avenue de la Porte de France.",en:"It's on Avenue de la Porte de France.",note:"Your street — right on the Italian border."},
+    {fr:"Nous habitons au sixième étage.",en:"We live on the sixth floor.",note:"Le sixième étage — top floor."},
+    {fr:"C'est le dernier étage.",en:"It's the top floor.",note:"Le dernier étage — people will be impressed."},
+    {fr:"Nous avons une terrasse sur le toit.",en:"We have a rooftop terrace.",note:"La terrasse sur le toit."},
+    {fr:"On voit la mer et l'Italie.",en:"You can see the sea and Italy.",note:"This will stop every conversation."},
+    {fr:"C'est à cent mètres de l'Italie.",en:"It's 100 metres from Italy.",note:"People love this fact."},
+    {fr:"La vue est incroyable.",en:"The view is incredible."},
+    {fr:"Oui, nous avons beaucoup de chance.",en:"Yes, we are very lucky.",note:"Say this when they react to your apartment."},
+    {fr:"C'est notre chien Lola.",en:"This is our dog Lola.",note:"Introduce her before they reach for her."},
+    {fr:"Elle est un peu grognon.",en:"She's a bit grumpy.",note:"Un peu grognon — sets expectations gently."},
+    {fr:"Elle a été malade.",en:"She has been sick.",note:"Explains the grumpiness with sympathy."},
+    {fr:"Ne la touchez pas, s'il vous plaît.",en:"Please don't touch her.",note:"Polite but clear — use before anyone reaches."},
+    {fr:"Elle fait peur mais elle n'a pas de dents !",en:"She looks scary but she has no teeth!",note:"This always gets a laugh."},
+    {fr:"Je fais du yoga le matin.",en:"I do yoga in the morning."},
+    {fr:"Je me promène sur la promenade.",en:"I walk on the promenade.",note:"La promenade — the seafront walkway."},
+    {fr:"Je cherche un coach sportif.",en:"I'm looking for a personal trainer."},
+    {fr:"J'ai besoin de travailler sur l'équilibre.",en:"I need to work on my balance.",note:"L'équilibre — balance."},
+    {fr:"J'ai un petit problème avec le pied.",en:"I have a small problem with my foot.",note:"Simple explanation for your drop foot."},
+    {fr:"C'est neurologique.",en:"It's neurological.",note:"Two words — dignified, moves the conversation on."},
   ]},
   neighbors:{name:"Meeting Neighbors",tip:"From Manali 3/21 — these are the real conversations you'll have in your building and on the street in Menton.",phrases:[
     {fr:"Bonjour madame, je suis votre nouveau voisin.",en:"Hello madam, I am your new neighbor.",note:"Voisin = neighbor (masc). Voisine = feminine. Nouveau before masculine noun."},
@@ -2201,14 +2251,44 @@ svg.dv-ring{transform:rotate(-90deg);width:88px;height:88px;}
 <script>
 (function(){
 const DV_CATS=[
-  // ── VOCAB CATEGORIES ──
+  {id:'survival',emoji:'⭐',name:"Jack's Phrases",phrases:[
+    {fr:"Enchanté.",en:"Pleased to meet you."},
+    {fr:"Je parle un peu français.",en:"I speak a little French."},
+    {fr:"Parlez-moi comme si j'avais cinq ans.",en:"Speak to me like I'm five years old."},
+    {fr:"Parlez plus lentement, s'il vous plaît.",en:"Speak more slowly, please."},
+    {fr:"Pouvez-vous répéter ?",en:"Can you repeat that?"},
+    {fr:"Je ne comprends pas.",en:"I don't understand."},
+    {fr:"Un cappuccino bien chaud, s'il vous plaît.",en:"A very hot cappuccino, please."},
+    {fr:"À emporter, s'il vous plaît.",en:"To go, please."},
+    {fr:"Une baguette, s'il vous plaît.",en:"A baguette, please."},
+    {fr:"L'addition, s'il vous plaît.",en:"The bill, please."},
+    {fr:"Où sont les toilettes ?",en:"Where are the bathrooms?"},
+    {fr:"C'est délicieux.",en:"It's delicious."},
+    {fr:"Merci, vous êtes très gentil.",en:"Thank you, you are very kind."},
+  ]},
+  {id:'jackvie',emoji:'🏡',name:"Jack's Life",phrases:[
+    {fr:"Nous habitons à Garavan.",en:"We live in Garavan."},
+    {fr:"Nous habitons au sixième étage.",en:"We live on the sixth floor."},
+    {fr:"C'est le dernier étage.",en:"It's the top floor."},
+    {fr:"Nous avons une terrasse sur le toit.",en:"We have a rooftop terrace."},
+    {fr:"On voit la mer et l'Italie.",en:"You can see the sea and Italy."},
+    {fr:"La vue est incroyable.",en:"The view is incredible."},
+    {fr:"Oui, nous avons beaucoup de chance.",en:"Yes, we are very lucky."},
+    {fr:"C'est notre chien Lola.",en:"This is our dog Lola."},
+    {fr:"Elle est un peu grognon.",en:"She's a bit grumpy."},
+    {fr:"Ne la touchez pas, s'il vous plaît.",en:"Please don't touch her."},
+    {fr:"Elle fait peur mais elle n'a pas de dents !",en:"She looks scary but she has no teeth!"},
+    {fr:"Je me promène sur la promenade.",en:"I walk on the promenade."},
+    {fr:"J'ai un petit problème avec le pied.",en:"I have a small problem with my foot."},
+  ]},
+  // ── VOCAB ──
   {id:'vocab_numbers',emoji:'🔢',name:'Numbers',phrases:[
     {fr:'zéro',en:'0 — zero'},{fr:'un',en:'1 — one'},{fr:'deux',en:'2 — two'},
     {fr:'trois',en:'3 — three'},{fr:'quatre',en:'4 — four'},{fr:'cinq',en:'5 — five'},
     {fr:'six',en:'6 — six'},{fr:'sept',en:'7 — seven'},{fr:'huit',en:'8 — eight'},
     {fr:'neuf',en:'9 — nine'},{fr:'dix',en:'10 — ten'},{fr:'vingt',en:'20 — twenty'},
     {fr:'trente',en:'30 — thirty'},{fr:'quarante',en:'40 — forty'},{fr:'cinquante',en:'50 — fifty'},
-    {fr:'soixante',en:'60 — sixty'},{fr:'cent',en:'100 — one hundred'},{fr:'mille',en:'1000 — one thousand'},
+    {fr:'soixante',en:'60 — sixty'},{fr:'cent',en:'100 — one hundred'},
   ]},
   {id:'vocab_days',emoji:'📅',name:'Days & Months',phrases:[
     {fr:'lundi',en:'Monday'},{fr:'mardi',en:'Tuesday'},{fr:'mercredi',en:'Wednesday'},
@@ -2216,67 +2296,57 @@ const DV_CATS=[
     {fr:'janvier',en:'January'},{fr:'février',en:'February'},{fr:'mars',en:'March'},
     {fr:'avril',en:'April'},{fr:'mai',en:'May'},{fr:'juin',en:'June'},
     {fr:'juillet',en:'July'},{fr:'août',en:'August'},{fr:'septembre',en:'September'},
-    {fr:'octobre',en:'October'},{fr:'novembre',en:'November'},{fr:'décembre',en:'December'},
   ]},
   {id:'vocab_food',emoji:'🥖',name:'Food & Market',phrases:[
     {fr:'le pain',en:'bread'},{fr:'la baguette',en:'baguette'},{fr:'le croissant',en:'croissant'},
     {fr:'le fromage',en:'cheese'},{fr:'le beurre',en:'butter'},{fr:'le lait',en:'milk'},
-    {fr:'les œufs',en:'eggs'},{fr:'la viande',en:'meat'},{fr:'le poisson',en:'fish'},
-    {fr:'les légumes',en:'vegetables'},{fr:'les fruits',en:'fruit'},{fr:'le vin',en:'wine'},
     {fr:"l'eau",en:'water'},{fr:'le café',en:'coffee'},{fr:'le thé',en:'tea'},
-  ]},
-  {id:'vocab_family',emoji:'👨‍👩‍👧',name:'Family & People',phrases:[
-    {fr:'la femme',en:'wife / woman'},{fr:'le mari',en:'husband'},{fr:'la fille',en:'daughter / girl'},
-    {fr:'le fils',en:'son'},{fr:'la famille',en:'family'},{fr:"l'ami",en:'friend (m)'},
-    {fr:"l'amie",en:'friend (f)'},{fr:'le voisin',en:'neighbor (m)'},{fr:'la voisine',en:'neighbor (f)'},
-    {fr:'le médecin',en:'doctor'},{fr:'le propriétaire',en:'landlord'},{fr:'le notaire',en:'notary'},
+    {fr:'le vin',en:'wine'},{fr:'les légumes',en:'vegetables'},{fr:'les fruits',en:'fruit'},
   ]},
   // ── VERBS ──
   {id:'verbs_etre',emoji:'🟡',name:'Être — To Be',phrases:[
     {fr:'Je suis',en:'I am'},{fr:'Tu es',en:'You are (informal)'},
-    {fr:'Vous êtes',en:'You are (formal)'},{fr:'Il est',en:'He is'},{fr:'Elle est',en:'She is'},
+    {fr:'Vous êtes',en:'You are (formal)'},{fr:'Il est',en:'He is'},
     {fr:'Nous sommes',en:'We are'},{fr:'Ils sont',en:'They are'},
     {fr:'Je suis américain.',en:'I am American.'},{fr:'Nous sommes à la retraite.',en:'We are retired.'},
     {fr:"C'est magnifique.",en:"It's magnificent."},
   ]},
   {id:'verbs_avoir',emoji:'🔵',name:'Avoir — To Have',phrases:[
-    {fr:"J'ai",en:'I have'},{fr:'Tu as',en:'You have (informal)'},
-    {fr:'Vous avez',en:'You have (formal)'},{fr:'Il a',en:'He has'},
-    {fr:'Nous avons',en:'We have'},{fr:'Ils ont',en:'They have'},
+    {fr:"J'ai",en:'I have'},{fr:'Tu as',en:'You have'},{fr:'Vous avez',en:'You have (formal)'},
+    {fr:'Il a',en:'He has'},{fr:'Nous avons',en:'We have'},{fr:'Ils ont',en:'They have'},
     {fr:"J'ai faim.",en:"I'm hungry."},{fr:"J'ai soif.",en:"I'm thirsty."},
-    {fr:'Nous avons acheté un appartement.',en:'We bought an apartment.'},{fr:'Il y a un balcon.',en:'There is a balcony.'},
+    {fr:'Nous avons acheté un appartement.',en:'We bought an apartment.'},
   ]},
   {id:'verbs_key',emoji:'⚡',name:'Key Verbs',phrases:[
     {fr:"J'habite à Menton.",en:'I live in Menton.'},{fr:'Vous habitez où ?',en:'Where do you live?'},
     {fr:'Je parle un peu français.',en:'I speak a little French.'},{fr:'Vous parlez anglais ?',en:'Do you speak English?'},
-    {fr:'Je viens des États-Unis.',en:'I come from the United States.'},{fr:"D'où venez-vous ?",en:'Where do you come from?'},
-    {fr:"Je m'appelle Jack.",en:'My name is Jack.'},{fr:'Comment vous appelez-vous ?',en:'What is your name?'},
-    {fr:'Je vais bien.',en:"I'm doing well."},{fr:'Nous allons à la boulangerie.',en:"We're going to the bakery."},
-    {fr:'Je cherche la pharmacie.',en:"I'm looking for the pharmacy."},{fr:'Je voudrais un café.',en:"I'd like a coffee."},
+    {fr:'Je viens des États-Unis.',en:'I come from the United States.'},
+    {fr:"Je m'appelle Jack.",en:'My name is Jack.'},
+    {fr:'Je cherche la pharmacie.',en:"I'm looking for the pharmacy."},
+    {fr:'Je voudrais un café.',en:"I'd like a coffee."},
+    {fr:'Je fais du yoga.',en:'I do yoga.'},{fr:'Je me promène.',en:'I go for a walk.'},
   ]},
   // ── Q&A ──
   {id:'qa_drive',emoji:'💬',name:'Q&A — Real Questions',phrases:[
     {fr:'Comment vous appelez-vous ?',en:"What is your name? → Je m'appelle Jack."},
     {fr:"D'où venez-vous ?",en:'Where do you come from? → Je viens des États-Unis.'},
-    {fr:'Où habitez-vous ?',en:"Where do you live? → J'habite à Menton."},
+    {fr:'Où habitez-vous ?',en:"Where do you live? → J'habite à Menton, à Garavan."},
     {fr:'Quelle est votre nationalité ?',en:'What is your nationality? → Je suis américain.'},
-    {fr:'Quelle langue parlez-vous ?',en:'What language do you speak? → Je parle anglais et un peu français.'},
     {fr:'Vous êtes en vacances ?',en:"Are you on holiday? → Non, j'habite ici maintenant."},
     {fr:'Vous aimez Menton ?',en:"Do you like Menton? → Oui, j'adore Menton."},
-    {fr:'Vous êtes marié ?',en:'Are you married? → Oui, je suis marié.'},
-    {fr:'Vous avez des enfants ?',en:"Do you have children? → Non, nous n'avons pas d'enfants."},
     {fr:'Vous travaillez ?',en:'Do you work? → Non, je suis à la retraite.'},
     {fr:'Vous apprenez le français ?',en:"Are you learning French? → Oui, j'apprends le français."},
     {fr:'Vous habitez depuis longtemps ?',en:"Have you lived here long? → Non, je viens d'arriver."},
+    {fr:'Votre appartement est grand ?',en:'Is your apartment large? → Oui, et la vue est incroyable.'},
   ]},
-  // ── PHRASES ──
+  // ── DAILY PHRASES ──
   {id:'phrases_daily',emoji:'🌅',name:'Daily Life',phrases:[
-    {fr:'À quelle heure ?',en:'At what time?'},{fr:'Maintenant',en:'Now'},
-    {fr:"Aujourd'hui",en:'Today'},{fr:'Demain',en:'Tomorrow'},{fr:'Ce soir',en:'This evening'},
+    {fr:'À quelle heure ?',en:'At what time?'},{fr:"Aujourd'hui",en:'Today'},
+    {fr:'Demain',en:'Tomorrow'},{fr:'Ce soir',en:'This evening'},
     {fr:'Il fait beau.',en:'The weather is nice.'},{fr:'Il fait chaud.',en:"It's hot."},
-    {fr:'Je suis fatigué.',en:"I'm tired."},{fr:'Je suis en retard.',en:"I'm late."},
-    {fr:'Pas de problème.',en:'No problem.'},{fr:"C'est bon.",en:"That's fine / That's good."},
-    {fr:'On y va !',en:"Let's go!"},{fr:'Tout va bien.',en:"Everything's fine."},
+    {fr:'Je suis fatigué.',en:"I'm tired."},{fr:'Pas de problème.',en:'No problem.'},
+    {fr:"C'est bon.",en:"That's fine."},{fr:'On y va !',en:"Let's go!"},
+    {fr:'Tout va bien.',en:"Everything's fine."},
   ]},
   {id:'phrases_polite',emoji:'🎩',name:'Polite & Social',phrases:[
     {fr:"S'il vous plaît.",en:'Please.'},{fr:'Merci beaucoup.',en:'Thank you very much.'},
@@ -2284,7 +2354,6 @@ const DV_CATS=[
     {fr:'Pardon.',en:'Sorry / Excuse me.'},{fr:'Excusez-moi.',en:'Excuse me (formal).'},
     {fr:'Je suis désolé.',en:"I'm sorry."},{fr:'Pas grave.',en:'No worries.'},
     {fr:"D'accord.",en:'OK / Agreed.'},{fr:'Bien sûr.',en:'Of course.'},
-    {fr:'Peut-être.',en:'Maybe.'},{fr:"C'est gentil.",en:"That's kind."},
   ]},
   {id:'neighbors',emoji:'🤝',name:'Neighbors',phrases:[
     {fr:"Bonjour madame, je suis votre nouveau voisin.",en:"Hello, I am your new neighbor."},
@@ -2431,14 +2500,22 @@ const dvCirc=251;
 
 const grid=document.getElementById('dv-cgrid');
 if(grid){
+  function dvAddHeader(label){
+    const h=document.createElement('div');
+    h.style.cssText='grid-column:1/-1;font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#7d8590;margin-top:8px;margin-bottom:2px;padding:0 2px;';
+    h.textContent=label;grid.appendChild(h);
+  }
   const allBtn=document.createElement('button');
   allBtn.className='dv-cbtn';allBtn.style.gridColumn='1/-1';
   allBtn.innerHTML='<span class="dv-ce">🔀</span><span class="dv-cn" style="display:inline;margin-left:6px">All Categories — Continuous</span><span class="dv-cc" style="display:block;margin-top:2px">Every phrase, all units, back to back</span>';
   allBtn.onclick=()=>{dvCat=DV_ALL_ID;document.querySelectorAll('.dv-cbtn').forEach(x=>x.classList.remove('dv-sel'));allBtn.classList.add('dv-sel');};
   grid.appendChild(allBtn);
+  const dvGroupHeaders={'survival':'— Survival & My Life —','vocab_numbers':'— Vocabulary —','verbs_etre':'— Verbs —','qa_drive':'— Q&A & Phrases —','neighbors':'— Situations —','lesson2':'— Lessons —'};
   DV_CATS.forEach(cat=>{
+    if(dvGroupHeaders[cat.id]) dvAddHeader(dvGroupHeaders[cat.id]);
     const b=document.createElement('button');
     b.className='dv-cbtn'+(cat.id==='neighbors'?' dv-sel':'');
+    b.setAttribute('data-id',cat.id);
     b.innerHTML=`<span class="dv-ce">${cat.emoji}</span><span class="dv-cn">${cat.name}</span><span class="dv-cc">${cat.phrases.length} phrases</span>`;
     b.onclick=()=>{dvCat=cat.id;document.querySelectorAll('.dv-cbtn').forEach(x=>x.classList.remove('dv-sel'));b.classList.add('dv-sel');};
     grid.appendChild(b);
@@ -2476,12 +2553,13 @@ function dvUpdateHdr(){const pbar=document.getElementById('dv-pbar');const cnt=d
 function dvStopAll(){clearInterval(dvTimer);clearTimeout(dvTimer);dvTimer=null;speechSynthesis&&speechSynthesis.cancel();dvPhase='idle';dvPaused=false;dvPulseOn(false);}
 function dvCountdown(secs,color,onDone){clearInterval(dvTimer);dvTimer=null;dvCdMax=secs;dvCdVal=secs;dvSetRing(dvCdVal,dvCdMax,color);dvTimer=setInterval(()=>{if(dvPaused)return;dvCdVal--;dvSetRing(dvCdVal,dvCdMax,color);if(dvCdVal<=0){clearInterval(dvTimer);dvTimer=null;onDone&&onDone();}},1000);}
 
-function dvListenSpeak(){if(dvIdx>=dvPhrases.length){dvDone();return;}dvPhase='speaking';const p=dvPhrases[dvIdx];dvUpdateHdr();dvSetBadge('LISTEN','bl');dvSetText(p.fr,p.en);dvPulseOn(false);dvHideRing();dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused&&dvPhase==='speaking')dvListenRepeat();});}
-function dvListenRepeat(){dvPhase='repeating';dvSetBadge('YOUR TURN — REPEAT','bg');const e=document.getElementById('dv-eng');if(e)e.textContent='';dvPulseOn(true);dvCountdown(dvSecs,'#3fb950',()=>{dvPulseOn(false);dvIdx++;dvListenSpeak();});}
+function dvSmartSecs(text,base){var words=text.trim().split(/\s+/).length;if(words<=2)return Math.max(2,base-2);if(words<=5)return base;if(words<=9)return base+1;return base+2;}
+function dvListenSpeak(){if(dvIdx>=dvPhrases.length){dvDone();return;}dvPhase='speaking';const p=dvPhrases[dvIdx];dvUpdateHdr();dvSetBadge('IN ENGLISH...','bl');dvSetText(p.en,'');dvPulseOn(false);dvHideRing();dvSpeak(p.en,'en-US',()=>{if(dvPaused||dvPhase!=='speaking')return;dvPhase='thinking';const thinkSecs=dvSmartSecs(p.fr,dvSecs);dvSetBadge('NOW IN FRENCH...','bb');dvPulseOn(true);dvCountdown(thinkSecs,'#58a6ff',()=>{dvPulseOn(false);dvPhase='revealing';dvSetBadge('LISTEN','bl');dvSetText(p.fr,p.en);dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused&&dvPhase==='revealing')dvListenRepeat();});});});}
+function dvListenRepeat(){dvPhase='repeating';dvSetBadge('YOUR TURN — REPEAT','bg');dvPulseOn(true);const p=dvPhrases[dvIdx];const repeatSecs=dvSmartSecs(p.fr,Math.max(3,dvSecs-2));dvCountdown(repeatSecs,'#3fb950',()=>{dvPulseOn(false);dvIdx++;dvListenSpeak();});}
 function dvQuizPrompt(){if(dvIdx>=dvPhrases.length){dvDone();return;}dvPhase='prompting';const p=dvPhrases[dvIdx];dvUpdateHdr();dvSetBadge('HOW DO YOU SAY...','bb');dvSetText(p.en,'');dvPulseOn(false);dvHideRing();dvSpeak(p.en,'en-US',()=>{if(!dvPaused&&dvPhase==='prompting')dvQuizThink();});}
-function dvQuizThink(){dvPhase='thinking';dvSetBadge('SAY IT IN FRENCH !','bb');dvPulseOn(true);dvCountdown(dvSecs,'#58a6ff',()=>{dvPulseOn(false);dvQuizReveal();});}
+function dvQuizThink(){dvPhase='thinking';dvSetBadge('SAY IT IN FRENCH !','bb');dvPulseOn(true);const p=dvPhrases[dvIdx];const thinkSecs=dvSmartSecs(p.fr,dvSecs);dvCountdown(thinkSecs,'#58a6ff',()=>{dvPulseOn(false);dvQuizReveal();});}
 function dvQuizReveal(){dvPhase='revealing';const p=dvPhrases[dvIdx];dvSetBadge('ANSWER — REPEAT IT','bg');dvSetText(p.fr,p.en);dvHideRing();dvSpeak(p.fr,'fr-FR',()=>{if(dvPaused||dvPhase!=='revealing')return;dvPhase='repeating';dvSetBadge('SAY IT AGAIN !','bb');dvPulseOn(true);dvCountdown(dvSecs,'#58a6ff',()=>{dvPulseOn(false);dvQuizConfirm();});});}
-function dvQuizConfirm(){dvPhase='confirming';const p=dvPhrases[dvIdx];dvSetBadge('LISTEN ONCE MORE','bg');dvSetText(p.fr,p.en);dvSpeak(p.fr,'fr-FR',()=>{if(dvPaused||dvPhase!=='confirming')return;dvPhase='finalrep';dvSetBadge('ONE LAST TIME — GO !','bb');dvPulseOn(true);dvCountdown(dvSecs,'#58a6ff',()=>{dvPulseOn(false);dvIdx++;dvQuizPrompt();});});}
+function dvQuizConfirm(){dvPhase='confirming';const p=dvPhrases[dvIdx];dvSetBadge('LISTEN ONCE MORE','bg');dvSetText(p.fr,p.en);dvSpeak(p.fr,'fr-FR',()=>{if(dvPaused||dvPhase!=='confirming')return;dvPhase='finalrep';dvSetBadge('ONE LAST TIME — GO !','bb');dvPulseOn(true);const finalSecs=dvSmartSecs(dvPhrases[dvIdx].fr,Math.max(3,dvSecs-2));dvCountdown(finalSecs,'#58a6ff',()=>{dvPulseOn(false);dvIdx++;dvQuizPrompt();});});}
 
 window.dvReplay=function(){clearInterval(dvTimer);clearTimeout(dvTimer);dvTimer=null;speechSynthesis&&speechSynthesis.cancel();if(dvIdx>=dvPhrases.length)return;const p=dvPhrases[dvIdx];if(dvMode==='listen'){dvPhase='speaking';dvSetBadge('LISTEN','bl');dvSetText(p.fr,p.en);dvPulseOn(false);dvHideRing();dvSpeak(p.fr,'fr-FR',()=>{if(!dvPaused)dvListenRepeat();});}else{dvPhase='prompting';dvSetBadge('HOW DO YOU SAY...','bb');dvSetText(p.en,'');dvPulseOn(false);dvHideRing();dvSpeak(p.en,'en-US',()=>{if(!dvPaused)dvQuizThink();});}};
 window.dvPause=function(){dvPaused=!dvPaused;const btn=document.getElementById('dv-pausebtn');if(btn)btn.textContent=dvPaused?'▶ Resume':'⏸ Pause';if(dvPaused){speechSynthesis&&speechSynthesis.cancel();}else{if(dvMode==='listen'){if(dvPhase==='speaking')dvListenSpeak();else if(dvPhase==='repeating')dvListenRepeat();}else{if(dvPhase==='prompting')dvQuizPrompt();else if(dvPhase==='thinking')dvQuizThink();else if(dvPhase==='revealing')dvQuizReveal();}}};
@@ -2886,6 +2964,92 @@ document.addEventListener('DOMContentLoaded', () => { [1,2,3,4,5].forEach(initEx
 })();
 </script>
 
+</script>
+
+
+<!-- BILAN 2 PAGE -->
+<div class="page" id="page-bilan2">
+<div class="bl-title">Bilan 2 — Verbes en -ER</div>
+<div class="bl-sub">Group class 3/25. -ER verbs: parler, aimer, terminer. Simple questions with est-ce que.</div>
+<div class="bl-ex" id="b2ex1">
+  <div class="bl-ex-title">Exercise 1 — Conjuguez PARLER</div>
+  <div class="bl-rule">parler: je parle · tu parles · il/elle parle · nous parlons · vous parlez · ils/elles parlent</div>
+  <div class="bl-bank" id="b2bank1"></div>
+  <div class="bl-item"><span class="bl-num">1.</span><span class="bl-text">Je <span class="bl-slot" data-answer="parle" data-ex="b2_1">___</span> anglais.</span></div>
+  <div class="bl-item"><span class="bl-num">2.</span><span class="bl-text">Tu <span class="bl-slot" data-answer="parles" data-ex="b2_1">___</span> français ?</span></div>
+  <div class="bl-item"><span class="bl-num">3.</span><span class="bl-text">Il <span class="bl-slot" data-answer="parle" data-ex="b2_1">___</span> très bien.</span></div>
+  <div class="bl-item"><span class="bl-num">4.</span><span class="bl-text">Nous <span class="bl-slot" data-answer="parlons" data-ex="b2_1">___</span> ensemble.</span></div>
+  <div class="bl-item"><span class="bl-num">5.</span><span class="bl-text">Vous <span class="bl-slot" data-answer="parlez" data-ex="b2_1">___</span> anglais ?</span></div>
+  <div class="bl-item"><span class="bl-num">6.</span><span class="bl-text">Ils <span class="bl-slot" data-answer="parlent" data-ex="b2_1">___</span> trop vite.</span></div>
+  <div class="bl-footer"><div class="bl-score" id="b2score1">0/6</div><button class="bl-reset" onclick="resetB2(1)">↺ Reset</button></div>
+  <div class="bl-complete" id="b2complete1">✓ Exercise 1 complete!</div>
+</div>
+<div class="bl-ex" id="b2ex2">
+  <div class="bl-ex-title">Exercise 2 — Conjuguez AIMER</div>
+  <div class="bl-rule">j'aime · tu aimes · il aime · nous aimons · vous aimez · ils aiment · négation: n'aime pas</div>
+  <div class="bl-bank" id="b2bank2"></div>
+  <div class="bl-item"><span class="bl-num">1.</span><span class="bl-text">J'<span class="bl-slot" data-answer="aime" data-ex="b2_2">___</span> Menton.</span></div>
+  <div class="bl-item"><span class="bl-num">2.</span><span class="bl-text">Tu <span class="bl-slot" data-answer="aimes" data-ex="b2_2">___</span> le café ?</span></div>
+  <div class="bl-item"><span class="bl-num">3.</span><span class="bl-text">Il <span class="bl-slot" data-answer="n'aime pas" data-ex="b2_2">___</span> la circulation.</span></div>
+  <div class="bl-item"><span class="bl-num">4.</span><span class="bl-text">Nous <span class="bl-slot" data-answer="aimons" data-ex="b2_2">___</span> vivre ici.</span></div>
+  <div class="bl-item"><span class="bl-num">5.</span><span class="bl-text">Vous <span class="bl-slot" data-answer="aimez" data-ex="b2_2">___</span> la France ?</span></div>
+  <div class="bl-item"><span class="bl-num">6.</span><span class="bl-text">Ils <span class="bl-slot" data-answer="n'aiment pas" data-ex="b2_2">___</span> le sport.</span></div>
+  <div class="bl-footer"><div class="bl-score" id="b2score2">0/6</div><button class="bl-reset" onclick="resetB2(2)">↺ Reset</button></div>
+  <div class="bl-complete" id="b2complete2">✓ Exercise 2 complete!</div>
+</div>
+<div class="bl-ex" id="b2ex3">
+  <div class="bl-ex-title">Exercise 3 — Conjuguez TERMINER</div>
+  <div class="bl-rule">je termine · tu termines · il termine · nous terminons · vous terminez · ils terminent</div>
+  <div class="bl-bank" id="b2bank3"></div>
+  <div class="bl-item"><span class="bl-num">1.</span><span class="bl-text">Je <span class="bl-slot" data-answer="termine" data-ex="b2_3">___</span> le travail à 18h.</span></div>
+  <div class="bl-item"><span class="bl-num">2.</span><span class="bl-text">Tu <span class="bl-slot" data-answer="termines" data-ex="b2_3">___</span> à quelle heure ?</span></div>
+  <div class="bl-item"><span class="bl-num">3.</span><span class="bl-text">Elle <span class="bl-slot" data-answer="termine" data-ex="b2_3">___</span> ses études.</span></div>
+  <div class="bl-item"><span class="bl-num">4.</span><span class="bl-text">Nous <span class="bl-slot" data-answer="terminons" data-ex="b2_3">___</span> le projet demain.</span></div>
+  <div class="bl-item"><span class="bl-num">5.</span><span class="bl-text">Vous <span class="bl-slot" data-answer="terminez" data-ex="b2_3">___</span> le repas ?</span></div>
+  <div class="bl-item"><span class="bl-num">6.</span><span class="bl-text">Ils <span class="bl-slot" data-answer="terminent" data-ex="b2_3">___</span> la réunion.</span></div>
+  <div class="bl-footer"><div class="bl-score" id="b2score3">0/6</div><button class="bl-reset" onclick="resetB2(3)">↺ Reset</button></div>
+  <div class="bl-complete" id="b2complete3">✓ Exercise 3 complete!</div>
+</div>
+<div class="bl-ex" id="b2ex4">
+  <div class="bl-ex-title">Exercise 4 — La Question Simple</div>
+  <div class="bl-rule">Raise intonation (Tu travailles ?) OR use Est-ce que (Est-ce que tu travailles ?)</div>
+  <div class="bl-bank" id="b2bank4"></div>
+  <div class="bl-item"><span class="bl-num">1.</span><span class="bl-text"><span class="bl-slot" data-answer="Est-ce que" data-ex="b2_4">___</span> vous parlez anglais ?</span></div>
+  <div class="bl-item"><span class="bl-num">2.</span><span class="bl-text"><span class="bl-slot" data-answer="Est-ce que" data-ex="b2_4">___</span> tu aimes le café ?</span></div>
+  <div class="bl-item"><span class="bl-num">3.</span><span class="bl-text">Vous travaillez ici ? — <span class="bl-slot" data-answer="Non" data-ex="b2_4">___</span>, je suis à la retraite.</span></div>
+  <div class="bl-item"><span class="bl-num">4.</span><span class="bl-text">Vous aimez Menton ? — <span class="bl-slot" data-answer="Oui" data-ex="b2_4">___</span>, j'aime beaucoup Menton !</span></div>
+  <div class="bl-item"><span class="bl-num">5.</span><span class="bl-text">Est-ce que vous déjeunez à 13h ? — <span class="bl-slot" data-answer="Oui" data-ex="b2_4">___</span>, nous déjeunons à midi.</span></div>
+  <div class="bl-footer"><div class="bl-score" id="b2score4">0/5</div><button class="bl-reset" onclick="resetB2(4)">↺ Reset</button></div>
+  <div class="bl-complete" id="b2complete4">✓ Exercise 4 complete!</div>
+</div>
+<div class="tip-box" style="margin-bottom:32px">🎯 All -ER verbs follow the same pattern as parler. e, es, ent sound identical.</div>
+</div>
+
+<script>
+(function(){
+const B2_BANKS={'b2_1':['parle','parles','parle','parlons','parlez','parlent'],'b2_2':['aime','aimes',"n'aime pas",'aimons','aimez',"n'aiment pas"],'b2_3':['termine','termines','termine','terminons','terminez','terminent'],'b2_4':['Est-ce que','Est-ce que','Non','Oui','Oui']};
+const B2_CTX={'b2_1-0':{fr:"Je parle anglais.",en:"I speak English."},'b2_1-1':{fr:"Tu parles français ?",en:"Do you speak French?"},'b2_1-2':{fr:"Il parle très bien.",en:"He speaks very well."},'b2_1-3':{fr:"Nous parlons ensemble.",en:"We speak together."},'b2_1-4':{fr:"Vous parlez anglais ?",en:"Do you speak English?"},'b2_1-5':{fr:"Ils parlent trop vite.",en:"They speak too fast."},'b2_2-0':{fr:"J'aime Menton.",en:"I love Menton."},'b2_2-1':{fr:"Tu aimes le café ?",en:"Do you like coffee?"},'b2_2-2':{fr:"Il n'aime pas la circulation.",en:"He doesn't like traffic."},'b2_2-3':{fr:"Nous aimons vivre ici.",en:"We love living here."},'b2_2-4':{fr:"Vous aimez la France ?",en:"Do you like France?"},'b2_2-5':{fr:"Ils n'aiment pas le sport.",en:"They don't like sport."},'b2_3-0':{fr:"Je termine le travail à 18h.",en:"I finish work at 6pm."},'b2_3-1':{fr:"Tu termines à quelle heure ?",en:"What time do you finish?"},'b2_3-2':{fr:"Elle termine ses études.",en:"She is finishing her studies."},'b2_3-3':{fr:"Nous terminons le projet demain.",en:"We finish the project tomorrow."},'b2_3-4':{fr:"Vous terminez le repas ?",en:"Are you finishing the meal?"},'b2_3-5':{fr:"Ils terminent la réunion.",en:"They are finishing the meeting."},'b2_4-0':{fr:"Est-ce que vous parlez anglais ?",en:"Do you speak English?"},'b2_4-1':{fr:"Est-ce que tu aimes le café ?",en:"Do you like coffee?"},'b2_4-2':{fr:"Non, je suis à la retraite.",en:"No, I am retired."},'b2_4-3':{fr:"Oui, j'aime beaucoup Menton !",en:"Yes, I love Menton very much!"},'b2_4-4':{fr:"Oui, nous déjeunons à midi.",en:"Yes, we have lunch at midday."}};
+const b2s={};let b2sel=null,b2t=null;
+function b2init(n){const bk=document.getElementById('b2bank'+n);if(!bk)return;bk.innerHTML='';const key='b2_'+n;const ans=[...B2_BANKS[key]].sort(()=>Math.random()-0.5);const cnts={};ans.forEach(a=>{cnts[a]=(cnts[a]||0)+1;});const slots=document.querySelectorAll('.bl-slot[data-ex="'+key+'"]');b2s[n]={correct:0,total:slots.length};b2sc(n);const seen={};ans.forEach(a=>{if(seen[a])return;seen[a]=true;const c=document.createElement('span');c.className='bl-chip';c.textContent=a+(cnts[a]>1?' ×'+cnts[a]:'');c.dataset.answer=a;c.dataset.remaining=cnts[a];c.dataset.bex=n;c.onclick=()=>b2pick(c);bk.appendChild(c);});let i=0;slots.forEach(s=>{s.dataset.slotIdx=i++;s.textContent='___';s.classList.remove('correct','wrong');s.onclick=()=>b2fill(s);});const comp=document.getElementById('b2complete'+n);if(comp)comp.style.display='none';}
+function b2pick(c){if(b2sel)b2sel.el.style.outline='';if(b2sel&&b2sel.el===c){b2sel=null;return;}b2sel={el:c,n:parseInt(c.dataset.bex),answer:c.dataset.answer};c.style.outline='2px solid #c9a84c';c.style.outlineOffset='2px';}
+function b2fill(s){if(!b2sel||s.classList.contains('correct'))return;const n=parseInt(s.dataset.ex.replace('b2_',''));if(n!==b2sel.n)return;const norm=x=>x.trim().toLowerCase().replace(/['']/g,"'");if(norm(b2sel.answer)===norm(s.dataset.answer)){s.textContent=b2sel.answer;s.classList.add('correct');s.onclick=null;const c=b2sel.el;let r=parseInt(c.dataset.remaining)-1;c.dataset.remaining=r;if(r<=0)c.classList.add('used');else c.textContent=c.dataset.answer+(r>1?' ×'+r:'');c.style.outline='';b2sel=null;b2s[n].correct++;b2sc(n);if(b2s[n].correct>=b2s[n].total){const el=document.getElementById('b2complete'+n);if(el)el.style.display='block';}const ctx=B2_CTX[s.dataset.ex+'-'+s.dataset.slotIdx]||{fr:b2sel?b2sel.answer:s.dataset.answer,en:''};b2pron(ctx.fr,ctx.en);}else{s.textContent=b2sel.answer;s.classList.add('wrong');setTimeout(()=>{s.textContent='___';s.classList.remove('wrong');},700);b2sel.el.style.outline='';b2sel=null;}}
+function b2pron(fr,en){clearInterval(b2t);const p=document.getElementById('blPronun');document.getElementById('blPronFr').textContent=fr;document.getElementById('blPronEn').textContent=en;const st=document.getElementById('blPronStatus');document.querySelectorAll('.bl-pronun-wave').forEach(w=>w.classList.add('on'));st.className='bl-pronun-status ready';st.textContent='Listen...';p.classList.add('show');blSpeak(fr,()=>{document.querySelectorAll('.bl-pronun-wave').forEach(w=>w.classList.remove('on'));st.className='bl-pronun-status listening';st.textContent='Now say it!';let secs=5;const fg=document.getElementById('blPronRingFg');const rn=document.getElementById('blPronRingNum');fg.style.strokeDashoffset=0;rn.textContent=secs;b2t=setInterval(()=>{secs--;fg.style.strokeDashoffset=157*(1-secs/5);rn.textContent=secs;if(secs<=0){clearInterval(b2t);st.className='bl-pronun-status next';st.textContent='Bien !';fg.style.strokeDashoffset=157;rn.textContent='✓';}},1000);});}
+function b2sc(n){const el=document.getElementById('b2score'+n);if(el)el.innerHTML='Score: <b>'+b2s[n].correct+'/'+b2s[n].total+'</b>';}
+window.resetB2=function(n){b2sel=null;clearInterval(b2t);document.getElementById('blPronun').classList.remove('show');b2init(n);};
+[1,2,3,4].forEach(b2init);
+})();
+
+// ── COUNTDOWN + PROGRESS ──
+(function(){
+  function updateCountdown(){var t=new Date('2026-04-10T00:00:00'),n=new Date(),d=t-n,el=document.getElementById('countdownNum'),sub=document.getElementById('countdownSub');if(!el)return;if(d<=0){el.textContent='🎉';if(sub)sub.textContent="You're there! Bienvenue à Menton!";return;}var days=Math.ceil(d/(1000*60*60*24));el.textContent=days;if(sub){if(days<=3)sub.textContent='Almost there — final push!';else if(days<=7)sub.textContent='One week — focus on Lessons 1-3';else if(days<=14)sub.textContent='Two weeks — do one lesson a day';else sub.textContent='April 10 closing — keep going!';}}
+  updateCountdown();
+  function updateProgress(){var el=document.getElementById('lessonProgress');if(!el)return;var ls=[{n:1,name:'Voisins'},{n:2,name:'Commerces'},{n:3,name:'Débrouiller'},{n:4,name:'Chez Vous'},{n:5,name:'Café'}];el.innerHTML='';ls.forEach(function(l){var done=localStorage.getItem('lesson_done_'+l.n);var dot=document.createElement('div');dot.style.cssText='display:flex;align-items:center;gap:5px;font-size:0.75rem;padding:4px 10px;border-radius:20px;cursor:pointer;'+(done?'background:rgba(46,125,79,0.2);border:1px solid rgba(46,125,79,0.4);color:#7eeaa8;':'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--muted);');dot.innerHTML=(done?'✓ ':'')+' L'+l.n+' '+l.name;dot.onclick=function(){if(done)localStorage.removeItem('lesson_done_'+l.n);else localStorage.setItem('lesson_done_'+l.n,'1');updateProgress();};el.appendChild(dot);});}
+  updateProgress();
+  var origSP=window.showPage;window.showPage=function(id){origSP(id);if(id==='home')updateProgress();};
+})();
+
+// ── NOSLEEP ──
+(function(){var vid=document.createElement('video');vid.setAttribute('loop','');vid.setAttribute('playsinline','');vid.setAttribute('muted','');vid.style.cssText='position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;z-index:-1;';vid.src='data:video/mp4;base64,AAAAHGZ0eXBpc29tAAACAGlzb21pc28ybXA0MAAAAA9mcmVlAAAAGm1kYXQ=';document.addEventListener('touchstart',function sv(){document.body.appendChild(vid);vid.play().catch(function(){});document.removeEventListener('touchstart',sv);},{once:true});})();
 </script>
 
 </body>
